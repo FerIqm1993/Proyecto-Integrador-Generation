@@ -36,4 +36,4 @@ Bienvenido al repositorio del Proyecto Integrador **Tiendas 3V**, un sitio web t
 - Sistema de autenticación de usuarios.
 
 ---
-**Desarrollado como proyecto integrador final.**
+**Desarrollado como proyecto integrador.**
