@@ -1,16 +1,7 @@
 /* ==========================================
    PALETA DE COLORES (Variables según la imagen)[cite: 1]
    ========================================== */
-:root {
-  --color-bg-light: #F5F2E7;    /* Cream/Off-white[cite: 1] */
-  --color-brown: #6B4226;       /* Brown Accent[cite: 1] */
-  --color-blue-primary: #4A90E2;/* Vibrant Blue[cite: 1] */
-  --color-tan: #D4A373;         /* Warm Tan/Gold[cite: 1] */
-  --color-dark-blue: #333333;   /* Dark Navy/Charcoal[cite: 1] */
-  --color-gray-text: #666666;   /* Medium Gray[cite: 1] */
-  
-  --color-amber-gold: #F5C027;  /* Color de ofertas */
-}
+
 
 /* Estilo para el logo en imagen */
 .brand-logo-img {
@@ -24,13 +15,13 @@
 /* General Body */
 body {
   font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-  background-color: #FAFAFA;
-  color: var(--color-dark-blue);
+  background-color: var(--crema);
+  color: var(--Marino);
 }
 
 /* Colores personalizados */
 .bg-dark-blue {
-  background-color: var(--color-dark-blue) !important;
+  background-color: var(--Marino) !important;
 }
 
 .bg-light-blue {
@@ -38,7 +29,7 @@ body {
 }
 
 .bg-amber {
-  background-color: var(--color-amber-gold);
+  background-color: var(--beige);
 }
 
 .text-light-gray {
@@ -51,7 +42,7 @@ body {
 
 /* Color azul principal de Tienda 3V */
 .text-primary-3v {
-  color: #1A73E8 !important; /* Azul idéntico al logo e imagen 1[cite: 7] */
+  color: var(--azul) !important; /* Azul idéntico al logo e imagen 1[cite: 7] */
 }
 
 /* Tamaño de la imagen del logo en el Header */
@@ -68,7 +59,7 @@ body {
 }
 
 .nav-links-custom .nav-link:hover {
-  color: #1A73E8 !important;
+  color: var(--azul) !important;
 }
 
 /* Buscador con fondo suave gris clarito y redondeado */
@@ -103,7 +94,7 @@ body {
 
 /* Círculo azul intenso con número de productos */
 .cart-badge-circle {
-  background-color: #1A73E8;
+  background-color: var(--azul);
   color: #FFFFFF;
   font-size: 0.75rem;
   font-weight: bold;
@@ -116,7 +107,7 @@ body {
 }
 /* Restablecer el fondo oscuro degradado original para el Hero */
 .hero-section {
-  background: linear-gradient(135deg, #1d2630 0%, #333333 100%) !important;
+  background: linear-gradient(135deg, #1d2630 0%, var(--gris-oscuro) 100%) !important;
   color: #ffffff !important;
 }
 
@@ -161,7 +152,7 @@ body {
 
 /* Botones Personalizados */
 .btn-warning-custom {
-  background-color: var(--color-amber-gold);
+  background-color: var(--beige);
   color: #111;
   border: none;
 }
@@ -171,7 +162,7 @@ body {
 }
 
 .btn-primary-custom {
-  background-color: var(--color-blue-primary);
+  background-color: var(--azul);
   color: white;
   border: none;
 }
@@ -191,8 +182,8 @@ body {
 
 /* Categorías en forma de píldoras */
 .category-pill {
-  border: 1px solid var(--color-blue-primary);
-  color: var(--color-blue-primary);
+  border: 1px solid var(--azul);
+  color: var(--azul);
   background: white;
   border-radius: 50px;
   padding: 6px 20px;
@@ -204,7 +195,7 @@ body {
 
 .category-pill:hover,
 .category-pill.active {
-  background-color: var(--color-blue-primary);
+  background-color: var(--azul);
   color: white;
 }
 
