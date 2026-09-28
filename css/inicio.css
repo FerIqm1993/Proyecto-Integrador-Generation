@@ -107,7 +107,7 @@ body {
 }
 /* Restablecer el fondo oscuro degradado original para el Hero */
 .hero-section {
-  background: linear-gradient(135deg, #1d2630 0%, var(--gris-oscuro) 100%) !important;
+  background: linear-gradient(135deg, var(--azul) 0%, #357abd 55%, var(--Marino) 140%) !important;
   color: #ffffff !important;
 }
 
