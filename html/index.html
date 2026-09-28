@@ -15,33 +15,36 @@
 </head>
 <body>
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg bg-white border-bottom py-3">
-        <div class="container d-flex align-items-center">
+    <nav class="navbar navbar-expand-lg border-bottom py-2 py-lg-3 custom-navbar">
+        <div class="container d-flex align-items-center justify-content-between">
             <!-- Logo area -->
-            <a class="navbar-brand d-flex align-items-center fw-bold text-primary fs-3" href="#">
-                <img src="../img/logo.png" alt="Logo Tienda 3V" style="height: 50px; width: auto;" class="me-2">
-                <span style="color: #0b5ed7;">Tienda 3V</span>
+            <a class="navbar-brand d-flex align-items-center fw-bold fs-3 m-0" href="#">
+                <img src="../img/logo.png" alt="Logo Tienda 3V" style="height: 50px; width: auto;" class="me-2 d-none d-lg-block">
+                <span class="brand-text">Tienda 3V</span>
             </a>
-
-            <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
+            
+            <!-- Mobile Icons -->
+            <div class="d-flex d-lg-none align-items-center gap-3 mobile-icons">
+                <a href="#" class="text-white fs-5"><i class="bi bi-search"></i></a>
+                <a href="#" class="text-white fs-5"><i class="bi bi-cart3"></i></a>
+                <a href="#" class="text-white fs-5"><i class="bi bi-person"></i></a>
+            </div>
 
             <!-- Navbar links -->
-            <div class="collapse navbar-collapse ms-4" id="navbarNav">
+            <div class="collapse navbar-collapse ms-4 d-none d-lg-flex" id="navbarNav">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0 fw-semibold text-dark gap-3">
                     <li class="nav-item"><a class="nav-link text-dark" href="#">Inicio</a></li>
                     <li class="nav-item"><a class="nav-link text-dark" href="#">Categorías</a></li>
                     <li class="nav-item"><a class="nav-link text-dark" href="#">Acerca</a></li>
                     <li class="nav-item"><a class="nav-link active text-dark fw-bold border-bottom border-dark border-2" href="#">Contacto</a></li>
                 </ul>
-
+                
                 <!-- Search -->
                 <form class="d-flex position-relative me-4" style="width: 350px;">
                     <i class="bi bi-search position-absolute top-50 start-0 translate-middle-y ms-3 text-muted"></i>
                     <input class="form-control bg-light border-0 ps-5 rounded-3" type="search" placeholder="Busca abarrotes, lácteos, limpieza y más..." aria-label="Search">
                 </form>
-
+                
                 <!-- Icons -->
                 <div class="d-flex align-items-center">
                     <a href="#" class="text-dark me-3 fs-5"><i class="bi bi-person"></i></a>
@@ -55,59 +58,60 @@
     </nav>
 
     <!-- Hero Section -->
-    <header class="hero-section text-white py-5">
+    <header class="hero-section text-white py-4 py-lg-5">
         <div class="container">
-            <h1 class="fw-bold mb-2">Contáctanos</h1>
-            <p class="mb-0 fs-5 text-white-50">Estamos aquí para resolver cualquier duda o sugerencia sobre tus pedidos.</p>
+            <h1 class="fw-bold mb-2 hero-title">Contáctanos</h1>
+            <p class="mb-0 fs-5 text-white-50 d-none d-lg-block">Estamos aquí para resolver cualquier duda o sugerencia sobre tus pedidos.</p>
         </div>
     </header>
 
     <!-- Main Content -->
-    <main class="container my-5 flex-grow-1">
+    <main class="container my-4 my-lg-5 flex-grow-1">
         <div class="row g-4">
             
             <!-- Left Column: Form -->
             <div class="col-lg-7">
-                <div class="card border-0 shadow-sm rounded-4 h-100 p-2">
+                <div class="card border-0 shadow-sm rounded-4 h-100 p-lg-2 contact-card-mobile">
                     <div class="card-body p-4 p-md-4">
-                        <h3 class="fw-bold mb-4">Envíanos un mensaje</h3>
+                        <h4 class="fw-bold mb-4">Envíanos un mensaje</h4>
                         <form id="contactForm">
                             <div class="row g-3">
                                 <div class="col-md-6">
-                                    <label class="form-label fw-semibold small text-dark">Nombre Completo</label>
-                                    <input type="text" class="form-control custom-input" id="name" placeholder="Pedro Paramon" required>
+                                    <label class="form-label small text-dark">Nombre completo</label>
+                                    <input type="text" class="form-control custom-input" id="name" placeholder="Juan Escutia" required>
                                 </div>
                                 <div class="col-md-6">
-                                    <label class="form-label fw-semibold small text-dark">Correo Electrónico</label>
-                                    <input type="email" class="form-control custom-input" id="email" placeholder="ejemplo@correo.com" required>
+                                    <label class="form-label small text-dark">Correo electrónico</label>
+                                    <input type="email" class="form-control custom-input active-input" id="email" placeholder="juan@3v.mx" required>
+                                    <small class="text-primary d-none d-lg-none active-hint" style="font-size: 10px;">Foco activo - listo para escribir</small>
                                 </div>
-                                <div class="col-md-6 mt-4">
-                                    <label class="form-label fw-semibold small text-dark">Teléfono</label>
-                                    <input type="tel" class="form-control custom-input" id="phone" placeholder="55-1234-5678" required>
+                                <div class="col-md-6 mt-3 mt-lg-4">
+                                    <label class="form-label small text-dark">Teléfono</label>
+                                    <input type="tel" class="form-control custom-input" id="phone" placeholder="Opcional">
                                 </div>
-                                <div class="col-md-6 mt-4">
-                                    <label class="form-label fw-semibold small text-dark">Motivo de Contacto</label>
+                                <div class="col-md-6 mt-3 mt-lg-4">
+                                    <label class="form-label small text-dark">Motivo de consulta</label>
                                     <select class="form-select custom-input" id="subject" required>
-                                        <option value="Sugerencia o Comentarios" selected>Sugerencia o Comentarios</option>
+                                        <option value="Soporte técnico / Compra en línea" selected>Soporte técnico / Compra en línea</option>
                                         <option value="Duda sobre pedido">Duda sobre pedido</option>
                                         <option value="Facturación">Facturación</option>
                                         <option value="Otro">Otro</option>
                                     </select>
                                 </div>
-                                <div class="col-12 mt-4">
-                                    <label class="form-label fw-semibold small text-dark">Mensaje</label>
-                                    <textarea class="form-control custom-input" id="message" rows="4" placeholder="Escribe tu consulta detalladamente aquí..." required></textarea>
+                                <div class="col-12 mt-3 mt-lg-4">
+                                    <label class="form-label small text-dark">Mensaje</label>
+                                    <textarea class="form-control custom-input" id="message" rows="3" placeholder="Escribe tu mensaje aquí..." required></textarea>
                                 </div>
                                 <div class="col-12 mt-3">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" id="privacyPolicy" checked required>
-                                        <label class="form-check-label small text-dark" for="privacyPolicy">
-                                            Acepto los términos del Aviso de Privacidad de Tienda 3V.
+                                    <div class="form-check d-flex align-items-center">
+                                        <input class="form-check-input me-2 mt-0 custom-checkbox" type="checkbox" id="privacyPolicy" checked required>
+                                        <label class="form-check-label small text-dark" for="privacyPolicy" style="font-size: 0.85rem;">
+                                            Acepto el Aviso de Privacidad Integral.
                                         </label>
                                     </div>
                                 </div>
                                 <div class="col-12 mt-4">
-                                    <button type="submit" class="btn btn-primary w-100 py-3 fw-bold rounded-3 fs-6">Enviar mensaje</button>
+                                    <button type="submit" class="btn btn-primary w-100 py-2 py-lg-3 fw-bold rounded-3 fs-6">Enviar mensaje</button>
                                 </div>
                             </div>
                         </form>
@@ -115,14 +119,24 @@
                 </div>
             </div>
 
-            <!-- Right Column: Info & Map -->
-            <div class="col-lg-5 d-flex flex-column gap-4">
+            <!-- Mobile Social Icons -->
+            <div class="col-12 d-block d-lg-none mt-4 text-center border-top border-bottom border-primary border-opacity-50 border-dotted py-4">
+                <h6 class="fw-bold mb-3 text-dark fs-6">Síguenos en redes sociales</h6>
+                <div class="d-flex justify-content-center gap-3">
+                    <a href="#" class="btn rounded-circle social-btn d-flex align-items-center justify-content-center text-primary"><i class="bi bi-facebook"></i></a>
+                    <a href="#" class="btn rounded-circle social-btn d-flex align-items-center justify-content-center text-primary"><i class="bi bi-instagram"></i></a>
+                    <a href="#" class="btn rounded-circle social-btn d-flex align-items-center justify-content-center text-primary"><i class="bi bi-twitter"></i></a>
+                </div>
+            </div>
 
+            <!-- Right Column: Info & Map (Hidden on Mobile) -->
+            <div class="col-lg-5 d-none d-lg-flex flex-column gap-4">
+                
                 <!-- Support Info Card -->
                 <div class="card border-0 shadow-sm rounded-4 p-2">
                     <div class="card-body p-4 p-md-4">
                         <h4 class="fw-bold mb-4">Información de Soporte</h4>
-
+                        
                         <div class="d-flex align-items-center mb-3">
                             <i class="bi bi-telephone text-primary fs-5 me-3"></i>
                             <span class="text-dark">Línea directa: 800-3V-AYUDA</span>
@@ -153,48 +167,48 @@
         </div>
 
         <!-- FAQ Section -->
-        <div class="mt-5 pt-4">
-            <h3 class="fw-bold mb-4">Preguntas Frecuentes</h3>
+        <div class="mt-4 pt-3 pt-lg-4">
+            <h4 class="fw-bold mb-3 mb-lg-4">Preguntas frecuentes</h4>
             
             <div class="accordion custom-accordion d-flex flex-column gap-3" id="faqAccordion">
                 <!-- FAQ Item 1 -->
-                <div class="accordion-item border-0 rounded-4 shadow-sm overflow-hidden">
+                <div class="accordion-item border-0 rounded-3 overflow-hidden">
                     <h2 class="accordion-header">
-                        <button class="accordion-button fw-bold fs-6 px-4 py-3" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                            ¿Cómo funciona el sistema de pickup en sucursal?
+                        <button class="accordion-button collapsed fw-bold fs-6 px-3 py-2 py-lg-3" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                            ¿Cuánto tarda mi entrega pickup?
                         </button>
                     </h2>
-                    <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
-                        <div class="accordion-body px-4 pb-4 pt-0 text-muted small">
+                    <div id="collapseOne" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body px-3 pb-3 pt-0 text-muted small">
                             Es muy fácil: agregas los artículos al carrito, seleccionas tu sucursal más cercana, seleccionas tu horario preferido de recolección y confirmas tu compra. Al llegar, nuestro personal te entregará todo listo directamente en tu auto o área de pickup.
                         </div>
                     </div>
                 </div>
 
                 <!-- FAQ Item 2 -->
-                <div class="accordion-item border-0 rounded-4 shadow-sm overflow-hidden">
+                <div class="accordion-item border-0 rounded-3 overflow-hidden">
                     <h2 class="accordion-header">
-                        <button class="accordion-button collapsed fw-bold fs-6 px-4 py-3" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                            ¿Cuáles son las formas de pago aceptadas?
+                        <button class="accordion-button collapsed fw-bold fs-6 px-3 py-2 py-lg-3" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                            ¿Cuáles son las formas de pago?
                         </button>
                     </h2>
                     <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
-                        <div class="accordion-body px-4 pb-4 pt-0 text-muted small">
+                        <div class="accordion-body px-3 pb-3 pt-0 text-muted small">
                             Aceptamos pago seguro con tarjeta de crédito o débito Visa, Mastercard y American Express en la plataforma, o si lo prefieres, puedes pagar físicamente con efectivo o vales de despensa directo en la sucursal al recoger.
                         </div>
                     </div>
                 </div>
 
                 <!-- FAQ Item 3 -->
-                <div class="accordion-item border-0 rounded-4 shadow-sm overflow-hidden">
+                <div class="accordion-item border-0 rounded-3 overflow-hidden">
                     <h2 class="accordion-header">
-                        <button class="accordion-button collapsed fw-bold fs-6 px-4 py-3" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                            ¿Puedo facturar mis compras?
+                        <button class="accordion-button fw-bold fs-6 px-3 py-2 py-lg-3" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="true" aria-controls="collapseThree">
+                            ¿Cómo cancelo o cambio un pedido?
                         </button>
                     </h2>
-                    <div id="collapseThree" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
-                        <div class="accordion-body px-4 pb-4 pt-0 text-muted small">
-                            Sí, puedes facturar todas tus compras de manera digital ingresando tu número de pedido y RFC en la pestaña superior de 'Facturación' dentro de los 30 días posteriores a tu compra.
+                    <div id="collapseThree" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body px-3 pb-3 pt-0 text-muted small">
+                            Puedes hacerlo directamente desde tu panel de usuario o enviando un correo a soporte@tienda3v.mx para solicitar la cancelación o cambio.
                         </div>
                     </div>
                 </div>
