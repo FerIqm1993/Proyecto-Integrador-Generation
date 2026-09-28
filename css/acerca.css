@@ -217,3 +217,82 @@
 /* ================== NOTA INFERIOR ========================== */
 
 .animation-note {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 30px;
+    color: var(--gris);
+    font-size: 0.85rem;
+}
+
+/* ================== NUESTRO EQUIPO ========================== */
+
+.team-section {
+    padding: 20px 0 60px;
+}
+
+.team-section .section-title {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.team-card {
+    background-color: var(--blanco);
+    border: 1px solid #dddddd;
+    border-radius: 12px;
+    overflow: hidden;
+    text-align: center;
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+}
+
+.team-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 30px rgba(51, 51, 51, 0.15);
+}
+
+.team-img-wrapper {
+    width: 100%;
+    height: 220px;
+    overflow: hidden;
+    background-color: #f8f9fa;
+}
+
+.team-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.team-card:hover .team-img {
+    transform: scale(1.08);
+}
+
+.team-info {
+    padding: 24px 20px;
+}
+
+.team-info h3 {
+    margin: 0 0 5px;
+    color: var(--gris-oscuro);
+    font-size: 1.2rem;
+    font-weight: 700;
+}
+
+.team-role {
+    display: block;
+    margin-bottom: 15px;
+    color: var(--azul);
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.team-bio {
+    margin: 0;
+    color: var(--gris);
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
