@@ -75,14 +75,14 @@ function renderProducts(items) {
       <div class="product-card d-flex flex-column justify-content-between p-3">
         <div>
           <div class="product-img-wrapper mb-2">
-            <img class="product-img" src="${product.image}" alt="${product.name}" loading="lazy">
+            <a href="pages/producto.html"><img class="product-img" src="${product.image}" alt="${product.name}" loading="lazy"></a>
             <button class="btn-add-cart" onclick="addToCart(${product.id})" title="Agregar al carrito">
               <i class="fa-solid fa-plus"></i>
             </button>
           </div>
           <span class="badge bg-light text-success border mb-1">${product.tag}</span>
           <span class="d-block text-muted small fw-semibold text-uppercase">${product.category}</span>
-          <h6 class="fw-bold text-dark text-truncate mb-2" title="${product.name}">${product.name}</h6>
+          <a href="pages/producto.html" style="text-decoration:none; color:inherit;"><h6 class="fw-bold text-dark text-truncate mb-2" title="${product.name}">${product.name}</h6></a>
         </div>
         <div>
           <div class="d-flex align-items-baseline gap-2">

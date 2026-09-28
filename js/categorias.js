@@ -135,11 +135,11 @@
           '<div class="product-card">'+
             '<div class="product-img-wrap">'+
               oferta + btn +
-              '<img src="'+IMG[p.img]+'" alt="'+p.nombre+'" loading="lazy" onerror="this.style.display=\'none\'">'+
+              '<a href="producto.html"><img src="'+IMG[p.img]+'" alt="'+p.nombre+'" loading="lazy" onerror="this.style.display=\'none\'"></a>'+
             '</div>'+
             '<div class="product-body">'+
               stock +
-              '<div class="product-name">'+p.nombre+'</div>'+
+              '<a href="producto.html" style="text-decoration:none; color:inherit;"><div class="product-name">'+p.nombre+'</div></a>'+
               '<div class="price-row"><span class="price-now">'+fmt(p.precio)+'</span>'+precioAnt+'</div>'+
             '</div>'+
           '</div>'+
