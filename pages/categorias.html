@@ -1,10 +1,10 @@
-Ôªø<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tienda 3V - Categor√≠as</title>
+    <title>Tienda 3V - CategorÌas</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Custom CSS -->
@@ -20,6 +20,7 @@
     
 <body>
     <!-- ===== NAVBAR ===== -->
+        <!-- ===== NAVBAR ===== -->
     <nav class="navbar navbar-expand-lg navbar-tienda sticky-top">
         <div class="container">
             <!-- Logo -->
@@ -110,13 +111,19 @@
                         aria-label="Carrito">
                         <i class="bi bi-cart3"></i>
 
+                        <span class="cart-count">6</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
 
 
-<!-- ===================== CONTENIDO PRINCIPAL ===================== -->
+  <!-- ===================== CONTENIDO PRINCIPAL ===================== -->
 <main class="container-fluid px-3 px-lg-4 py-4">
   <div class="row g-4">
 
-    <!-- ============ SIDEBAR / FILTROS (colapsable en m√≥vil) ============ -->
+    <!-- ============ SIDEBAR / FILTROS (colapsable en mÛvil) ============ -->
     <aside class="col-lg-3">
       <button class="btn btn-primary d-lg-none mb-3 w-100 fw-semibold" type="button"
               data-bs-toggle="collapse" data-bs-target="#filterCollapse" aria-expanded="false" aria-controls="filterCollapse">
@@ -125,17 +132,17 @@
 
       <div class="collapse d-lg-block" id="filterCollapse">
 
-          <!-- Categor√≠as -->
+          <!-- CategorÌas -->
           <div class="filter-card">
-            <h6>Categor√≠as</h6>
+            <h6>CategorÌas</h6>
             <ul class="cat-list" id="catList">
               <li class="active" data-cat="alimentos">Alimentos <span class="count">(124)</span></li>
               <li data-cat="cervezas">Cervezas, Vinos y Licores <span class="count">(85)</span></li>
               <li data-cat="hogar">Hogar <span class="count">(64)</span></li>
-              <li data-cat="ferreteria">Ferreter√≠a <span class="count">(92)</span></li>
+              <li data-cat="ferreteria">FerreterÌa <span class="count">(92)</span></li>
               <li data-cat="bebidas">Bebidas <span class="count">(48)</span></li>
               <li data-cat="belleza">Belleza y cuidado personal <span class="count">(70)</span></li>
-              <li data-cat="m√°s...as">m√°s...as <span class="count">(55)</span></li>
+              <li data-cat="m·s...as">m·s...as <span class="count">(55)</span></li>
             </ul>
           </div>
 
@@ -147,7 +154,7 @@
                 <label class="form-label small text-muted mb-1">Min</label>
                 <input type="number" class="form-control" id="minInput" min="0" max="300" value="0">
               </div>
-              <span class="text-muted pt-3">‚Äî</span>
+              <span class="text-muted pt-3">ó</span>
               <div class="flex-fill">
                 <label class="form-label small text-muted mb-1">Max</label>
                 <input type="number" class="form-control" id="maxInput" min="0" max="300" value="300">
@@ -171,7 +178,7 @@
       </div>
     </aside>
 
-    <!-- ============ CAT√ÅLOGO DE PRODUCTOS ============ -->
+    <!-- ============ CAT¡LOGO DE PRODUCTOS ============ -->
     <section class="col-lg-9">
       <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
         <div>
@@ -191,11 +198,11 @@
       <div class="empty-state d-none" id="emptyState">
         <i class="bi bi-inbox"></i>
         <h5 class="fw-bold">No se encontraron productos</h5>
-        <p class="mb-0">Ajusta los filtros de precio o disponibilidad para ver m√°s resultados.</p>
+        <p class="mb-0">Ajusta los filtros de precio o disponibilidad para ver m·s resultados.</p>
       </div>
 
-      <!-- Paginaci√≥n -->
-      <nav class="mt-4" aria-label="Paginaci√≥n">
+      <!-- PaginaciÛn -->
+      <nav class="mt-4" aria-label="PaginaciÛn">
         <ul class="pagination justify-content-center" id="pagination"></ul>
       </nav>
     </section>
@@ -216,10 +223,10 @@
     <div class="container">
         <div class="footer-content">
 
-            <!-- Tel√©fono -->
+            <!-- TelÈfono -->
             <div class="footer-item">
                 <i class="bi bi-telephone-fill"></i>
-                <span>Ll√°manos: 800-3V-AYUDA (800-382-9832)</span>
+                <span>Ll·manos: 800-3V-AYUDA (800-382-9832)</span>
             </div>
 
             <!-- Correo -->
@@ -230,8 +237,8 @@
 
 
 
-<!-- Toast de confirmaci√≥n -->
-<div class="toast-cart" id="toastCart"><i class="bi bi-check-circle-fill"></i><span id="toastText">A√±adido al carrito</span></div>
+<!-- Toast de confirmaciÛn -->
+<div class="toast-cart" id="toastCart"><i class="bi bi-check-circle-fill"></i><span id="toastText">AÒadido al carrito</span></div>
 
 <!-- Bootstrap JS Bundle -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -240,4 +247,6 @@
   <script src="../js/categorias.js"></script>
 </body>
 </html>
+
+
 
