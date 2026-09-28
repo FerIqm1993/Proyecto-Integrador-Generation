@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 
 <head>
@@ -8,7 +8,8 @@
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Custom CSS -->
-    <link href="../css/style.css" rel="stylesheet">
+    <link href="../css/global.css" rel="stylesheet">
+    <link href="../css/contacto.css" rel="stylesheet">
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <!-- Bootstrap Icons -->
@@ -16,53 +17,100 @@
 </head>
 
 <body>
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg border-bottom py-2 py-lg-3 custom-navbar">
-        <div class="container d-flex align-items-center justify-content-between">
-            <!-- Logo area -->
-            <a class="navbar-brand d-flex align-items-center fw-bold fs-3 m-0" href="#">
-                <img src="../img/logo.png" alt="Logo Tienda 3V" style="height: 50px; width: auto;"
-                    class="me-2 d-none d-lg-block">
-                <span class="brand-text">Tienda 3V</span>
+    
+<body>
+    <!-- ===== NAVBAR ===== -->
+    <nav class="navbar navbar-expand-lg navbar-tienda sticky-top">
+        <div class="container">
+            <!-- Logo -->
+            <a class="navbar-brand d-flex align-items-center gap-2" href="../index.html">
+                <img
+                    src="../img/Logo.png"
+                    alt="Logo Tienda 3V"
+                    class="logo">
+                    
+                <span>Tienda 3V</span>
             </a>
 
-            <!-- Mobile Icons -->
-            <div class="d-flex d-lg-none align-items-center gap-3 mobile-icons">
-                <a href="#" class="text-white fs-5"><i class="bi bi-search"></i></a>
-                <a href="#" class="text-white fs-5"><i class="bi bi-cart3"></i></a>
-                <a href="#" class="text-white fs-5"><i class="bi bi-person"></i></a>
-            </div>
+            <!-- Botón hamburguesa para móvil -->
+            <button
+                class="navbar-toggler"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#menuPrincipal"
+                aria-controls="menuPrincipal"
+                aria-expanded="false"
+                aria-label="Abrir menú">
+                <span class="navbar-toggler-icon"></span>
+            </button>
 
-            <!-- Navbar links -->
-            <div class="collapse navbar-collapse ms-4 d-none d-lg-flex" id="navbarNav">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0 fw-semibold text-dark gap-3">
-                    <li class="nav-item"><a class="nav-link text-dark" href="#">Inicio</a></li>
-                    <li class="nav-item"><a class="nav-link text-dark" href="#">Categorías</a></li>
-                    <li class="nav-item"><a class="nav-link text-dark" href="#">Acerca</a></li>
-                    <li class="nav-item"><a class="nav-link active text-dark fw-bold border-bottom border-dark border-2"
-                            href="#">Contacto</a></li>
+            <!-- Contenido del menú -->
+            <div
+                class="collapse navbar-collapse"
+                id="menuPrincipal">
+                <!-- Links -->
+                <ul class="navbar-nav ms-lg-4 mb-3 mb-lg-0">
+                    <li class="nav-item">
+                        <a
+                            class="nav-link"
+                            href="../index.html">
+                            Inicio
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a
+                            class="nav-link"
+                            href="categorias.html">
+                            Categorías
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a
+                            class="nav-link"
+                            href="acerca.html">
+                            Acerca
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a
+                            class="nav-link active"
+                            href="contacto.html">
+                            Contacto
+                        </a>
+                    </li>
                 </ul>
 
-                <!-- Search -->
-                <form class="d-flex position-relative me-4" style="width: 350px;">
-                    <i class="bi bi-search position-absolute top-50 start-0 translate-middle-y ms-3 text-muted"></i>
-                    <input class="form-control bg-light border-0 ps-5 rounded-3" type="search"
-                        placeholder="Busca abarrotes, lácteos, limpieza y más..." aria-label="Search">
+                <!-- Buscador -->
+                <form
+                    class="search-box ms-lg-auto"
+                    role="search">
+
+                    <i class="bi bi-search"></i>
+                    <input
+                        type="search"
+                        placeholder="Busca abarrotes, lácteos, limpieza y más..."
+                        aria-label="Buscar productos">
                 </form>
 
-                <!-- Icons -->
-                <div class="d-flex align-items-center">
-                    <a href="#" class="text-dark me-3 fs-5"><i class="bi bi-person"></i></a>
-                    <a href="#" class="btn rounded-pill px-3 d-flex align-items-center"
-                        style="background-color: #E8F0FE; color: #1A67D2; border: none;">
-                        <i class="bi bi-cart3 fs-5 me-2"></i>
-                        <span class="badge rounded-circle text-white d-flex align-items-center justify-content-center"
-                            style="background-color: #1A67D2; width: 24px; height: 24px;">6</span>
-                    </a>
-                </div>
-            </div>
-        </div>
-    </nav>
+                <!-- Iconos -->
+                <div class="nav-actions">
+                    <!-- Usuario -->
+                    <button
+                        class="icon-button"
+                        aria-label="Mi cuenta">
+                        <i class="bi bi-person"></i>
+                    </button>
+
+                    <!-- Carrito -->
+                    <button
+                        class="cart-button"
+                        aria-label="Carrito">
+                        <i class="bi bi-cart3"></i>
+
+
 
     <!-- Hero Section -->
     <header class="hero-section text-white py-2 py-lg-5">
@@ -217,7 +265,7 @@
                     <div id="collapseOne" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
                         <div class="accordion-body px-3 pb-3 pt-0 text-muted small">
                             Es muy fácil: agregas los artículos al carrito, seleccionas tu sucursal más cercana,
-                            seleccionas tu horario preferido de recolección y confirmas tu compra. Al llegar, nuestro
+                            seleccionas tu horario preferido de recolección y confirmás... compra. Al llegar, nuestro
                             personal te entregará todo listo directamente en tu auto o área de pickup.
                         </div>
                     </div>
@@ -229,12 +277,12 @@
                         <button class="accordion-button collapsed fw-bold fs-6 px-3 py-2 py-lg-3" type="button"
                             data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false"
                             aria-controls="collapseTwo">
-                            ¿Cuáles son las formas de pago?
+                            ¿Cuáles son las formás... pago?
                         </button>
                     </h2>
                     <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
                         <div class="accordion-body px-3 pb-3 pt-0 text-muted small">
-                            Aceptamos pago seguro con tarjeta de crédito o débito Visa, Mastercard y American Express en
+                            Aceptamos pago seguro con tarjeta de crédito o débito Visa, más...card y American Express en
                             la plataforma, o si lo prefieres, puedes pagar físicamente con efectivo o vales de despensa
                             directo en la sucursal al recoger.
                         </div>
@@ -275,26 +323,32 @@
 
     </main>
 
-    <!-- Footer -->
-    <footer class="mt-auto" style="background-color: #0f172a;">
-        <div class="container py-4">
-            <div class="d-flex flex-column flex-md-row justify-content-center align-items-center gap-4 text-white">
-                <div class="d-flex align-items-center">
-                    <i class="bi bi-telephone fs-5 me-2"></i>
-                    <span>Llámanos: 800-3V-AYUDA (800-382-9832)</span>
-                </div>
-                <div class="d-flex align-items-center">
-                    <i class="bi bi-envelope fs-5 me-2"></i>
-                    <span>contacto@tienda3v.mx</span>
-                </div>
+    <footer class="footer-contacto" id="contacto">
+    <div class="container">
+        <div class="footer-content">
+
+            <!-- Teléfono -->
+            <div class="footer-item">
+                <i class="bi bi-telephone-fill"></i>
+                <span>Llámanos: 800-3V-AYUDA (800-382-9832)</span>
             </div>
+
+            <!-- Correo -->
+            <div class="footer-item">
+                <i class="bi bi-envelope-fill"></i>
+                <span>contacto@tienda3v.mx</span>
+            </div>
+
         </div>
+    </div>
     </footer>
 
     <!-- Bootstrap Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <!-- Custom JS -->
-    <script type="module" src="../js/main.js"></script>
+    <script src="../js/global.js"></script>
+    <script src="../js/contacto.js"></script>
 </body>
 
 </html>
+

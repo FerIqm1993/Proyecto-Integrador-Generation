@@ -1,4 +1,4 @@
-export function initContactForm() {
+document.addEventListener('DOMContentLoaded', () => {
     const contactForm = document.getElementById('contactForm');
     const formAlert = document.getElementById('formAlert');
 
@@ -31,5 +31,4 @@ export function initContactForm() {
             }
         });
     }
-}
-
+});
