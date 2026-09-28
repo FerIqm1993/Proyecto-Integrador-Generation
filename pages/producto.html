@@ -136,7 +136,7 @@
                         <input type="text" class="form-control text-center fw-bold" value="1" readonly>
                         <button class="btn btn-outline-secondary" type="button">+</button>
                     </div>
-                    <button class="btn btn-primary btn-lg flex-grow-1 fw-bold text-white shadow-sm" onclick="alert('Producto añadido al carrito')">
+                    <button class="btn btn-primary btn-lg flex-grow-1 fw-bold text-white shadow-sm" onclick="addProductToCart({id: 'mock1', name: 'Leche entera Cremosa 1L', price: 28.50, img: 'https://images.unsplash.com/photo-1550583724-b2692b85b150?w=500', quantity: parseInt(document.querySelector('.input-group input').value || 1)})">
                         <i class="bi bi-cart-plus me-2"></i> Añadir al Carrito
                     </button>
                 </div>

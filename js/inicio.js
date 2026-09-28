@@ -21,7 +21,7 @@ const products = [
   { id: 8, name: "Agua Mineral 1.5L", category: "Bebidas", price: 16.50, originalPrice: 20.00, tag: "Disponible", image: "https://images.unsplash.com/photo-1546924282-0f057bc9dd5a?auto=format&fit=crop&w=600&q=80" }
 ];
 
-let cart = [];
+
 let currentCategory = "Todos";
 
 // Inicializar Aplicación cuando cargue el DOM
@@ -116,46 +116,43 @@ function filterByCategory(category) {
 function addToCart(productId) {
   const item = products.find(p => p.id === productId);
   if (!item) return;
-
-  const existing = cart.find(p => p.id === productId);
-  if (existing) {
-    existing.qty += 1;
-  } else {
-    cart.push({ ...item, qty: 1 });
-  }
-
+  
+  // Llama a la función global para sincronizar con localStorage
+  addProductToCart({
+    id: item.id,
+    name: item.name,
+    price: item.price,
+    img: item.img,
+    quantity: 1
+  });
+  
   updateCartUI();
 }
 
 // 2. Cambiar cantidad uno por uno (Sumar +1 o Restar -1)
 function changeQuantity(productId, delta) {
-  const item = cart.find(p => p.id === productId);
+  let cart = getCart();
+  const item = cart.find(p => p.id == productId);
   if (!item) return;
-
-  item.qty += delta;
-
-  // Si la cantidad llega a 0, se elimina automáticamente del carrito
-  if (item.qty <= 0) {
-    cart = cart.filter(p => p.id !== productId);
-  }
-
+  updateQuantity(productId, item.quantity + delta);
   updateCartUI();
 }
 
 // 3. Quitar por completo el producto
-function removeFromCart(productId) {
-  cart = cart.filter(item => item.id !== productId);
+function removeFromCartLocal(productId) {
+  removeFromCartLocal(productId);
   updateCartUI();
 }
 
 // 4. Actualizar la vista del carrito
 function updateCartUI() {
+  let cart = getCart(); // desde global.js
   const cartCount = document.getElementById("cartCount");
   const cartItemsList = document.getElementById("cartItemsList");
   const cartTotal = document.getElementById("cartTotal");
 
-  const totalItems = cart.reduce((acc, item) => acc + item.qty, 0);
-  const totalPrice = cart.reduce((acc, item) => acc + (item.price * item.qty), 0);
+  const totalItems = cart.reduce((acc, item) => acc + item.quantity, 0);
+  const totalPrice = cart.reduce((acc, item) => acc + (item.price * item.quantity), 0);
 
   if (cartCount) cartCount.textContent = totalItems;
   if (cartTotal) cartTotal.textContent = `$${totalPrice.toFixed(2)}`;
@@ -178,12 +175,12 @@ function updateCartUI() {
       <div class="d-flex align-items-center gap-2">
         <div class="cart-qty-controls d-flex align-items-center border rounded-pill bg-light px-1">
           <button class="btn btn-sm text-secondary p-0 px-2 fw-bold" onclick="changeQuantity(${item.id}, -1)">–</button>
-          <span class="px-2 fw-bold small">${item.qty}</span>
+          <span class="px-2 fw-bold small">${item.quantity}</span>
           <button class="btn btn-sm text-secondary p-0 px-2 fw-bold" onclick="changeQuantity(${item.id}, 1)">+</button>
         </div>
 
         <!-- Botón de basurero para eliminar de golpe -->
-        <button class="btn btn-sm text-danger p-0 ms-1" onclick="removeFromCart(${item.id})" title="Eliminar todo">
+        <button class="btn btn-sm text-danger p-0 ms-1" onclick="removeFromCartLocal(${item.id})" title="Eliminar todo">
           <i class="fa-regular fa-trash-can"></i>
         </button>
       </div>

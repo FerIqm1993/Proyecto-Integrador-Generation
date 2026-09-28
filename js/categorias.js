@@ -266,11 +266,18 @@
   grid.addEventListener("click", function(e){
     var btn = e.target.closest(".add-btn");
     if (!btn) return;
-    state.carrito++;
-    cartBadge.textContent = state.carrito;
-    cartBadge.classList.remove("pop");
-    void cartBadge.offsetWidth; // reiniciar animación
-    cartBadge.classList.add("pop");
+    
+    // Buscar producto
+    var prod = data.find(function(p){ return p.id === btn.dataset.id; });
+    if(prod) {
+        addProductToCart({
+            id: prod.id,
+            name: prod.nombre,
+            price: prod.precio,
+            img: IMG[prod.img],
+            quantity: 1
+        });
+    }
 
     // Botón pasa a check verde momentáneamente
     btn.classList.add("added");
@@ -281,7 +288,6 @@
     }, 900);
 
     // Toast de confirmación
-    var prod = PRODUCTOS.find(function(p){ return p.id === parseInt(btn.dataset.id,10); });
     toastText.textContent = (prod ? prod.nombre : "Producto") + " añadido al carrito";
     toast.classList.add("show");
     clearTimeout(toastTimer);

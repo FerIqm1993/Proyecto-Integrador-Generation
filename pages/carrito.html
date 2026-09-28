@@ -108,75 +108,7 @@
                                 </tr>
                             </thead>
                             <tbody id="cart-items">
-                                <!-- Producto 1 -->
-                                <tr data-price="45.90">
-                                    <td class="ps-4 py-3">
-                                        <div class="d-flex align-items-center gap-3">
-                                            <div class="bg-light p-2 rounded-3 border" style="width: 50px; height: 50px; display: flex; align-items: center; justify-content: center;">
-                                                <img src="https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=100" alt="Aceite" style="max-height: 100%; object-fit: contain;">
-                                            </div>
-                                            <span class="fw-semibold text-dark" style="font-size: 14px;">Aceite vegetal Pureza 1L</span>
-                                        </div>
-                                    </td>
-                                    <td class="text-secondary" style="font-size: 14px;">$45.90</td>
-                                    <td>
-                                        <div class="input-group input-group-sm quantity-control border rounded bg-light" style="width: 100px;">
-                                            <button class="btn btn-light border-0 text-dark px-2 btn-minus" type="button">-</button>
-                                            <input type="text" class="form-control text-center border-0 bg-light px-0 quantity-input" value="2" readonly style="font-size: 14px;">
-                                            <button class="btn btn-light border-0 text-dark px-2 btn-plus" type="button">+</button>
-                                        </div>
-                                    </td>
-                                    <td class="fw-bold text-primary subtotal-text" style="font-size: 14px;">$91.80</td>
-                                    <td>
-                                        <button class="btn btn-link text-danger p-0 btn-delete" type="button"><i class="bi bi-trash"></i></button>
-                                    </td>
-                                </tr>
-                                <!-- Producto 2 -->
-                                <tr data-price="28.50">
-                                    <td class="ps-4 py-3">
-                                        <div class="d-flex align-items-center gap-3">
-                                            <div class="bg-light p-2 rounded-3 border" style="width: 50px; height: 50px; display: flex; align-items: center; justify-content: center;">
-                                                <img src="https://images.unsplash.com/photo-1550583724-b2692b85b150?w=100" alt="Leche" style="max-height: 100%; object-fit: contain;">
-                                            </div>
-                                            <span class="fw-semibold text-dark" style="font-size: 14px;">Leche entera Cremosa 1L</span>
-                                        </div>
-                                    </td>
-                                    <td class="text-secondary" style="font-size: 14px;">$28.50</td>
-                                    <td>
-                                        <div class="input-group input-group-sm quantity-control border rounded bg-light" style="width: 100px;">
-                                            <button class="btn btn-light border-0 text-dark px-2 btn-minus" type="button">-</button>
-                                            <input type="text" class="form-control text-center border-0 bg-light px-0 quantity-input" value="3" readonly style="font-size: 14px;">
-                                            <button class="btn btn-light border-0 text-dark px-2 btn-plus" type="button">+</button>
-                                        </div>
-                                    </td>
-                                    <td class="fw-bold text-primary subtotal-text" style="font-size: 14px;">$85.50</td>
-                                    <td>
-                                        <button class="btn btn-link text-danger p-0 btn-delete" type="button"><i class="bi bi-trash"></i></button>
-                                    </td>
-                                </tr>
-                                <!-- Producto 3 -->
-                                <tr data-price="89.00">
-                                    <td class="ps-4 py-3">
-                                        <div class="d-flex align-items-center gap-3">
-                                            <div class="bg-light p-2 rounded-3 border" style="width: 50px; height: 50px; display: flex; align-items: center; justify-content: center;">
-                                                <img src="https://images.unsplash.com/photo-1585670149071-a59132223849?w=100" alt="Detergente" style="max-height: 100%; object-fit: contain;">
-                                            </div>
-                                            <span class="fw-semibold text-dark" style="font-size: 14px;">Detergente Multiusos 3kg</span>
-                                        </div>
-                                    </td>
-                                    <td class="text-secondary" style="font-size: 14px;">$89.00</td>
-                                    <td>
-                                        <div class="input-group input-group-sm quantity-control border rounded bg-light" style="width: 100px;">
-                                            <button class="btn btn-light border-0 text-dark px-2 btn-minus" type="button">-</button>
-                                            <input type="text" class="form-control text-center border-0 bg-light px-0 quantity-input" value="1" readonly style="font-size: 14px;">
-                                            <button class="btn btn-light border-0 text-dark px-2 btn-plus" type="button">+</button>
-                                        </div>
-                                    </td>
-                                    <td class="fw-bold text-primary subtotal-text" style="font-size: 14px;">$89.00</td>
-                                    <td>
-                                        <button class="btn btn-link text-danger p-0 btn-delete" type="button"><i class="bi bi-trash"></i></button>
-                                    </td>
-                                </tr>
+                                <!-- Los productos se renderizarán dinámicamente mediante JS -->
                             </tbody>
                         </table>
                     </div>
@@ -190,18 +122,18 @@
                     
                     <div class="d-flex justify-content-between mb-2 text-muted" style="font-size: 14px;">
                         <span>Subtotal</span>
-                        <span id="summary-subtotal">$206.30</span>
+                        <span id="summary-subtotal">$0.00</span>
                     </div>
                     <div class="d-flex justify-content-between mb-3 text-success" style="font-size: 14px;">
                         <span>Descuento cupón</span>
-                        <span id="summary-discount">-$25.00</span>
+                        <span id="summary-discount">-$0.00</span>
                     </div>
                     
                     <hr class="text-muted opacity-25 my-3">
 
                     <div class="d-flex justify-content-between align-items-center mb-4">
                         <span class="fw-bold text-dark fs-5">Total a pagar</span>
-                        <span class="fw-bold text-dark fs-4" id="summary-total">$181.30</span>
+                        <span class="fw-bold text-dark fs-4" id="summary-total">$0.00</span>
                     </div>
 
                     <!-- Sección Pickup -->
