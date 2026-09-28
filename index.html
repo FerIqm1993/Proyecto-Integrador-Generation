@@ -8,6 +8,7 @@
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Custom CSS -->
+    <link href="css/inicio.css" rel="stylesheet">
     <link href="css/global.css" rel="stylesheet">
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
@@ -86,14 +87,103 @@
     </nav>
 
     <!-- Main Content -->
-    <main class="flex-grow-1 d-flex flex-column justify-content-center align-items-center text-center py-5">
-        <h1 class="display-4 fw-bold mb-4" style="color: var(--primary);">Bienvenido a Tienda 3V</h1>
-        <p class="lead mb-5">Encuentra los mejores productos a los mejores precios.</p>
-        <div class="d-flex gap-3">
-            <a href="pages/categorias.html" class="btn btn-primary btn-lg px-4">Ver Categorías</a>
-            <a href="pages/contacto.html" class="btn btn-outline-primary btn-lg px-4">Contáctanos</a>
+    <!-- BANNER PRINCIPAL (HERO) - RESTAURADO A COLOR OSCURO -->
+<section class="hero-section py-4 py-lg-5 text-white">
+  <div class="container-fluid container-xl">
+    <div class="row align-items-center gy-4">
+      
+      <!-- COLUMNA IZQUIERDA: Texto y Botón -->
+      <div class="col-12 col-lg-7 text-start">
+        <span class="badge bg-amber text-dark fw-bold mb-2 px-3 py-2 text-uppercase d-inline-block">Gran Ahorro Mexicano</span>
+        <h1 class="display-5 fw-extrabold my-2 text-white">Jueves de ofertas: hasta –30%</h1>
+        <p class="lead mb-4 text-light-gray fs-6 fs-md-5">
+          Encuentra canasta básica, artículos del hogar y cuidado personal con los precios más bajos y listos para recoger en sucursal hoy mismo.
+        </p>
+        <a href="#ofertas" class="btn btn-warning-custom btn-lg fw-bold px-4 shadow-sm">Ver ofertas</a>
+      </div>
+
+      <!-- COLUMNA DERECHA: Imagen de la oferta -->
+      <div class="col-12 col-lg-5 text-center text-lg-end">
+        <img src="img/ofertas.jpeg" alt="Jueves de PolliOfertas" class="hero-offer-img img-fluid rounded-4 shadow">
+
+    </div>
+  </div>
+</section>
+
+
+  <!-- BARRA DE CATEGORÍAS (PILDRAS / BOTONES) -->
+  <section class="py-3 bg-white border-bottom shadow-sm overflow-hidden">
+    <div class="container-fluid container-xl">
+      <div class="d-flex gap-2 overflow-auto py-1 scrollbar-hidden" id="pillsContainer">
+        <!-- Renderizado dinámico vía JS -->
+      </div>
+    </div>
+  </section>
+
+  <!-- SECCIÓN DE BENEFICIOS / VENTAJAS -->
+  <section class="py-4 bg-light-blue" id="ventajas">
+    <div class="container-fluid container-xl">
+      <div class="row g-3 text-center text-md-start">
+        <div class="col-md-4">
+          <div class="d-flex align-items-center gap-3 p-2">
+            <i class="fa-solid fa-dollar-sign fs-2 text-primary"></i>
+            <div>
+              <h6 class="fw-bold mb-0">Los Precios Más Bajos</h6>
+              <small class="text-muted">Ahorro en tus compras habituales</small>
+            </div>
+          </div>
         </div>
-    </main>
+        <div class="col-md-4">
+          <div class="d-flex align-items-center gap-3 p-2">
+            <i class="fa-solid fa-store fs-2 text-primary"></i>
+            <div>
+              <h6 class="fw-bold mb-0">Recoge en Sucursal</h6>
+              <small class="text-muted">Listo en la sucursal seleccionada en 15 min</small>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="d-flex align-items-center gap-3 p-2">
+            <i class="fa-solid fa-shield-halved fs-2 text-primary"></i>
+            <div>
+              <h6 class="fw-bold mb-0">Compra 100% Segura</h6>
+              <small class="text-muted">Pago seguro con tarjeta o contra entrega</small>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BANNER DE RECOGER EN SUCURSAL -->
+  <section class="py-4 bg-dark-blue text-white">
+    <div class="container-fluid container-xl">
+      <div class="row align-items-center gy-3 text-center text-md-start">
+        <div class="col-md-8">
+          <h4 class="fw-bold mb-1">¿Prefieres ahorrar tiempo y filas?</h4>
+          <p class="mb-0 text-light-gray">Ordena en línea y recoge tu despensa en minutos. Contamos con estacionamiento exclusivo y rápida entrega en tu cajuela. ¡Gratis!</p>
+        </div>
+        <div class="col-md-4 text-md-end">
+          <button class="btn btn-primary-custom btn-lg fw-semibold" onclick="alert('link: acerca de -> nuestras sucursales')">Recoge en sucursal</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRODUCTOS / OFERTAS -->
+  <section class="py-5" id="ofertas">
+    <div class="container-fluid container-xl">
+      <div class="d-flex align-items-center justify-content-between mb-4">
+        <h3 class="fw-bold m-0"><i class="fa-solid fa-fire text-danger me-2"></i>Las Ofertas de la Semana</h3>
+        <button class="btn btn-link text-primary fw-semibold p-0 text-decoration-none" id="resetFilterBtn">Ver todo</button>
+      </div>
+
+      <!-- Grid de Productos -->
+      <div class="row g-3 g-md-4" id="productsGrid">
+        <!-- Render dinámico desde JS -->
+      </div>
+    </div>
+  </section>
 
     <footer class="footer-contacto" id="contacto">
     <div class="container">
@@ -115,9 +205,29 @@
     </div>
     </footer>
 
+    <!-- CANVAS LATERAL DEL CARRITO -->
+  <div class="offcanvas offcanvas-end" tabindex="-1" id="cartOffcanvas" aria-labelledby="cartOffcanvasLabel">
+    <div class="offcanvas-header bg-dark-blue text-white">
+      <h5 class="offcanvas-title fw-bold" id="cartOffcanvasLabel"><i class="fa-solid fa-cart-shopping me-2"></i>Tu Carrito</h5>
+      <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body d-flex flex-column">
+      <div id="cartItemsList" class="flex-grow-1 overflow-auto">
+        <!-- Elementos agregados dinámicamente -->
+      </div>
+      <div class="border-top pt-3 mt-3">
+        <div class="d-flex justify-content-between fs-5 fw-bold mb-3">
+          <span>Total:</span>
+          <span id="cartTotal">$0.00</span>
+        </div>
+        <button class="btn btn-primary-custom w-100 py-2 fw-bold" id="checkoutBtn">Proceder al Pago</button>
+      </div>
+    </div>
+
     <!-- Bootstrap Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <!-- Custom JS -->
+    <script src="js/inicio.js"></script>
     <script src="js/global.js"></script>
 </body>
 
