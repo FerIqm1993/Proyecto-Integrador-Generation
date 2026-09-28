@@ -15,6 +15,7 @@
 
     /* Compatibility variables */
     --primary: var(--azul);
+    --bs-primary: var(--azul);
     --primary-dark: var(--Marino);
     --primary-soft: rgba(74, 144, 226, 0.12);
     --bg: var(--crema);
@@ -45,6 +46,9 @@ body {
     color: var(--gris-oscuro);
     background-color: var(--crema);
     line-height: 1.6;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
 }
 
 /* ==================== NAVBAR ========================== */
@@ -224,6 +228,7 @@ footer {
 }
 
 .footer-contacto {
+    margin-top: auto;
     background-color: var(--azul);
     color: #ffffff;
     padding: 18px 0;
@@ -329,3 +334,6 @@ footer {
 
 @keyframes badgePop{ 0%{transform:scale(1)} 40%{transform:scale(1.5)} 100%{transform:scale(1)} }
 .pop { animation: badgePop .45s ease; }
+
+
+
