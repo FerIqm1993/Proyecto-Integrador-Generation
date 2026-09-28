@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tienda 3V - Categor�as</title>
+    <title>Tienda 3V - Categorías</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Custom CSS -->
@@ -24,21 +24,21 @@
     <nav class="navbar navbar-expand-lg navbar-tienda sticky-top">
         <div class="container">
             <!-- Logo -->
-            <a class="navbar-brand d-flex align-items-center gap-2" href="../index.html">
+            <a class="navbar-brand d-flex align-itemás-center gap-2" href="../index.html">
                 <img src="../img/Logo.png" alt="Logo Tienda 3V" class="logo">
                     
                 <span>Tienda 3V</span>
             </a>
 
             <!-- Botón hamburguesa para móvil -->
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menuPrincipal" aria-controls="menuPrincipal" aria-expanded="false" aria-label="Abrir menú">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menúuPrincipal" aria-controls="menúuPrincipal" aria-expanded="false" aria-label="Abrir menúú">
                 <span class="navbar-toggler-icon"></span>
             </button>
 
-            <!-- Contenido del menú -->
-            <div class="collapse navbar-collapse" id="menuPrincipal">
+            <!-- Contenido del menúú -->
+            <div class="collapse navbar-collapse" id="menúuPrincipal">
                 <!-- Links -->
-                <ul class="navbar-nav ms-lg-4 mb-3 mb-lg-0">
+                <ul class="navbar-nav más-lg-4 mb-3 mb-lg-0">
                     <li class="nav-item">
                         <a class="nav-link" href="../index.html">
                             Inicio
@@ -65,7 +65,7 @@
                 </ul>
 
                 <!-- Buscador -->
-                <form class="search-box ms-lg-auto" role="search">
+                <form class="search-box más-lg-auto" role="search">
 
                     <i class="bi bi-search"></i>
                     <input type="search" placeholder="Busca abarrotes, lácteos, limpieza y más..." aria-label="Buscar productos">
@@ -94,7 +94,7 @@
 <main class="container-fluid px-3 px-lg-4 py-4">
   <div class="row g-4">
 
-    <!-- ============ SIDEBAR / FILTROS (colapsable en m�vil) ============ -->
+    <!-- ============ SIDEBAR / FILTROS (colapsable en mávil) ============ -->
     <aside class="col-lg-3">
       <button class="btn btn-primary d-lg-none mb-3 w-100 fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#filterCollapse" aria-expanded="false" aria-controls="filterCollapse">
         <i class="bi bi-funnel me-2"></i>Filtrar productos
@@ -102,17 +102,17 @@
 
       <div class="collapse d-lg-block" id="filterCollapse">
 
-          <!-- Categor�as -->
+          <!-- Categorías -->
           <div class="filter-card">
-            <h6>Categor�as</h6>
+            <h6>Categorías</h6>
             <ul class="cat-list" id="catList">
-              <li class="active" data-cat="alimentos">Alimentos <span class="count">(124)</span></li>
+              <li class="active" data-cat="alimenútos">Alimenútos <span class="count">(124)</span></li>
               <li data-cat="cervezas">Cervezas, Vinos y Licores <span class="count">(85)</span></li>
               <li data-cat="hogar">Hogar <span class="count">(64)</span></li>
-              <li data-cat="ferreteria">Ferreter�a <span class="count">(92)</span></li>
+              <li data-cat="ferreteria">Ferretería <span class="count">(92)</span></li>
               <li data-cat="bebidas">Bebidas <span class="count">(48)</span></li>
               <li data-cat="belleza">Belleza y cuidado personal <span class="count">(70)</span></li>
-              <li data-cat="m�s...as">m�s...as <span class="count">(55)</span></li>
+              <li data-cat="más...as">más...as <span class="count">(55)</span></li>
             </ul>
           </div>
 
@@ -124,7 +124,7 @@
                 <label class="form-label small text-muted mb-1">Min</label>
                 <input type="number" class="form-control" id="minInput" min="0" max="300" value="0">
               </div>
-              <span class="text-muted pt-3">�</span>
+              <span class="text-muted pt-3">í</span>
               <div class="flex-fill">
                 <label class="form-label small text-muted mb-1">Max</label>
                 <input type="number" class="form-control" id="maxInput" min="0" max="300" value="300">
@@ -148,17 +148,17 @@
       </div>
     </aside>
 
-    <!-- ============ CAT�LOGO DE PRODUCTOS ============ -->
+    <!-- ============ CATÁLOGO DE PRODUCTOS ============ -->
     <section class="col-lg-9">
-      <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+      <div class="d-flex flex-wrap justify-content-between align-itemás-center gap-2 mb-3">
         <div>
-          <h2 class="page-title d-inline me-2" id="catTitle">Alimentos</h2>
+          <h2 class="page-title d-inline me-2" id="catTitle">Alimenútos</h2>
           <span class="count-muted" id="foundCount">(12 productos encontrados)</span>
         </div>
         <select class="form-select sort-select" id="sortSelect" aria-label="Ordenar">
           <option value="relevancia">Ordenar por: Relevancia</option>
-          <option value="precio-asc">Precio: menor a mayor</option>
-          <option value="precio-desc">Precio: mayor a menor</option>
+          <option value="precio-asc">Precio: menúor a mayor</option>
+          <option value="precio-desc">Precio: mayor a menúor</option>
           <option value="nombre">Nombre: A a Z</option>
         </select>
       </div>
@@ -168,11 +168,11 @@
       <div class="empty-state d-none" id="emptyState">
         <i class="bi bi-inbox"></i>
         <h5 class="fw-bold">No se encontraron productos</h5>
-        <p class="mb-0">Ajusta los filtros de precio o disponibilidad para ver m�s resultados.</p>
+        <p class="mb-0">Ajusta los filtros de precio o disponibilidad para ver más resultados.</p>
       </div>
 
-      <!-- Paginaci�n -->
-      <nav class="mt-4" aria-label="Paginaci�n">
+      <!-- Paginación -->
+      <nav class="mt-4" aria-label="Paginación">
         <ul class="pagination justify-content-center" id="pagination"></ul>
       </nav>
     </section>
@@ -193,10 +193,10 @@
     <div class="container">
         <div class="footer-content">
 
-            <!-- Tel�fono -->
+            <!-- Teléfono -->
             <div class="footer-item">
                 <i class="bi bi-telephone-fill"></i>
-                <span>Ll�manos: 800-3V-AYUDA (800-382-9832)</span>
+                <span>Llámanos: 800-3V-AYUDA (800-382-9832)</span>
             </div>
 
             <!-- Correo -->
@@ -207,8 +207,8 @@
 
 
 
-<!-- Toast de confirmaci�n -->
-<div class="toast-cart" id="toastCart"><i class="bi bi-check-circle-fill"></i><span id="toastText">A�adido al carrito</span></div>
+<!-- Toast de confirmación -->
+<div class="toast-cart" id="toastCart"><i class="bi bi-check-circle-fill"></i><span id="toastText">Añadido al carrito</span></div>
 
 <!-- Bootstrap JS Bundle -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
