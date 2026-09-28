@@ -275,3 +275,50 @@ body {
     font-size: 1.8rem;
   }
 }
+
+/* Propuesta 2: Botón Outline Dinámico */
+.btn-outline-dynamic {
+  position: relative;
+  background-color: transparent;
+  border: 2px solid var(--blanco);
+  color: var(--blanco);
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  overflow: hidden;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  transition: color 0.3s ease;
+  z-index: 1;
+  text-decoration: none;
+}
+
+.btn-outline-dynamic::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0%;
+  height: 100%;
+  background-color: var(--Marino);
+  transition: width 0.4s ease;
+  z-index: -1;
+}
+
+.btn-outline-dynamic:hover {
+  color: var(--blanco);
+  border-color: var(--Marino);
+}
+
+.btn-outline-dynamic:hover::before {
+  width: 100%;
+}
+
+.btn-outline-dynamic .btn-icon {
+  transition: transform 0.3s ease;
+}
+
+.btn-outline-dynamic:hover .btn-icon {
+  transform: translateX(4px);
+}
