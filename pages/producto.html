@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tienda 3V - Detalle de Producto</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="../css/global.css" rel="stylesheet">
+    <link href="../css/categorias.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+</head>
+
+<body>
+    
+<body>
+    <!-- ===== NAVBAR ===== -->
+        <!-- ===== NAVBAR ===== -->
+    <nav class="navbar navbar-expand-lg navbar-tienda sticky-top">
+        <div class="container">
+            <!-- Logo -->
+            <a class="navbar-brand d-flex align-items-center gap-2" href="../index.html">
+                <img src="../img/Logo.png" alt="Logo Tienda 3V" class="logo">
+                    
+                <span>Tienda 3V</span>
+            </a>
+
+            <!-- Botón hamburguesa para móvil -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menuPrincipal" aria-controls="menuPrincipal" aria-expanded="false" aria-label="Abrir menú">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <!-- Contenido del menú -->
+            <div class="collapse navbar-collapse" id="menuPrincipal">
+                <!-- Links -->
+                <ul class="navbar-nav ms-lg-4 mb-3 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link" href="../index.html">
+                            Inicio
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="categorias.html">
+                            Categorías
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="acerca.html">
+                            Acerca
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="contacto.html">
+                            Contacto
+                        </a>
+                    </li>
+                </ul>
+
+                <!-- Buscador -->
+                <form class="search-box más-lg-auto" role="search">
+
+                    <i class="bi bi-search"></i>
+                    <input type="search" placeholder="Busca abarrotes, lácteos, limpieza y más..." aria-label="Buscar productos">
+                </form>
+
+                <!-- Iconos -->
+                <div class="nav-actions">
+                    <!-- Usuario -->
+                    <button type="button" class="icon-button" aria-label="Mi cuenta">
+                        <i class="bi bi-person"></i>
+                    </button>
+
+                    <!-- Carrito -->
+                    <button type="button" class="cart-button" aria-label="Carrito" onclick="window.location.href='carrito.html'">
+                        <i class="bi bi-cart3"></i>
+
+                        <span class="cart-count">6</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ============ DETALLE DE PRODUCTO ============ -->
+    <div class="container my-5">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="../index.html">Inicio</a></li>
+                <li class="breadcrumb-item"><a href="categorias.html">Categorías</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Detalle de Producto</li>
+            </ol>
+        </nav>
+
+        <div class="row gx-5 mt-4">
+            <!-- Imagen del Producto -->
+            <div class="col-md-6 mb-4">
+                <div class="card border-0 shadow-sm rounded-4 overflow-hidden h-100 d-flex justify-content-center align-items-center p-4 bg-white">
+                    <img src="https://images.unsplash.com/photo-1550583724-b2692b85b150?w=500" alt="Producto de ejemplo" class="img-fluid" style="max-height: 400px; object-fit: contain;">
+                </div>
+            </div>
+
+            <!-- Detalles del Producto -->
+            <div class="col-md-6">
+                <span class="badge bg-primary text-white mb-2 px-3 py-2">Lácteos</span>
+                <h1 class="fw-bold mb-3 text-dark">Leche entera Cremosa 1L</h1>
+                
+                <div class="d-flex align-items-center gap-2 mb-3">
+                    <div class="text-warning">
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-half"></i>
+                    </div>
+                    <span class="text-muted">(124 opiniones)</span>
+                </div>
+
+                <h2 class="text-primary fw-bold mb-4">$28.50 <small class="text-muted fs-6 fw-normal">MXN</small></h2>
+
+                <p class="text-secondary mb-4">
+                    Leche 100% pura de vaca, ultrapasteurizada y enriquecida con vitaminas A y D. Ideal para el desayuno de toda la familia. Conservar en un lugar fresco y seco. Una vez abierto, manténgase en refrigeración.
+                </p>
+
+                <!-- Controles de Carrito -->
+                <div class="d-flex align-items-center gap-3 mb-4">
+                    <div class="input-group" style="width: 120px;">
+                        <button class="btn btn-outline-secondary" type="button">-</button>
+                        <input type="text" class="form-control text-center fw-bold" value="1" readonly>
+                        <button class="btn btn-outline-secondary" type="button">+</button>
+                    </div>
+                    <button class="btn btn-primary btn-lg flex-grow-1 fw-bold text-white shadow-sm" onclick="addProductToCart({id: 'mock1', name: 'Leche entera Cremosa 1L', price: 28.50, img: 'https://images.unsplash.com/photo-1550583724-b2692b85b150?w=500', quantity: parseInt(document.querySelector('.input-group input').value || 1)})">
+                        <i class="bi bi-cart-plus me-2"></i> Añadir al Carrito
+                    </button>
+                </div>
+
+                <!-- Info Adicional -->
+                <div class="card bg-light border-0 rounded-3 p-3 mt-4">
+                    <div class="d-flex align-items-center gap-2 mb-2">
+                        <i class="bi bi-truck text-primary fs-5"></i>
+                        <span class="fw-semibold">Recoge en sucursal disponible</span>
+                    </div>
+                    <div class="d-flex align-items-center gap-2">
+                        <i class="bi bi-shield-check text-primary fs-5"></i>
+                        <span class="fw-semibold">Compra 100% segura</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<footer class="footer-contacto" id="contacto">
+    <div class="container">
+        <div class="footer-content">
+
+            <!-- Teléfono -->
+            <div class="footer-item">
+                <i class="bi bi-telephone-fill"></i>
+                <span>Llámanos: 800-3V-AYUDA (800-382-9832)</span>
+            </div>
+
+            <!-- Correo -->
+            <div class="footer-item">
+                <i class="bi bi-envelope-fill"></i>
+                <span>contacto@tienda3v.mx</span>
+            </div>
+
+
+
+<!-- Toast de confirmación -->
+<div class="toast-cart" id="toastCart"><i class="bi bi-check-circle-fill"></i><span id="toastText">Añadido al carrito</span></div>
+
+<!-- Bootstrap JS Bundle -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script src="../js/global.js"></script>
+  <script src="../js/categorias.js"></script>
+</body>
+</html>
+
+
+

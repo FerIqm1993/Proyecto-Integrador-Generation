@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tienda 3V - Iniciar Sesión</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="../css/global.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+</head>
+
+<body class="d-flex flex-column min-vh-100">
+    <!-- ===== NAVBAR ===== -->
+    <nav class="navbar navbar-expand-lg navbar-tienda sticky-top">
+        <div class="container">
+            <!-- Logo -->
+            <a class="navbar-brand d-flex align-items-center gap-2" href="../index.html">
+                <img src="../img/Logo.png" alt="Logo Tienda 3V" class="logo">
+                <span>Tienda 3V</span>
+            </a>
+
+            <!-- Botón hamburguesa para móvil -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menuPrincipal" aria-controls="menuPrincipal" aria-expanded="false" aria-label="Abrir menú">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <!-- Contenido del menú -->
+            <div class="collapse navbar-collapse" id="menuPrincipal">
+                <!-- Links -->
+                <ul class="navbar-nav ms-lg-4 mb-3 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link" href="../index.html">Inicio</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="categorias.html">Categorías</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="acerca.html">Acerca</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="contacto.html">Contacto</a>
+                    </li>
+                </ul>
+
+                <!-- Buscador -->
+                <form class="search-box ms-lg-auto" role="search">
+                    <i class="bi bi-search"></i>
+                    <input type="search" placeholder="Busca abarrotes, lácteos, limpieza y más..." aria-label="Buscar productos">
+                </form>
+
+                <!-- Iconos -->
+                <div class="nav-actions">
+                    <!-- Usuario -->
+                    <a href="login.html" class="icon-button" aria-label="Mi cuenta" style="color: inherit; text-decoration: none;">
+                        <i class="bi bi-person"></i>
+                    </a>
+
+                    <!-- Carrito -->
+                    <button type="button" class="cart-button" aria-label="Carrito" onclick="window.location.href='carrito.html'">
+                        <i class="bi bi-cart3"></i>
+                        <span class="cart-count">6</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content: Login Form -->
+    <main class="flex-grow-1 d-flex flex-column justify-content-center align-items-center py-5">
+        <div class="container" style="max-width: 500px;">
+            <h2 class="text-center mb-4" style="color: var(--primary);">Iniciar Sesión</h2>
+            <div class="card shadow-sm">
+                <div class="card-body p-4">
+                    <form>
+                        <div class="mb-3">
+                            <label for="correo" class="form-label">Correo Electrónico</label>
+                            <input type="email" class="form-control" id="correo" placeholder="juan@correo.com" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Contraseña</label>
+                            <input type="password" class="form-control" id="password" placeholder="********" required>
+                        </div>
+
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <a href="#" class="text-decoration-none">¿Olvidaste tu contraseña?</a>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary w-100 mb-3">Iniciar sesión</button>
+                    </form>
+
+                    <div class="text-center mt-3">
+                        <p class="mb-2">¿No tienes cuenta?</p>
+                        <a href="registro.html" class="btn btn-outline-secondary w-100">Crear cuenta</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer-contacto mt-auto" id="contacto">
+        <div class="container">
+            <div class="footer-content">
+                <!-- Teléfono -->
+                <div class="footer-item">
+                    <i class="bi bi-telephone-fill"></i>
+                    <span>Llámanos: 800-3V-AYUDA (800-382-9832)</span>
+                </div>
+                <!-- Correo -->
+                <div class="footer-item">
+                    <i class="bi bi-envelope-fill"></i>
+                    <span>contacto@tienda3v.mx</span>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JS -->
+    <script src="../js/global.js"></script>
+</body>
+
+</html>
