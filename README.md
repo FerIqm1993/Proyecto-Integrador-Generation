@@ -31,6 +31,7 @@ Bienvenido al repositorio del Proyecto Integrador **Tiendas 3V**, un sitio web t
 *   **Adriana Sofía Benítez Treviño** - Desarrolladora Java Full Stack Jr.
 *   **Alma Delia Vences Sánchez** - Desarrollador Java Full Stack / Scrum Master
 *   **Daniel Rosas Monroy** - Desarrollador Java Full Stack
+*   **Mario Javier Solano Rodríguez** - Desarrollador Java Full Stack
 
 ## 🛠️ Tecnologías Usadas
 
@@ -44,4 +45,9 @@ Bienvenido al repositorio del Proyecto Integrador **Tiendas 3V**, un sitio web t
 - Sistema de autenticación de usuarios.
 
 ---
+## Organización del Proyecto
+[Tablero de Trello](https://trello.com/b/hhTkTvpJ)
+
+![Tablero de Trello de Tienda 3V](img/trello.png)
+
 **Desarrollado como proyecto integrador.**
