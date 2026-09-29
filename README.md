@@ -20,9 +20,17 @@ Bienvenido al repositorio del Proyecto Integrador **Tiendas 3V**, un sitio web t
     *   `carrito.html`: Resumen de los artículos para la simulación del pedido y selector de recolección.
     *   `categorias.html`: Grilla de productos con barra lateral para filtros (por precio, por orden, etc.).
     *   `producto.html`: Vista de detalle de un producto individual.
-    *   `acerca.html`, `contacto.html`, `login.html`, `registro.html`: Páginas informativas y de gestión de usuario.
+    *   `acerca.html`, `equipo.html`, `contacto.html`, `login.html`, `registro.html`: Páginas informativas, presentación del equipo y gestión de usuario.
 *   `/css/`: Hojas de estilo unificadas y adaptadas al sistema de diseño "3V".
 *   `/js/`: Scripts modulares para la lógica del E-Commerce simulado.
+
+## 👨‍💻👩‍💻 Equipo de Desarrollo
+
+*   **Ing. Luis Fernando Martínez Moreno** - Desarrollador Java Full Stack / Scrum Master
+*   **Ing. Hannia Victoria Reyes** - Desarrollador Java Full Stack
+*   **Adriana Sofía Benítez Treviño** - Desarrolladora Java Full Stack Jr.
+*   **Alma Delia Vences Sánchez** - Desarrollador Java Full Stack / Scrum Master
+*   **Daniel Rosas Monroy** - Desarrollador Java Full Stack
 
 ## 🛠️ Tecnologías Usadas
 
