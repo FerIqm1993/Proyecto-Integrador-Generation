@@ -26,7 +26,7 @@ Bienvenido al repositorio del Proyecto Integrador **Tiendas 3V**, un sitio web t
 
 ## 👨‍💻👩‍💻 Equipo de Desarrollo
 
-*   **Ing. Luis Fernando Martínez Moreno** - Desarrollador Java Full Stack / Scrum Master
+*   **Ing. Luis Fernando Martínez Moreno** - Desarrollador Java Full Stack / Product Owner
 *   **Ing. Hannia Victoria Reyes** - Desarrollador Java Full Stack
 *   **Adriana Sofía Benítez Treviño** - Desarrolladora Java Full Stack Jr.
 *   **Alma Delia Vences Sánchez** - Desarrollador Java Full Stack / Scrum Master
@@ -37,7 +37,7 @@ Bienvenido al repositorio del Proyecto Integrador **Tiendas 3V**, un sitio web t
 
 *   HTML5 & CSS3 (Diseño fluido y estricto uso de CSS Variables)
 *   Bootstrap 5.3 (Grid system, Offcanvas, Modal, Utilities)
-*   Vanilla JavaScript (ES6, Array functions, LocalStorage API, manipulación del DOM)
+*   JavaScript (ES6, Array functions, LocalStorage API, manipulación del DOM)
 
 ## 📌 Próximos Pasos (Futuro)
 - Integración real con una pasarela de pagos.
