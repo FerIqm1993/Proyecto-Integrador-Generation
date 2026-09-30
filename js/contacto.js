@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // 1. Inicializar EmailJS con tu Public Key (Reemplaza con tu clave real)
+    // 1. Inicializar EmailJS con tu Public Key
     emailjs.init({
-        publicKey: "HCyS-zOR6QNA-SEGq",
+        publicKey: CONFIG.EMAILJS_PUBLIC_KEY,
     });
 
     const contactForm = document.getElementById('contactForm');
@@ -114,7 +114,7 @@ document.addEventListener('DOMContentLoaded', () => {
             submitBtn.innerHTML = `<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span> Enviando...`;
 
             // Enviar correo a través de EmailJS
-            emailjs.sendForm('@Pollitosenfuga3', 'template_jmwr41b', contactForm)
+            emailjs.sendForm(CONFIG.EMAILJS_SERVICE_ID, CONFIG.EMAILJS_TEMPLATE_ID, contactForm)
                 .then(() => {
                     submitBtn.disabled = false;
                     submitBtn.innerHTML = originalButtonText;
