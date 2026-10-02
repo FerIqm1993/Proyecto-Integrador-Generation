@@ -1,4 +1,4 @@
-/* =================== HERO =========================== */
+/* HERO */
 
 .about-hero {
     padding: 55px 0;
@@ -24,7 +24,7 @@
     opacity: 0.92;
 }
 
-/* =============== SECCIÓN ABOUT================== */
+/*  SECCIÓN ACERCA DE NOSOTROS */
 
 .about-section {
     padding: 65px 0 35px;
@@ -60,9 +60,7 @@
         rgba(51, 51, 51, 0.12);
 }
 
-/* ==================================================
-   MISIÓN / VISIÓN / VALORES
-================================================== */
+/* MISIÓN / VISIÓN / VALORES */
 
 .info-section {
     padding: 10px 0 65px;
@@ -114,13 +112,11 @@
     line-height: 1.6;
 }
 
-/* =============== SUCURSALES ======================== */
+/* SUCURSALES */
 
 .branches-section {
     padding: 20px 0 60px;
 }
-
-/* Tarjeta con información */
 
 .branch-card {
     min-height: 145px;
@@ -165,7 +161,6 @@
     font-size: 1.2rem;
 }
 
-
 .branch-header h3 {
     margin: 0;
     color: var(--gris-oscuro);
@@ -190,7 +185,7 @@
     color: var(--beige);
 }
 
-/* ============== MAPAS =================== */
+/*  MAPAS */
 
 .branch-map {
     display: block;
@@ -214,7 +209,7 @@
         rgba(51, 51, 51, 0.13);
 }
 
-/* ================== NOTA INFERIOR ========================== */
+/*  NOTA INFERIOR  */
 
 .animation-note {
     display: flex;
@@ -226,7 +221,7 @@
     font-size: 0.85rem;
 }
 
-/* ================== NUESTRO EQUIPO ========================== */
+/*  NUESTRO EQUIPO  */
 
 .team-section {
     padding: 20px 0 60px;
