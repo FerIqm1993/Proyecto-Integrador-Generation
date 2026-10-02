@@ -38,6 +38,56 @@
 .team-section {
     padding: 60px 0;
 }
+/*Empieza el estilo para las tarjetas del equipo */
+.team-card {
+    background-color: var(--blanco);
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    overflow: hidden;
+    text-align: center;
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    
+}
+.team-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 30px rgba(51, 51, 51, 0.15);
+}
+/*se define el estilo para el contenedor de la imagen del equipo */
+.team-img-wrapper {
+    width: 100%;
+    height: 350px;
+    overflow: hidden;
+    background-color: #e9ecef;
+}
+/*se define el estilo para la imagen del equipo */
+.team-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top;
+    transition: transform 0.5s ease;
+}
+/*se define el estilo para la imagen del equipo cuando se pasa el mouse por encima de la tarjeta */
+.team-card:hover .team-img {
+    transform: scale(1.08);
+}
+/*se define el estilo para el contenedor de la informacion del equipo */
+.team-info {
+    padding: 24px 20px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+/**se define el estilo para el nombre del integrante del equipo */
+.team-info h3 {
+    margin: 0 0 5px;
+    color: var(--gris-oscuro);
+    font-size: 1.3rem;
+    font-weight: 700;
+}
 
 /* aqui se pone el estilo para el rol del equipo */
 .team-role {
@@ -91,11 +141,12 @@
     color: var(--blanco);
 }
 
+/* Estilo para el icono de curriculum vitae */
 .social-link i.bi-file-earmark-person {
     font-size: 1rem;
     margin-right: 2px;
 }
-
+/* Estilo para el enlace de curriculum vitae */
 .social-link[title="Curriculum Vitae"] {
     width: auto;
     padding: 0 15px;
