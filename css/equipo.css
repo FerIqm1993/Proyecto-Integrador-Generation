@@ -26,3 +26,80 @@
     font-size: 1rem;
     opacity: 0.92;
 }
+
+
+/* ================== NUESTRO EQUIPO ========================== */
+
+.main-team-section {
+    background-color: #f5f7fa;
+    min-height: calc(100vh - 350px);
+}
+
+.team-section {
+    padding: 60px 0;
+}
+
+/* aqui se pone el estilo para el rol del equipo */
+.team-role {
+    display: block;
+    margin-bottom: 15px;
+    color: var(--azul);
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* aqui se pone el estilo para la descripcion del integrante del equipo */
+.team-bio {
+    margin: 0 0 20px;
+    color: var(--gris);
+    font-size: 0.95rem;
+    line-height: 1.5;
+    flex-grow: 1;
+}
+/* aqui se pone el estilo para los enlaces sociales del integrante del equipo */
+.team-social {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: auto;
+}
+
+
+/* El estilo de como se muestran los enlaces de sociales */
+
+.social-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--blanco);
+    background-color: var(--azul);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    text-decoration: none;
+    font-size: 1.2rem;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+/*hover: se utiliza para definir el estilo cuando el usuario pasa el mouse por encima del enlace */
+.social-link:hover {
+    background-color: var(--Marino);
+    /*transform: scale(1.1) aumenta el tamaño del enlace al pasar el mouse por encima */
+    transform: scale(1.1);
+    color: var(--blanco);
+}
+
+.social-link i.bi-file-earmark-person {
+    font-size: 1rem;
+    margin-right: 2px;
+}
+
+.social-link[title="Curriculum Vitae"] {
+    width: auto;
+    padding: 0 15px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
