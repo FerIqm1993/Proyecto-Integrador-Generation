@@ -7,6 +7,10 @@ document.addEventListener("DOMContentLoaded", () => {
   fetch(navbarPath)
     .then(response => response.text())
     .then(data => {
+      // Si estamos en la raíz, limpiamos los "subir un nivel" de las rutas
+      if (isRoot) {
+        data = data.replace(/\.\.\//g, "");
+      }
       document.getElementById("navbar-container").innerHTML = data;
     })
     .catch(error => console.error("Error al cargar el navbar:", error));
