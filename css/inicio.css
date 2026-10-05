@@ -1,7 +1,16 @@
 /* ==========================================
-   PALETA DE COLORES (Variables según la imagen)[cite: 1]
+   PALETA DE COLORES 
    ========================================== */
-
+:root {
+  --color-bg-light: #F5F2E7;    /* Cream/Off-white[cite: 1] */
+  --color-brown: #6B4226;       /* Brown Accent[cite: 1] */
+  --color-blue-primary: #4A90E2;/* Vibrant Blue[cite: 1] */
+  --color-tan: #D4A373;         /* Warm Tan/Gold[cite: 1] */
+  --color-dark-blue: #333333;   /* Dark Navy/Charcoal[cite: 1] */
+  --color-gray-text: #666666;   /* Medium Gray[cite: 1] */
+  
+  --color-amber-gold: #F5C027;  /* Color de ofertas */
+}
 
 /* Estilo para el logo en imagen */
 .brand-logo-img {
@@ -15,13 +24,13 @@
 /* General Body */
 body {
   font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-  background-color: var(--crema);
-  color: var(--Marino);
+  background-color: #FAFAFA;
+  color: var(--color-dark-blue);
 }
 
 /* Colores personalizados */
 .bg-dark-blue {
-  background-color: var(--Marino) !important;
+  background-color: var(--color-dark-blue) !important;
 }
 
 .bg-light-blue {
@@ -29,7 +38,7 @@ body {
 }
 
 .bg-amber {
-  background-color: var(--beige);
+  background-color: var(--color-amber-gold);
 }
 
 .text-light-gray {
@@ -37,12 +46,12 @@ body {
 }
 
 /* ==========================================
-   ESTILOS HEADER BLANCO (ESTILO IMAGEN 1)[cite: 7]
+   ESTILOS HEADER 
    ========================================== */
 
 /* Color azul principal de Tienda 3V */
 .text-primary-3v {
-  color: var(--azul) !important; /* Azul idéntico al logo e imagen 1[cite: 7] */
+  color: #1A73E8 !important; /* Azul idéntico al logo e imagen 1[cite: 7] */
 }
 
 /* Tamaño de la imagen del logo en el Header */
@@ -59,7 +68,7 @@ body {
 }
 
 .nav-links-custom .nav-link:hover {
-  color: var(--azul) !important;
+  color: #1A73E8 !important;
 }
 
 /* Buscador con fondo suave gris clarito y redondeado */
@@ -94,7 +103,7 @@ body {
 
 /* Círculo azul intenso con número de productos */
 .cart-badge-circle {
-  background-color: var(--azul);
+  background-color: #1A73E8;
   color: #FFFFFF;
   font-size: 0.75rem;
   font-weight: bold;
@@ -105,18 +114,17 @@ body {
   align-items: center;
   justify-content: center;
 }
-/* Restablecer el fondo oscuro degradado original para el Hero */
-.hero-section {
-  background: linear-gradient(135deg, var(--azul) 0%, #357abd 55%, var(--Marino) 140%) !important;
-  color: #ffffff !important;
+/* Fondo sección principal */
+.seccion-principal {
+    background-color: #2b2f35; 
 }
 
-/* Color gris claro para el párrafo secundario */
+/* Color para el texto en fondo oscuro */
 .text-light-gray {
-  color: #D0D0D0 !important;
+    color: #cbd5e1;
 }
 
-/* Botón amarillo de ofertas */
+/* Botón  ofertas */
 .btn-warning-custom {
   background-color: #F5C027;
   color: #111111;
@@ -128,7 +136,7 @@ body {
   color: #000000;
 }
 /* ==========================================
-   Estilos para la Imagen de Ofertas en Hero[cite: 2]
+   Estilos para la Imagen de Ofertas en Hero
    ========================================== */
 
 /* Controla el tamaño y comportamiento de la nueva imagen */
@@ -152,7 +160,7 @@ body {
 
 /* Botones Personalizados */
 .btn-warning-custom {
-  background-color: var(--beige);
+  background-color: var(--color-amber-gold);
   color: #111;
   border: none;
 }
@@ -162,7 +170,7 @@ body {
 }
 
 .btn-primary-custom {
-  background-color: var(--azul);
+  background-color: var(--color-blue-primary);
   color: white;
   border: none;
 }
@@ -182,8 +190,8 @@ body {
 
 /* Categorías en forma de píldoras */
 .category-pill {
-  border: 1px solid var(--azul);
-  color: var(--azul);
+  border: 1px solid var(--color-blue-primary);
+  color: var(--color-blue-primary);
   background: white;
   border-radius: 50px;
   padding: 6px 20px;
@@ -195,7 +203,7 @@ body {
 
 .category-pill:hover,
 .category-pill.active {
-  background-color: var(--azul);
+  background-color: var(--color-blue-primary);
   color: white;
 }
 
@@ -274,51 +282,4 @@ body {
   .hero-section h1 {
     font-size: 1.8rem;
   }
-}
-
-/* Propuesta 2: Botón Outline Dinámico */
-.btn-outline-dynamic {
-  position: relative;
-  background-color: transparent;
-  border: 2px solid var(--blanco);
-  color: var(--blanco);
-  padding: 0.75rem 1.5rem;
-  border-radius: 8px;
-  overflow: hidden;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  transition: color 0.3s ease;
-  z-index: 1;
-  text-decoration: none;
-}
-
-.btn-outline-dynamic::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 0%;
-  height: 100%;
-  background-color: var(--Marino);
-  transition: width 0.4s ease;
-  z-index: -1;
-}
-
-.btn-outline-dynamic:hover {
-  color: var(--blanco);
-  border-color: var(--Marino);
-}
-
-.btn-outline-dynamic:hover::before {
-  width: 100%;
-}
-
-.btn-outline-dynamic .btn-icon {
-  transition: transform 0.3s ease;
-}
-
-.btn-outline-dynamic:hover .btn-icon {
-  transform: translateX(4px);
 }
