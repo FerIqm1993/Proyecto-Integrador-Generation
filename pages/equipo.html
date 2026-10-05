@@ -1,15 +1,17 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Equipo de Desarrolladores</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+      <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Íconos de Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- CSS Personalizado -->
     <link rel="stylesheet" href="../css/global.css">
     <link rel="stylesheet" href="../css/equipo.css">
-</head>
 
 <body class="bg-white">
     <!-- Aquí se inserta el navbar desde el archivo navbar.html -->
@@ -45,11 +47,11 @@
     </section>
 
     <!-- ============ CONTENIDO PRINCIPAL ============ -->
-    <main class="seccion-principal-equipo">
-        <section class="seccion-equipo">
-            <div class="container">
-                <div class="row g-4 justify-content-center" id="contenedor-equipo">
-                    <!-- Tarjeta del Equipo -->
+    <main class="main-team-section">
+        <section class="team-section">
+         <div class="container">
+            <div class="row g-4 justify-content-center" id="team-container">
+                 <!-- Tarjeta del Equipo -->
                     <div class="col-md-8 col-lg-4" class="col-2">
                         <div class="tarjeta-equipo">
                             <div class="contenedor-img-equipo">
@@ -64,17 +66,51 @@
                                     Apasionado por la tecnología y el desarrollo frontend. Encargado de promover una
                                     correcta comunicación con el equipo y generar propuestas de valor tomando en cuenta
                                     a los clientes.
-                                <div class="social-equipo">
+                                <div class="team-social">
                                     <a href="https://www.linkedin.com/in/fernando-martinez-ds/" target="_blank"
-                                        class="enlace-social" title="LinkedIn">
+                                        class="social-link" title="LinkedIn">
                                         <i class="bi bi-linkedin"></i>
                                     </a>
-                                    <a href="https://github.com/FerIqm1993" target="_blank" class="enlace-social"
+                                    <a href="https://github.com/FerIqm1993" target="_blank" class="social-link"
                                         title="GitHub">
                                         <i class="bi bi-github"></i>
                                     </a>
                                     <a href="https://drive.google.com/file/d/1_J3JK2qVhZgwY_wa-2sPOKoGxkxNmB7H/view?usp=sharing"
-                                        target="_blank" class="enlace-social" title="Curriculum Vitae">
+                                        target="_blank" class="social-link" title="Curriculum Vitae">
+                                        <i class="bi bi-file-earmark-person"></i> CV
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tarjeta del Equipo: Alma Delia Vences Sánchez -->
+                    <div class="col-md-8 col-lg-4">
+                        <div class="team-card">
+                            <div class="team-img-wrapper">
+                                <img src="../img/equipo/advs.jpeg" alt="Foto de Alma Delia Vences Sánchez"
+                                    class="team-img"
+                                    onerror="this.src='https://ui-avatars.com/api/?name=Alma+Vences&background=4A90E2&color=fff&size=300'">
+                            </div>
+                            <div class="team-info">
+                                <h3>Ing. Alma Delia Vences Sánchez</h3>
+                                <span class="team-role">Desarrollador Java Full Stack / SCRUM MASTER</span>
+                                <p class="team-bio">
+                                    Función principal como Scrum Master del proyecto e‑commerce “Tienda 3V”, liderando
+                                    la organización del equipo y facilitando la metodología ágil.
+                                    Colaboración en la construcción de funcionalidades del sistema, revisión de código y
+                                    pruebas básicas para garantizar calidad.
+                                </p>
+                                <div class="team-social">
+                                    <a href="https://www.linkedin.com/in/alma-vences" target="_blank"
+                                        class="social-link" title="LinkedIn">
+                                        <i class="bi bi-linkedin"></i>
+                                    </a>
+                                    <a href="https://github.com/vences10" target="_blank" class="social-link"
+                                        title="GitHub">
+                                        <i class="bi bi-github"></i>
+                                    </a>
+                                    <a href="#" class="social-link" title="Curriculum Vitae">
                                         <i class="bi bi-file-earmark-person"></i> CV
                                     </a>
                                 </div>
@@ -84,12 +120,12 @@
 
                     <!-- Tarjeta del Equipo: Hannia Victoria Reyes -->
                     <div class="col-md-8 col-lg-4">
-                        <div class="tarjeta-equipo">
-                            <div class="contenedor-img-equipo">
-                                <img src="../img/equipo/hvr.png" alt="Foto de Hannia Victoria Reyes" class="img-equipo"
+                        <div class="team-card">
+                            <div class="team-img-wrapper">
+                                <img src="../img/equipo/hvr.png" alt="Foto de Hannia Victoria Reyes" class="team-img"
                                     onerror="this.src='https://ui-avatars.com/api/?name=Hannia+Victoria+Reyes&background=4A90E2&color=fff&size=300'">
                             </div>
-                            <div class="info-equipo">
+                            <div class="team-info">
                                 <h3>Ing. Hannia Victoria Reyes</h3>
                                 <span class="rol-equipo">Desarrolladora Java Full Stack</span>
                                 <p class="bio-equipo">
@@ -97,23 +133,24 @@
                                     responsivos, componentes visuales, navegación y funcionalidades, mejorando
                                     continuamente la experiencia del usuario y el rendimiento de la tienda.
                                 </p>
-                                <div class="social-equipo">
+                                <div class="team-social">
                                     <a href="https://www.linkedin.com/in/hanniavictoria/" target="_blank"
-                                        class="enlace-social" title="LinkedIn">
+                                        class="social-link" title="LinkedIn">
                                         <i class="bi bi-linkedin"></i>
                                     </a>
-                                    <a href="https://github.com/hanniavictoria" target="_blank" class="enlace-social"
+                                    <a href="https://github.com/hanniavictoria" target="_blank" class="social-link"
                                         title="GitHub">
                                         <i class="bi bi-github"></i>
                                     </a>
-                                    <a href="#" class="enlace-social" title="Curriculum Vitae">
+                                    <a href="#" class="social-link" title="Curriculum Vitae">
                                         <i class="bi bi-file-earmark-person"></i> CV
                                     </a>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <!-- Tarjeta del Equipo: Alma Delia Vences SÃ¡nchez -->
+
+                    <!-- Tarjeta del Equipo: Adriana Sofía Benítez Treviño -->
                     <div class="col-md-8 col-lg-4">
                         <div class="tarjeta-equipo">
                             <div class="contenedor-img-equipo">
@@ -167,11 +204,11 @@
                                         class="enlace-social" title="LinkedIn">
                                         <i class="bi bi-linkedin"></i>
                                     </a>
-                                    <a href="https://github.com/AdrianaBtz" target="_blank" class="enlace-social"
+                                    <a href="https://github.com/AdrianaBtz" target="_blank" class="social-link"
                                         title="GitHub">
                                         <i class="bi bi-github"></i>
                                     </a>
-                                    <a href="#" class="enlace-social" title="Curriculum Vitae">
+                                    <a href="#" class="social-link" title="Curriculum Vitae">
                                         <i class="bi bi-file-earmark-person"></i> CV
                                     </a>
                                 </div>
@@ -183,12 +220,12 @@
 
                     <!-- Tarjeta del Equipo: Daniel Rosas Monroy -->
                     <div class="col-md-8 col-lg-4">
-                        <div class="tarjeta-equipo">
-                            <div class="contenedor-img-equipo">
-                                <img src="../img/equipo/drm.png" alt="Foto de Daniel Rosas Monroy" class="img-equipo"
+                        <div class="team-card">
+                            <div class="team-img-wrapper">
+                                <img src="../img/equipo/drm.png" alt="Foto de Daniel Rosas Monroy" class="team-img"
                                     onerror="this.src='https://ui-avatars.com/api/?name=Daniel+Rosas&background=4A90E2&color=fff&size=300'">
                             </div>
-                            <div class="info-equipo">
+                            <div class="team-info">
                                 <h3>Daniel Rosas Monroy</h3>
                                 <span class="rol-equipo">Desarrollador Java Full Stack</span>
                                 <p class="bio-equipo">
@@ -196,16 +233,16 @@
                                     diseño atractivo utilizando HTML, CSS y JavaScript, asegurando una experiencia de
                                     usuario fluida y totalmente responsiva.
                                 </p>
-                                <div class="social-equipo">
+                                <div class="team-social">
                                     <a href="https://www.linkedin.com/in/daniel-rosas-monroy-" target="_blank"
-                                        class="enlace-social" title="LinkedIn">
+                                        class="social-link" title="LinkedIn">
                                         <i class="bi bi-linkedin"></i>
                                     </a>
-                                    <a href="https://github.com/danielrm9881-dotcom" target="_blank" class="enlace-social"
+                                    <a href="https://github.com/danielrm9881-dotcom" target="_blank" class="social-link"
                                         title="GitHub">
                                         <i class="bi bi-github"></i>
                                     </a>
-                                    <a href="#" class="enlace-social" title="Curriculum Vitae">
+                                    <a href="#" class="social-link" title="Curriculum Vitae">
                                         <i class="bi bi-file-earmark-person"></i> CV
                                     </a>
                                 </div>
@@ -213,7 +250,7 @@
                         </div>
                     </div>
 
-                    <!-- Tarjeta del Equipo: Mario Javier Solano RodrÃ­guez -->
+                    <!-- Tarjeta del Equipo: Mario Javier Solano Rodríguez -->
                     <div class="col-md- col-lg-4">
                         <div class="tarjeta-equipo">
                             <div class="contenedor-img-equipo">
@@ -228,24 +265,24 @@
                                     Desarrollé proyectos Full Stack y me especialice en Java, en mis últimos proyectos
                                     me estoy orientando al desarrollo Backend.
                                 </p>
-                                <div class="social-equipo">
+                                <div class="team-social">
                                     <a href="https://www.linkedin.com/in/mariosoro?utm_source=share_via&utm_content=profile&utm_medium=member_android"
-                                        target="_blank" class="enlace-social" title="LinkedIn">
+                                        target="_blank" class="social-link" title="LinkedIn">
                                         <i class="bi bi-linkedin"></i>
                                     </a>
-                                    <a href="https://github.com/majasoro" target="_blank" class="enlace-social"
+                                    <a href="https://github.com/majasoro" target="_blank" class="social-link"
                                         title="GitHub">
                                         <i class="bi bi-github"></i>
                                     </a>
-                                    <a href="#" class="enlace-social" title="Curriculum Vitae">
+                                    <a href="#" class="social-link" title="Curriculum Vitae">
                                         <i class="bi bi-file-earmark-person"></i> CV
                                     </a>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
             </div>
+         </div>
         </section>
     </main>
 
@@ -256,7 +293,7 @@
                 <!-- Teléfono -->
                 <div class="item-footer">
                     <i class="bi bi-telephone-fill"></i>
-                    <span>LlÃ¡manos: 800-3V-AYUDA (800-382-9832)</span>
+                    <span>Llámanos: 800-3V-AYUDA (800-382-9832)</span>
                 </div>
                 <!-- Correo -->
                 <div class="item-footer">
