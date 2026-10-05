@@ -1,42 +1,45 @@
-﻿/*  HERO EQUIPO */
+/* =================== HERO EQUIPO =========================== */
 
-.hero-equipo {
+.team-hero {
     padding: 55px 0;
     color: var(--blanco);
     background:
+    /*degradado lineal */
         linear-gradient(
-            135deg,
-            var(--azul) 0%,
-            #357abd 55%,
-            var(--Marino) 140%
+            135deg, /*ángulo del degradado*/
+            var(--azul) 0%,/*punto de inicio*/
+            #357abd 55%, /*punto intermedio*/
+            var(--Marino) 140% /* punto final */
         );
     text-align: center;
 }
 
-.hero-equipo h1 {
+.team-hero h1 {
     margin-bottom: 8px;
+    /* clamp ajusta el tamaño del textro, define un valor con 3 limites: minimo, ideal, maximo */
     font-size: clamp(2rem, 4vw, 2.7rem);
     font-weight: 800;
 }
 
-.hero-equipo p {
+.team-hero p {
     margin: 0;
     font-size: 1rem;
     opacity: 0.92;
 }
 
-/*  NUESTRO EQUIPO  */
 
-.seccion-principal-equipo {
+/* ================== NUESTRO EQUIPO ========================== */
+
+.main-team-section {
     background-color: #f5f7fa;
     min-height: calc(100vh - 350px);
 }
 
-.seccion-equipo {
+.team-section {
     padding: 60px 0;
 }
-
-.tarjeta-equipo {
+/*Empieza el estilo para las tarjetas del equipo */
+.team-card {
     background-color: var(--blanco);
     border: 1px solid #e0e0e0;
     border-radius: 12px;
@@ -48,46 +51,46 @@
     flex-direction: column;
     
 }
-
-.tarjeta-equipo:hover {
+.team-card:hover {
     transform: translateY(-8px);
     box-shadow: 0 15px 30px rgba(51, 51, 51, 0.15);
 }
-
-.contenedor-img-equipo {
+/*se define el estilo para el contenedor de la imagen del equipo */
+.team-img-wrapper {
     width: 100%;
     height: 350px;
     overflow: hidden;
     background-color: #e9ecef;
 }
-
-.img-equipo {
+/*se define el estilo para la imagen del equipo */
+.team-img {
     width: 100%;
     height: 100%;
     object-fit: cover;
     object-position: top;
     transition: transform 0.5s ease;
 }
-
-.tarjeta-equipo:hover .img-equipo {
+/*se define el estilo para la imagen del equipo cuando se pasa el mouse por encima de la tarjeta */
+.team-card:hover .team-img {
     transform: scale(1.08);
 }
-
-.info-equipo {
+/*se define el estilo para el contenedor de la informacion del equipo */
+.team-info {
     padding: 24px 20px;
     display: flex;
     flex-direction: column;
     flex-grow: 1;
 }
-
-.info-equipo h3 {
+/**se define el estilo para el nombre del integrante del equipo */
+.team-info h3 {
     margin: 0 0 5px;
     color: var(--gris-oscuro);
     font-size: 1.3rem;
     font-weight: 700;
 }
 
-.rol-equipo {
+/* aqui se pone el estilo para el rol del equipo */
+.team-role {
     display: block;
     margin-bottom: 15px;
     color: var(--azul);
@@ -97,22 +100,26 @@
     letter-spacing: 0.5px;
 }
 
-.bio-equipo {
+/* aqui se pone el estilo para la descripcion del integrante del equipo */
+.team-bio {
     margin: 0 0 20px;
     color: var(--gris);
     font-size: 0.95rem;
     line-height: 1.5;
     flex-grow: 1;
 }
-
-.social-equipo {
+/* aqui se pone el estilo para los enlaces sociales del integrante del equipo */
+.team-social {
     display: flex;
     justify-content: center;
     gap: 15px;
     margin-top: auto;
 }
 
-.enlace-social {
+
+/* El estilo de como se muestran los enlaces de sociales */
+
+.social-link {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -126,24 +133,24 @@
     transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
-.enlace-social:hover {
+/*hover: se utiliza para definir el estilo cuando el usuario pasa el mouse por encima del enlace */
+.social-link:hover {
     background-color: var(--Marino);
+    /*transform: scale(1.1) aumenta el tamaño del enlace al pasar el mouse por encima */
     transform: scale(1.1);
     color: var(--blanco);
 }
 
-.enlace-social i.bi-file-earmark-person {
+/* Estilo para el icono de curriculum vitae */
+.social-link i.bi-file-earmark-person {
     font-size: 1rem;
     margin-right: 2px;
 }
-
-.enlace-social[title="Curriculum Vitae"] {
+/* Estilo para el enlace de curriculum vitae */
+.social-link[title="Curriculum Vitae"] {
     width: auto;
     padding: 0 15px;
     border-radius: 20px;
     font-size: 0.9rem;
     font-weight: 600;
 }
-
-
-
