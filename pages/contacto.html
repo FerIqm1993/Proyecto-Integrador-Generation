@@ -17,59 +17,8 @@
 </head>
 
 <body>
-    <!-- ===== BARRA DE NAVEGACION ===== -->
-    <nav class="navbar navbar-expand-lg navbar-tienda sticky-top">
-        <div class="container">
-            <!-- Logotipo -->
-            <a class="navbar-brand d-flex align-items-center gap-2" href="../index.html">
-                <img src="../img/Logo.png" alt="Logo Tienda 3V" class="logo">
-                <span>Tienda 3V</span>
-            </a>
-
-            <!-- Botón  para móvil -->
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menuPrincipal" aria-controls="menuPrincipal" aria-expanded="false" aria-label="Abrir menú">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-
-            <!-- Contenido del menú -->
-            <div class="collapse navbar-collapse" id="menuPrincipal">
-                <!-- Enlaces -->
-                <ul class="navbar-nav ms-lg-4 mb-3 mb-lg-0">
-                    <li class="nav-item">
-                        <a class="nav-link" href="../index.html">Inicio</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="categorias.html">Categorías</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="acerca.html">Acerca</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" href="contacto.html">Contacto</a>
-                    </li>
-                </ul>
-
-                <!-- Buscador -->
-                <form class="caja-busqueda ms-lg-auto" role="search">
-                    <button type="submit" class="boton-buscar" aria-label="Buscar">
-                        <i class="bi bi-search"></i>
-                    </button>
-                    <input type="search" placeholder="Busca abarrotes, lácteos, limpieza y más..." aria-label="Buscar productos">
-                </form>
-
-                <!-- Iconos -->
-                <div class="acciones-nav">
-                    <button type="button" class="boton-icono" aria-label="Mi cuenta">
-                        <i class="bi bi-person"></i>
-                    </button>
-                    <button type="button" class="boton-carrito" aria-label="Carrito" onclick="window.location.href='carrito.html'">
-                        <i class="bi bi-cart3"></i>
-                        <span class="contador-carrito">6</span>
-                    </button>
-                </div>
-            </div>
-        </div>
-    </nav>
+      <!-- Aquí se inserta el navbar desde el archivo navbar.html -->
+    <div id="navbar-container"></div>
 
     <!-- Seccion Principal -->
     <header class="seccion-principal text-white py-2 py-lg-5">
@@ -188,6 +137,8 @@
     <script src="../js/config.js"></script>
     <script src="../js/global.js"></script>
     <script src="../js/contacto.js"></script>
+     <script src="../js/navbar.js"></script>
+  <script src="../js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>
