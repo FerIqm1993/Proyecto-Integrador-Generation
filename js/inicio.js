@@ -1,5 +1,5 @@
 // 1. ORDEN EXACTO DE CATEGORÍAS (De la más a la menos importante requerida)
-const categoriesOrdered = [
+const categoriasOrdenadas = [
   "Hogar",
   "Cervezas, Vinos y Licores",
   "Ferretería",
@@ -10,84 +10,84 @@ const categoriesOrdered = [
 ];
 
 // 2. PRODUCTOS DE MUESTRA
-const products = [
-  { id: 1, name: "Aceite Vegetal Pureco 1L", category: "Alimentos", price: 45.20, originalPrice: 52.00, tag: "Disponible", image: "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?auto=format&fit=crop&w=600&q=80" },
-  { id: 2, name: "Leche Entera Cremosa 1L", category: "Alimentos", price: 22.90, originalPrice: 26.00, tag: "Disponible", image: "https://images.unsplash.com/photo-1563636619-e9143da7973b?auto=format&fit=crop&w=600&q=80" },
-  { id: 3, name: "Detergente Multiusos 1kg", category: "Hogar", price: 39.00, originalPrice: 45.00, tag: "Disponible", image: "https://images.unsplash.com/photo-1563453392212-326f5e854473?auto=format&fit=crop&w=600&q=80" },
-  { id: 4, name: "Jabón de Barra Premium 400g", category: "Belleza y Cuidado Personal", price: 18.00, originalPrice: 22.00, tag: "Disponible", image: "https://images.unsplash.com/photo-1608248543803-ba4f8c70ae0b?auto=format&fit=crop&w=600&q=80" },
-  { id: 5, name: "Cerveza Clara 6 Pack", category: "Cervezas, Vinos y Licores", price: 98.00, originalPrice: 115.00, tag: "Disponible", image: "https://images.unsplash.com/photo-1481215919404-66ba77de043f?auto=format&fit=crop&w=600&q=80" },
-  { id: 6, name: "Alimento para Perro 2kg", category: "Mascotas", price: 145.00, originalPrice: 160.00, tag: "Disponible", image: "https://images.unsplash.com/photo-1589924691995-400dc9ecc119?auto=format&fit=crop&w=600&q=80" },
-  { id: 7, name: "Juego de Desarmadores 4 pzs", category: "Ferretería", price: 89.00, originalPrice: 110.00, tag: "Disponible", image: "https://images.unsplash.com/photo-1504148455328-c376907d081c?auto=format&fit=crop&w=600&q=80" },
-  { id: 8, name: "Agua Mineral 1.5L", category: "Bebidas", price: 16.50, originalPrice: 20.00, tag: "Disponible", image: "https://images.unsplash.com/photo-1546924282-0f057bc9dd5a?auto=format&fit=crop&w=600&q=80" }
+const productos = [
+  { id: 1, nombre: "Aceite Vegetal Pureco 1L", categoria: "Alimentos", precio: 45.20, precioOriginal: 52.00, etiqueta: "Disponible", imagen: "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?auto=format&fit=crop&w=600&q=80" },
+  { id: 2, nombre: "Leche Entera Cremosa 1L", categoria: "Alimentos", precio: 22.90, precioOriginal: 26.00, etiqueta: "Disponible", imagen: "https://images.unsplash.com/photo-1563636619-e9143da7973b?auto=format&fit=crop&w=600&q=80" },
+  { id: 3, nombre: "Detergente Multiusos 1kg", categoria: "Hogar", precio: 39.00, precioOriginal: 45.00, etiqueta: "Disponible", imagen: "https://images.unsplash.com/photo-1563453392212-326f5e854473?auto=format&fit=crop&w=600&q=80" },
+  { id: 4, nombre: "Jabón de Barra Premium 400g", categoria: "Belleza y Cuidado Personal", precio: 18.00, precioOriginal: 22.00, etiqueta: "Disponible", imagen: "https://images.unsplash.com/photo-1608248543803-ba4f8c70ae0b?auto=format&fit=crop&w=600&q=80" },
+  { id: 5, nombre: "Cerveza Clara 6 Pack", categoria: "Cervezas, Vinos y Licores", precio: 98.00, precioOriginal: 115.00, etiqueta: "Disponible", imagen: "https://images.unsplash.com/photo-1481215919404-66ba77de043f?auto=format&fit=crop&w=600&q=80" },
+  { id: 6, nombre: "Alimento para Perro 2kg", categoria: "Mascotas", precio: 145.00, precioOriginal: 160.00, etiqueta: "Disponible", imagen: "https://images.unsplash.com/photo-1589924691995-400dc9ecc119?auto=format&fit=crop&w=600&q=80" },
+  { id: 7, nombre: "Juego de Desarmadores 4 pzs", categoria: "Ferretería", precio: 89.00, precioOriginal: 110.00, etiqueta: "Disponible", imagen: "https://images.unsplash.com/photo-1504148455328-c376907d081c?auto=format&fit=crop&w=600&q=80" },
+  { id: 8, nombre: "Agua Mineral 1.5L", categoria: "Bebidas", precio: 16.50, precioOriginal: 20.00, etiqueta: "Disponible", imagen: "https://images.unsplash.com/photo-1546924282-0f057bc9dd5a?auto=format&fit=crop&w=600&q=80" }
 ];
 
 
-let currentCategory = "Todos";
+let categoriaActual = "Todos";
 
 // Inicializar Aplicación cuando cargue el DOM
 document.addEventListener("DOMContentLoaded", () => {
-  renderHeaderCategories();
-  renderPillCategories();
-  renderProducts(products);
-  setupEvents();
+  renderizarCategoriasHeader();
+  renderizarCategoriasPildora();
+  renderizarProductos(productos);
+  configurarEventos();
 });
 
 // Cargar categorías en el menú desplegable del Header
-function renderHeaderCategories() {
-  const container = document.getElementById("headerCategoryList");
-  if (!container) return;
+function renderizarCategoriasHeader() {
+  const contenedor = document.getElementById("headerCategoryList");
+  if (!contenedor) return;
   
-  container.innerHTML = `<li><a class="dropdown-item fw-bold" href="#" onclick="filterByCategory('Todos')">Todas las Categorías</a></li><li><hr class="dropdown-divider"></li>`;
+  contenedor.innerHTML = `<li><a class="dropdown-item fw-bold" href="#" onclick="filtrarPorCategoria('Todos')">Todas las Categorías</a></li><li><hr class="dropdown-divider"></li>`;
   
-  categoriesOrdered.forEach(cat => {
+  categoriasOrdenadas.forEach(cat => {
     const li = document.createElement("li");
-    li.innerHTML = `<a class="dropdown-item" href="#ofertas" onclick="filterByCategory('${cat}')">${cat}</a>`;
-    container.appendChild(li);
+    li.innerHTML = `<a class="dropdown-item" href="#ofertas" onclick="filtrarPorCategoria('${cat}')">${cat}</a>`;
+    contenedor.appendChild(li);
   });
 }
 
 // Cargar categorías en botones tipo píldora
-function renderPillCategories() {
-  const container = document.getElementById("contenedorPildoras");
-  if (!container) return;
+function renderizarCategoriasPildora() {
+  const contenedor = document.getElementById("contenedorPildoras");
+  if (!contenedor) return;
 
-  let html = `<button class="category-pill ${currentCategory === 'Todos' ? 'active' : ''}" onclick="filterByCategory('Todos')">Todos</button>`;
+  let html = `<button class="category-pill ${categoriaActual === 'Todos' ? 'active' : ''}" onclick="filtrarPorCategoria('Todos')">Todos</button>`;
   
-  categoriesOrdered.forEach(cat => {
-    html += `<button class="category-pill ${currentCategory === cat ? 'active' : ''}" onclick="filterByCategory('${cat}')">${cat}</button>`;
+  categoriasOrdenadas.forEach(cat => {
+    html += `<button class="category-pill ${categoriaActual === cat ? 'active' : ''}" onclick="filtrarPorCategoria('${cat}')">${cat}</button>`;
   });
   
-  container.innerHTML = html;
+  contenedor.innerHTML = html;
 }
 
 // Renderizar tarjetas de productos
-function renderProducts(items) {
-  const container = document.getElementById("cuadriculaProductos");
-  if (!container) return;
+function renderizarProductos(articulos) {
+  const contenedor = document.getElementById("cuadriculaProductos");
+  if (!contenedor) return;
 
-  if (items.length === 0) {
-    container.innerHTML = `<div class="col-12 text-center py-5"><p class="fs-5 text-muted">No se encontraron productos en esta categoría.</p></div>`;
+  if (articulos.length === 0) {
+    contenedor.innerHTML = `<div class="col-12 text-center py-5"><p class="fs-5 text-muted">No se encontraron productos en esta categoría.</p></div>`;
     return;
   }
 
-  container.innerHTML = items.map(product => `
+  contenedor.innerHTML = articulos.map(producto => `
     <div class="col-6 col-md-4 col-lg-3">
       <div class="product-card d-flex flex-column justify-content-between p-3">
         <div>
           <div class="product-img-wrapper mb-2">
-            <a href="pages/producto.html"><img class="product-img" src="${product.image}" alt="${product.name}" loading="lazy"></a>
-            <button class="btn-add-cart" onclick="addToCart(${product.id})" title="Agregar al carrito">
+            <a href="pages/producto.html"><img class="product-img" src="${producto.imagen}" alt="${producto.nombre}" loading="lazy"></a>
+            <button class="btn-add-cart" onclick="agregarAlCarrito(${producto.id})" title="Agregar al carrito">
               <i class="fa-solid fa-plus"></i>
             </button>
           </div>
-          <span class="badge bg-light text-success border mb-1">${product.tag}</span>
-          <span class="d-block text-muted small fw-semibold text-uppercase">${product.category}</span>
-          <a href="pages/producto.html" style="text-decoration:none; color:inherit;"><h6 class="fw-bold text-dark text-truncate mb-2" title="${product.name}">${product.name}</h6></a>
+          <span class="badge bg-light text-success border mb-1">${producto.etiqueta}</span>
+          <span class="d-block text-muted small fw-semibold text-uppercase">${producto.categoria}</span>
+          <a href="pages/producto.html" style="text-decoration:none; color:inherit;"><h6 class="fw-bold text-dark text-truncate mb-2" title="${producto.nombre}">${producto.nombre}</h6></a>
         </div>
         <div>
           <div class="d-flex align-items-baseline gap-2">
-            <span class="fs-5 fw-bold text-primary">$${product.price.toFixed(2)}</span>
-            <span class="small text-muted text-decoration-line-through">$${product.originalPrice.toFixed(2)}</span>
+            <span class="fs-5 fw-bold text-primary">$${producto.precio.toFixed(2)}</span>
+            <span class="small text-muted text-decoration-line-through">$${producto.precioOriginal.toFixed(2)}</span>
           </div>
         </div>
       </div>
@@ -96,15 +96,15 @@ function renderProducts(items) {
 }
 
 // Filtrar Productos por categoría
-function filterByCategory(category) {
-  currentCategory = category;
-  renderPillCategories();
+function filtrarPorCategoria(categoria) {
+  categoriaActual = categoria;
+  renderizarCategoriasPildora();
 
-  if (category === "Todos") {
-    renderProducts(products);
+  if (categoria === "Todos") {
+    renderizarProductos(productos);
   } else {
-    const filtered = products.filter(p => p.category === category);
-    renderProducts(filtered);
+    const filtrados = productos.filter(p => p.categoria === categoria);
+    renderizarProductos(filtrados);
   }
 }
 
@@ -113,74 +113,74 @@ function filterByCategory(category) {
 // ==========================================
 
 // 1. Agregar producto al carrito desde la página
-function addToCart(productId) {
-  const item = products.find(p => p.id === productId);
-  if (!item) return;
+function agregarAlCarrito(idProducto) {
+  const articulo = productos.find(p => p.id === idProducto);
+  if (!articulo) return;
   
   // Llama a la función global para sincronizar con localStorage
-  addProductToCart({
-    id: item.id,
-    name: item.name,
-    price: item.price,
-    img: item.img,
-    quantity: 1
+  agregarProductoAlCarrito({
+    id: articulo.id,
+    nombre: articulo.nombre,
+    precio: articulo.precio,
+    img: articulo.imagen,
+    cantidad: 1
   });
   
-  updateCartUI();
+  actualizarUICarrito();
 }
 
 // 2. Cambiar cantidad uno por uno (Sumar +1 o Restar -1)
-function changeQuantity(productId, delta) {
-  let cart = getCart();
-  const item = cart.find(p => p.id == productId);
-  if (!item) return;
-  updateQuantity(productId, item.quantity + delta);
-  updateCartUI();
+function cambiarCantidad(idProducto, delta) {
+  let carrito = obtenerCarrito();
+  const articulo = carrito.find(p => p.id == idProducto);
+  if (!articulo) return;
+  actualizarCantidad(idProducto, articulo.cantidad + delta);
+  actualizarUICarrito();
 }
 
 // 3. Quitar por completo el producto
-function removeFromCartLocal(productId) {
-  removeFromCartLocal(productId);
-  updateCartUI();
+function eliminarProducto(idProducto) {
+  eliminarDelCarritoLocal(idProducto);
+  actualizarUICarrito();
 }
 
 // 4. Actualizar la vista del carrito
-function updateCartUI() {
-  let cart = typeof getCart !== 'undefined' ? getCart() : []; // desde global.js (fallback to [] if not defined)
-  const cartCount = document.querySelector(".contador-carrito");
-  const cartItemsList = document.getElementById("listaItemsCarrito");
-  const cartTotal = document.getElementById("totalCarrito");
+function actualizarUICarrito() {
+  let carrito = typeof obtenerCarrito !== 'undefined' ? obtenerCarrito() : []; // desde global.js (fallback to [] if not defined)
+  const contadorCarrito = document.querySelector(".contador-carrito");
+  const listaItemsCarrito = document.getElementById("listaItemsCarrito");
+  const totalCarrito = document.getElementById("totalCarrito");
 
-  const totalItems = cart.reduce((acc, item) => acc + item.quantity, 0);
-  const totalPrice = cart.reduce((acc, item) => acc + (item.price * item.quantity), 0);
+  const totalArticulos = carrito.reduce((acc, articulo) => acc + articulo.cantidad, 0);
+  const precioTotal = carrito.reduce((acc, articulo) => acc + (articulo.precio * articulo.cantidad), 0);
 
-  if (cartCount) cartCount.textContent = totalItems;
-  if (cartTotal) cartTotal.textContent = `$${totalPrice.toFixed(2)}`;
+  if (contadorCarrito) contadorCarrito.textContent = totalArticulos;
+  if (totalCarrito) totalCarrito.textContent = `$${precioTotal.toFixed(2)}`;
 
-  if (!cartItemsList) return;
+  if (!listaItemsCarrito) return;
 
-  if (cart.length === 0) {
-    cartItemsList.innerHTML = `<p class="text-center text-muted my-5">Tu carrito está vacío</p>`;
+  if (carrito.length === 0) {
+    listaItemsCarrito.innerHTML = `<p class="text-center text-muted my-5">Tu carrito está vacío</p>`;
     return;
   }
 
-  cartItemsList.innerHTML = cart.map(item => `
+  listaItemsCarrito.innerHTML = carrito.map(articulo => `
     <div class="d-flex align-items-center justify-content-between border-bottom py-3">
       <div class="me-2 flex-grow-1">
-        <h6 class="mb-1 fw-bold small text-dark">${item.name}</h6>
-        <div class="text-primary fw-bold small">$${item.price.toFixed(2)} / c.u.</div>
+        <h6 class="mb-1 fw-bold small text-dark">${articulo.nombre}</h6>
+        <div class="text-primary fw-bold small">$${articulo.precio.toFixed(2)} / c.u.</div>
       </div>
       
       <!-- CONTROLES PARA QUITAR Y SUMAR DE 1 EN 1 -->
       <div class="d-flex align-items-center gap-2">
         <div class="cart-qty-controls d-flex align-items-center border rounded-pill bg-light px-1">
-          <button class="btn btn-sm text-secondary p-0 px-2 fw-bold" onclick="changeQuantity(${item.id}, -1)">–</button>
-          <span class="px-2 fw-bold small">${item.quantity}</span>
-          <button class="btn btn-sm text-secondary p-0 px-2 fw-bold" onclick="changeQuantity(${item.id}, 1)">+</button>
+          <button class="btn btn-sm text-secondary p-0 px-2 fw-bold" onclick="cambiarCantidad(${articulo.id}, -1)">–</button>
+          <span class="px-2 fw-bold small">${articulo.cantidad}</span>
+          <button class="btn btn-sm text-secondary p-0 px-2 fw-bold" onclick="cambiarCantidad(${articulo.id}, 1)">+</button>
         </div>
 
         <!-- Botón de basurero para eliminar de golpe -->
-        <button class="btn btn-sm text-danger p-0 ms-1" onclick="removeFromCartLocal(${item.id})" title="Eliminar todo">
+        <button class="btn btn-sm text-danger p-0 ms-1" onclick="eliminarProducto(${articulo.id})" title="Eliminar todo">
           <i class="fa-regular fa-trash-can"></i>
         </button>
       </div>
@@ -189,29 +189,29 @@ function updateCartUI() {
 }
 
 // Escuchar búsquedas y botones
-function setupEvents() {
-  const searchInput = document.querySelector('input[type="search"]');
-  const searchInputMobile = document.getElementById("searchInputMobile");
-  const mobileSearchBtn = document.getElementById("mobileSearchBtn");
-  const mobileSearchContainer = document.getElementById("mobileSearchContainer");
-  const resetFilterBtn = document.getElementById("btnRestablecerFiltro");
+function configurarEventos() {
+  const inputBusqueda = document.querySelector('input[type="search"]');
+  const inputBusquedaMovil = document.getElementById("searchInputMobile");
+  const botonBusquedaMovil = document.getElementById("mobileSearchBtn");
+  const contenedorBusquedaMovil = document.getElementById("mobileSearchContainer");
+  const botonRestablecerFiltro = document.getElementById("btnRestablecerFiltro");
 
-  const handleSearch = (e) => {
-    const query = e.target.value.toLowerCase();
-    const filtered = products.filter(p => p.name.toLowerCase().includes(query) || p.category.toLowerCase().includes(query));
-    renderProducts(filtered);
+  const manejarBusqueda = (e) => {
+    const consulta = e.target.value.toLowerCase();
+    const filtrados = productos.filter(p => p.nombre.toLowerCase().includes(consulta) || p.categoria.toLowerCase().includes(consulta));
+    renderizarProductos(filtrados);
   };
 
-  if (searchInput) searchInput.addEventListener("input", handleSearch);
-  if (searchInputMobile) searchInputMobile.addEventListener("input", handleSearch);
+  if (inputBusqueda) inputBusqueda.addEventListener("input", manejarBusqueda);
+  if (inputBusquedaMovil) inputBusquedaMovil.addEventListener("input", manejarBusqueda);
 
-  if (mobileSearchBtn && mobileSearchContainer) {
-    mobileSearchBtn.addEventListener("click", () => {
-      mobileSearchContainer.classList.toggle("d-none");
+  if (botonBusquedaMovil && contenedorBusquedaMovil) {
+    botonBusquedaMovil.addEventListener("click", () => {
+      contenedorBusquedaMovil.classList.toggle("d-none");
     });
   }
 
-  if (resetFilterBtn) {
-    resetFilterBtn.addEventListener("click", () => filterByCategory("Todos"));
+  if (botonRestablecerFiltro) {
+    botonRestablecerFiltro.addEventListener("click", () => filtrarPorCategoria("Todos"));
   }
 }

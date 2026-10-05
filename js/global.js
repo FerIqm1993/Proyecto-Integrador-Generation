@@ -1,33 +1,33 @@
-function getCart() {
-  const cart = localStorage.getItem('cart');
-  return cart ? JSON.parse(cart) : [];
+function obtenerCarrito() {
+  const carrito = localStorage.getItem('carrito');
+  return carrito ? JSON.parse(carrito) : [];
 }
 
-function addProductToCart(item) {
-  let cart = getCart();
-  const existing = cart.find(p => p.id === item.id);
-  if (existing) {
-    existing.quantity += item.quantity;
+function agregarProductoAlCarrito(articulo) {
+  let carrito = obtenerCarrito();
+  const existente = carrito.find(p => p.id === articulo.id);
+  if (existente) {
+    existente.cantidad += articulo.cantidad;
   } else {
-    cart.push(item);
+    carrito.push(articulo);
   }
-  localStorage.setItem('cart', JSON.stringify(cart));
+  localStorage.setItem('carrito', JSON.stringify(carrito));
 }
 
-function updateQuantity(productId, quantity) {
-  let cart = getCart();
-  const item = cart.find(p => p.id === productId);
-  if (item) {
-    item.quantity = quantity;
-    if (item.quantity <= 0) {
-      cart = cart.filter(p => p.id !== productId);
+function actualizarCantidad(idProducto, cantidad) {
+  let carrito = obtenerCarrito();
+  const articulo = carrito.find(p => p.id === idProducto);
+  if (articulo) {
+    articulo.cantidad = cantidad;
+    if (articulo.cantidad <= 0) {
+      carrito = carrito.filter(p => p.id !== idProducto);
     }
-    localStorage.setItem('cart', JSON.stringify(cart));
+    localStorage.setItem('carrito', JSON.stringify(carrito));
   }
 }
 
-function removeFromCartLocal(productId) {
-  let cart = getCart();
-  cart = cart.filter(p => p.id !== productId);
-  localStorage.setItem('cart', JSON.stringify(cart));
+function eliminarDelCarritoLocal(idProducto) {
+  let carrito = obtenerCarrito();
+  carrito = carrito.filter(p => p.id !== idProducto);
+  localStorage.setItem('carrito', JSON.stringify(carrito));
 }

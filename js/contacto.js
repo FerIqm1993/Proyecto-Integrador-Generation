@@ -4,128 +4,128 @@ document.addEventListener('DOMContentLoaded', () => {
         publicKey: CONFIG.EMAILJS_PUBLIC_KEY,
     });
 
-    const contactForm = document.getElementById('formularioContacto');
-    const formAlert = document.getElementById('alertaFormulario');
-    const submitBtn = contactForm.querySelector('button[type="submit"]');
+    const formularioContacto = document.getElementById('formularioContacto');
+    const alertaFormulario = document.getElementById('alertaFormulario');
+    const botonEnviar = formularioContacto.querySelector('button[type="submit"]');
 
-    // Función auxiliar para mostrar alertas generales (éxito o error global)
-    function showAlert(message, type = 'success') {
-        const iconElement = formAlert.querySelector('i');
-        const textElement = formAlert.querySelector('div');
+    // Función auxiliar para mostrar alertas generales (éxito o error)
+    function mostrarAlerta(mensaje, tipo = 'success') {
+        const elementoIcono = alertaFormulario.querySelector('i');
+        const elementoTexto = alertaFormulario.querySelector('div');
 
-        if (type === 'success') {
-            formAlert.style.backgroundColor = '#E6F4EA';
-            formAlert.style.borderColor = '#CEEAD6';
-            formAlert.style.color = '#137333';
-            iconElement.className = 'bi bi-check-circle me-2 fs-5';
+        if (tipo === 'success') {
+            alertaFormulario.style.backgroundColor = '#E6F4EA';
+            alertaFormulario.style.borderColor = '#CEEAD6';
+            alertaFormulario.style.color = '#137333';
+            elementoIcono.className = 'bi bi-check-circle me-2 fs-5';
         } else {
-            formAlert.style.backgroundColor = '#FCE8E6';
-            formAlert.style.borderColor = '#FAD2CF';
-            formAlert.style.color = '#C5221F';
-            iconElement.className = 'bi bi-exclamation-triangle me-2 fs-5';
+            alertaFormulario.style.backgroundColor = '#FCE8E6';
+            alertaFormulario.style.borderColor = '#FAD2CF';
+            alertaFormulario.style.color = '#C5221F';
+            elementoIcono.className = 'bi bi-exclamation-triangle me-2 fs-5';
         }
 
-        textElement.textContent = message;
-        formAlert.classList.remove('d-none');
-        formAlert.classList.add('d-flex');
+        elementoTexto.textContent = mensaje;
+        alertaFormulario.classList.remove('d-none');
+        alertaFormulario.classList.add('d-flex');
 
         setTimeout(() => {
-            formAlert.classList.add('d-none');
-            formAlert.classList.remove('d-flex');
+            alertaFormulario.classList.add('d-none');
+            alertaFormulario.classList.remove('d-flex');
         }, 6000);
     }
 
     // Expresión regular para validar correos electrónicos
-    function isValidEmail(email) {
+    function esCorreoValido(correo) {
         const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return regex.test(email);
+        return regex.test(correo);
     }
 
-    if (contactForm) {
-        contactForm.addEventListener('submit', (e) => {
+    if (formularioContacto) {
+        formularioContacto.addEventListener('submit', (e) => {
             e.preventDefault(); // Evita que la página se recargue
 
-            const nameInput = document.getElementById('nombre');
-            const emailInput = document.getElementById('correo');
-            const phoneInput = document.getElementById('telefono');
-            const subjectInput = document.getElementById('asunto');
-            const messageInput = document.getElementById('mensaje');
-            const privacyPolicy = document.getElementById('politicaPrivacidad');
+            const inputNombre = document.getElementById('nombre');
+            const inputCorreo = document.getElementById('correo');
+            const inputTelefono = document.getElementById('telefono');
+            const inputAsunto = document.getElementById('asunto');
+            const inputMensaje = document.getElementById('mensaje');
+            const politicaPrivacidad = document.getElementById('politicaPrivacidad');
 
             // Limpiar errores visuales y validaciones nativas previas de todos los campos
-            const inputs = contactForm.querySelectorAll('.form-control, .form-select');
+            const inputs = formularioContacto.querySelectorAll('.form-control, .form-select');
             inputs.forEach(input => {
                 input.classList.remove('is-invalid');
-                input.setCustomValidity(''); // Resetea el mensaje nativo
+                input.setCustomValidity(''); // Resetea el mensaje
             });
 
-            // 1. Validar Nombre
-            const name = nameInput.value.trim();
-            if (!name) {
-                nameInput.setCustomValidity('Por favor, completa este campo.');
-                nameInput.reportValidity();
+            // Validar Nombre
+            const nombre = inputNombre.value.trim();
+            if (!nombre) {
+                inputNombre.setCustomValidity('Por favor, completa este campo.');
+                inputNombre.reportValidity();
                 return;
             }
 
-            // 2. Validar Correo Electrónico
-            const email = emailInput.value.trim();
-            if (!email || !isValidEmail(email)) {
-                emailInput.setCustomValidity('Incluye un signo "@" en la dirección de correo electrónico.');
-                emailInput.reportValidity();
+            // Validar Correo Electrónico
+            const correo = inputCorreo.value.trim();
+            if (!correo || !esCorreoValido(correo)) {
+                inputCorreo.setCustomValidity('Incluye un signo "@" en la dirección de correo electrónico.');
+                inputCorreo.reportValidity();
                 return;
             }
 
-            // 3. Validar Teléfono (Opcional, pero si se llena, solo acepta números y muestra globito nativo)
-            const phone = phoneInput.value.trim();
-            if (phone !== '') {
-                const phoneRegex = /^[0-9]+$/;
-                if (!phoneRegex.test(phone)) {
-                    phoneInput.setCustomValidity('El número de teléfono solo debe contener números (sin letras ni espacios).');
-                    phoneInput.reportValidity(); // Muestra el mensaje nativo flotante estilo navegador
+            // Validar Teléfono (Opcional, pero si se llena, solo acepta números y muestra globito nativo)
+            const telefono = inputTelefono.value.trim();
+            if (telefono !== '') {
+                const regexTelefono = /^[0-9]+$/;
+                if (!regexTelefono.test(telefono)) {
+                    inputTelefono.setCustomValidity('El número de teléfono solo debe contener números (sin letras ni espacios).');
+                    inputTelefono.reportValidity(); // Muestra el mensaje nativo flotante estilo navegador
                     return;
                 }
             }
 
-            // 4. Validar Motivo de Consulta
-            const subject = subjectInput.value;
-            if (!subject) {
-                subjectInput.setCustomValidity('Por favor, selecciona una opción.');
-                subjectInput.reportValidity();
+            // Validar Motivo de Consulta
+            const asunto = inputAsunto.value;
+            if (!asunto) {
+                inputAsunto.setCustomValidity('Por favor, selecciona una opción.');
+                inputAsunto.reportValidity();
                 return;
             }
 
-            // 5. Validar Mensaje
-            const message = messageInput.value.trim();
-            if (!message) {
-                messageInput.setCustomValidity('Por favor, completa este campo.');
-                messageInput.reportValidity();
+            // Validar Mensaje
+            const mensaje = inputMensaje.value.trim();
+            if (!mensaje) {
+                inputMensaje.setCustomValidity('Por favor, completa este campo.');
+                inputMensaje.reportValidity();
                 return;
             }
 
-            // 6. Validar Aviso de Privacidad
-            if (!privacyPolicy.checked) {
-                showAlert('Debes aceptar el Aviso de Privacidad.', 'error');
+            // Validar Aviso de Privacidad
+            if (!politicaPrivacidad.checked) {
+                mostrarAlerta('Debes aceptar el Aviso de Privacidad.', 'error');
                 return;
             }
 
             // Cambiar texto y deshabilitar botón mientras se envía
-            const originalButtonText = submitBtn.innerHTML;
-            submitBtn.disabled = true;
-            submitBtn.innerHTML = `<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span> Enviando...`;
+            const textoBotonOriginal = botonEnviar.innerHTML;
+            botonEnviar.disabled = true;
+            botonEnviar.innerHTML = `<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span> Enviando...`;
 
             // Enviar correo a través de EmailJS
-            emailjs.sendForm(CONFIG.EMAILJS_SERVICE_ID, CONFIG.EMAILJS_TEMPLATE_ID, contactForm)
+            emailjs.sendForm(CONFIG.EMAILJS_SERVICE_ID, CONFIG.EMAILJS_TEMPLATE_ID, formularioContacto)
                 .then(() => {
-                    submitBtn.disabled = false;
-                    submitBtn.innerHTML = originalButtonText;
-                    showAlert('¡Mensaje recibido con éxito! Te responderemos en un plazo menor a 24 horas.', 'success');
-                    contactForm.reset();
+                    botonEnviar.disabled = false;
+                    botonEnviar.innerHTML = textoBotonOriginal;
+                    mostrarAlerta('¡Mensaje recibido con éxito! Te responderemos en un plazo menor a 24 horas.', 'success');
+                    formularioContacto.reset();
                 })
                 .catch((error) => {
-                    submitBtn.disabled = false;
-                    submitBtn.innerHTML = originalButtonText;
+                    botonEnviar.disabled = false;
+                    botonEnviar.innerHTML = textoBotonOriginal;
                     console.error('Error de EmailJS:', error);
-                    showAlert('Ocurrió un error al enviar el correo. Por favor, intenta más tarde.', 'error');
+                    mostrarAlerta('Ocurrió un error al enviar el correo. Por favor, intenta más tarde.', 'error');
                 });
         });
     }
