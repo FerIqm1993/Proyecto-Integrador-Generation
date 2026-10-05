@@ -13,69 +13,10 @@
 </head>
 
 <body>
-    <!-- ===== NAVBAR ===== -->
-    <nav class="navbar navbar-expand-lg navbar-tienda sticky-top">
-        <div class="container">
-            <!-- Logo -->
-            <a class="navbar-brand d-flex align-items-center gap-2" href="../index.html">
-                <img src="../img/Logo.png" alt="Logo Tienda 3V" class="logo">
-                    <span>Tienda 3V</span>
-            </a>
 
-            <!-- BotÃ³n hamburguesa para mÃ³vil -->
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menuPrincipal" aria-controls="menuPrincipal" aria-expanded="false" aria-label="Abrir menÃº">
-                <span class="navbar-toggler-icon"></span>
-            </button>
+    <!-- Aquí se inserta el navbar desde el archivo navbar.html -->
+    <div id="navbar-container"></div>
 
-            <!-- Contenido del menÃº -->
-            <div class="collapse navbar-collapse" id="menuPrincipal">
-                <!-- Links -->
-                <ul class="navbar-nav ms-lg-4 mb-3 mb-lg-0">
-                    <li class="nav-item">
-                        <a class="nav-link" href="../index.html">Inicio</a>
-                    </li>
-
-                    <li class="nav-item">
-                        <a class="nav-link" href="categorias.html">Categorías</a>
-                    </li>
-
-                    <li class="nav-item">
-                        <a class="nav-link active" href="acerca.html">Acerca</a>
-                    </li>
-
-                    <li class="nav-item">
-                        <a class="nav-link" href="equipo.html">Equipo</a>
-                    </li>
-
-                    <li class="nav-item">
-                        <a class="nav-link" href="contacto.html">
-                            Contacto
-                        </a>
-                    </li>
-                </ul>
-
-                <!-- Buscador -->
-                <form class="caja-busqueda ms-lg-auto" role="search">
-                    <i class="bi bi-search"></i>
-                    <input type="search" placeholder="Busca abarrotes, lÃ¡cteos, limpieza y mÃ¡s..." aria-label="Buscar productos">
-                </form>
-
-                <!-- Iconos -->
-                <div class="acciones-nav">
-                    <!-- Usuario -->
-                    <button type="button" class="boton-icono" aria-label="Mi cuenta">
-                        <i class="bi bi-person"></i>
-                    </button>
-
-                    <!-- Carrito -->
-                    <button type="button" class="boton-carrito" aria-label="Carrito" onclick="window.location.href='carrito.html'">
-                        <i class="bi bi-cart3"></i>
-                        <span class="contador-carrito">6</span>
-                    </button>
-                </div>
-            </div>
-        </div>
-    </nav>
 
     <!-- ======HERO / ENCABEZADO====== -->
 
@@ -84,7 +25,7 @@
             <h1>Sobre Tienda 3V</h1>
             <p>
                 Conoce la historia, el equipo y la gran red de
-                sucursales que impulsan nuestro propÃ³sito.
+                sucursales que impulsan nuestro propósito.
             </p>
         </div>
     </header>
@@ -102,15 +43,15 @@
 
                         <p>
                             Nacimos con la idea clara de que comprar
-                            la despensa bÃ¡sica no debe comprometer
+                            la despensa básica no debe comprometer
                             las finanzas del hogar.
                         </p>
 
                         <p>
-                            A travÃ©s de convenios directos con
-                            productores mexicanos y optimizaciÃ³n
+                            A través de convenios directos con
+                            productores mexicanos y optimización
                             logística de última milla, brindamos un
-                            sÃºper digital sin intermediarios.
+                            súper digital sin intermediarios.
                         </p>
 
                         <p>
@@ -119,7 +60,7 @@
                             eliminas los costos de envío tradicionales
                             y aseguras que tus productos están
                             perfectamente empacados y listos en la
-                            hora que mÃ¡s te convenga.
+                            hora que más te convenga.
                         </p>
                     </div>
 
@@ -279,6 +220,8 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js">
     </script>
 
+ <script src="../js/navbar.js"></script>
+  <script src="../js/bootstrap.bundle.min.js"></script>
 <script src="../js/global.js"></script>
 <script src="../js/acerca.js"></script>
 </body>

@@ -76,8 +76,8 @@ function renderizarProductos(articulos) {
         <div>
           <div class="product-img-wrapper mb-2">
             <a href="pages/producto.html"><img class="product-img" src="${producto.imagen}" alt="${producto.nombre}" loading="lazy"></a>
-            <button class="btn-add-cart" onclick="agregarAlCarrito(${producto.id})" title="Agregar al carrito">
-              <i class="fa-solid fa-plus"></i>
+            <button class="btn-add-cart d-flex align-items-center justify-content-center text-white fw-bold fs-5" onclick="agregarAlCarrito(${producto.id})" title="Agregar al carrito" style="line-height: 1;">
+            +
             </button>
           </div>
           <span class="badge bg-light text-success border mb-1">${producto.etiqueta}</span>
@@ -112,22 +112,6 @@ function filtrarPorCategoria(categoria) {
 // LÓGICA DEL CARRITO CON SUMA Y RESTA (1 EN 1)
 // ==========================================
 
-// Agregar producto al carrito desde la página
-function agregarAlCarrito(idProducto) {
-  const articulo = productos.find(p => p.id === idProducto);
-  if (!articulo) return;
-  
-  // Llama a la función global para sincronizar con localStorage
-  agregarProductoAlCarrito({
-    id: articulo.id,
-    nombre: articulo.nombre,
-    precio: articulo.precio,
-    img: articulo.imagen,
-    cantidad: 1
-  });
-  
-  actualizarUICarrito();
-}
 
 // Cambiar cantidad uno por uno (Sumar +1 o Restar -1)
 function cambiarCantidad(idProducto, delta) {
@@ -214,4 +198,5 @@ function configurarEventos() {
   if (botonRestablecerFiltro) {
     botonRestablecerFiltro.addEventListener("click", () => filtrarPorCategoria("Todos"));
   }
+  
 }
