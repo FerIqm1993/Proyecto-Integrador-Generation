@@ -1,6 +1,6 @@
 ﻿/*  HERO EQUIPO */
 
-.team-hero {
+.hero-equipo {
     padding: 55px 0;
     color: var(--blanco);
     background:
@@ -13,13 +13,13 @@
     text-align: center;
 }
 
-.team-hero h1 {
+.hero-equipo h1 {
     margin-bottom: 8px;
     font-size: clamp(2rem, 4vw, 2.7rem);
     font-weight: 800;
 }
 
-.team-hero p {
+.hero-equipo p {
     margin: 0;
     font-size: 1rem;
     opacity: 0.92;
@@ -32,11 +32,11 @@
     min-height: calc(100vh - 350px);
 }
 
-.team-section {
+.seccion-equipo {
     padding: 60px 0;
 }
 
-.team-card {
+.tarjeta-equipo {
     background-color: var(--blanco);
     border: 1px solid #e0e0e0;
     border-radius: 12px;
@@ -49,19 +49,19 @@
     
 }
 
-.team-card:hover {
+.tarjeta-equipo:hover {
     transform: translateY(-8px);
     box-shadow: 0 15px 30px rgba(51, 51, 51, 0.15);
 }
 
-.team-img-wrapper {
+.contenedor-img-equipo {
     width: 100%;
     height: 350px;
     overflow: hidden;
     background-color: #e9ecef;
 }
 
-.team-img {
+.img-equipo {
     width: 100%;
     height: 100%;
     object-fit: cover;
@@ -69,25 +69,25 @@
     transition: transform 0.5s ease;
 }
 
-.team-card:hover .team-img {
+.tarjeta-equipo:hover .img-equipo {
     transform: scale(1.08);
 }
 
-.team-info {
+.info-equipo {
     padding: 24px 20px;
     display: flex;
     flex-direction: column;
     flex-grow: 1;
 }
 
-.team-info h3 {
+.info-equipo h3 {
     margin: 0 0 5px;
     color: var(--gris-oscuro);
     font-size: 1.3rem;
     font-weight: 700;
 }
 
-.team-role {
+.rol-equipo {
     display: block;
     margin-bottom: 15px;
     color: var(--azul);
@@ -97,7 +97,7 @@
     letter-spacing: 0.5px;
 }
 
-.team-bio {
+.bio-equipo {
     margin: 0 0 20px;
     color: var(--gris);
     font-size: 0.95rem;
@@ -105,14 +105,14 @@
     flex-grow: 1;
 }
 
-.team-social {
+.social-equipo {
     display: flex;
     justify-content: center;
     gap: 15px;
     margin-top: auto;
 }
 
-.social-link {
+.enlace-social {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -126,18 +126,18 @@
     transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
-.social-link:hover {
+.enlace-social:hover {
     background-color: var(--Marino);
     transform: scale(1.1);
     color: var(--blanco);
 }
 
-.social-link i.bi-file-earmark-person {
+.enlace-social i.bi-file-earmark-person {
     font-size: 1rem;
     margin-right: 2px;
 }
 
-.social-link[title="Curriculum Vitae"] {
+.enlace-social[title="Curriculum Vitae"] {
     width: auto;
     padding: 0 15px;
     border-radius: 20px;
