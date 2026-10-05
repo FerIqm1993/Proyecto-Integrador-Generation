@@ -1,6 +1,6 @@
-/* HERO */
+﻿/* HERO */
 
-.about-hero {
+.hero-acerca {
     padding: 55px 0;
     color: var(--blanco);
     background:
@@ -12,44 +12,44 @@
         );
 }
 
-.about-hero h1 {
+.hero-acerca h1 {
     margin-bottom: 8px;
     font-size: clamp(2rem, 4vw, 2.7rem);
     font-weight: 800;
 }
 
-.about-hero p {
+.hero-acerca p {
     margin: 0;
     font-size: 1rem;
     opacity: 0.92;
 }
 
-/*  SECCIÓN ACERCA DE NOSOTROS */
+/*  SECCIÃ“N ACERCA DE NOSOTROS */
 
-.about-section {
+.seccion-acerca {
     padding: 65px 0 35px;
 }
 
-.section-title {
+.titulo-seccion {
     color: var(--gris-oscuro);
     font-size: clamp(1.6rem, 3vw, 2rem);
     font-weight: 800;
     line-height: 1.3;
 }
 
-.about-section p {
+.seccion-acerca p {
     color: var(--gris);
     font-size: 0.97rem;
     margin-top: 20px;
 }
 
-.about-section strong {
+.seccion-acerca strong {
     color: var(--Marino);
 }
 
 /* Imagen principal */
 
-.about-image {
+.imagen-acerca {
     display: block;
     width: 100%;
     height: 340px;
@@ -60,13 +60,13 @@
         rgba(51, 51, 51, 0.12);
 }
 
-/* MISIÓN / VISIÓN / VALORES */
+/* MISIÃ“N / VISIÃ“N / VALORES */
 
-.info-section {
+.seccion-info {
     padding: 10px 0 65px;
 }
 
-.info-card {
+.tarjeta-info {
     padding: 25px 24px;
     background-color: var(--blanco);
     border-left: 4px solid var(--azul);
@@ -79,33 +79,33 @@
         box-shadow 0.3s ease;
 }
 
-.info-card:hover {
+.tarjeta-info:hover {
     transform: translateY(-5px);
     box-shadow:
         0 10px 25px
         rgba(51, 51, 51, 0.10);
 }
 
-.info-title {
+.titulo-info {
     display: flex;
     align-items: center;
     gap: 10px;
     margin-bottom: 12px;
 }
 
-.info-title i {
+.titulo-info i {
     color: var(--azul);
     font-size: 1.25rem;
 }
 
-.info-title h3 {
+.titulo-info h3 {
     margin: 0;
     color: var(--gris-oscuro);
     font-size: 1.1rem;
     font-weight: 700;
 }
 
-.info-card p {
+.tarjeta-info p {
     margin: 0;
     color: var(--gris);
     font-size: 0.87rem;
@@ -114,11 +114,11 @@
 
 /* SUCURSALES */
 
-.branches-section {
+.seccion-sucursales {
     padding: 20px 0 60px;
 }
 
-.branch-card {
+.tarjeta-sucursal {
     min-height: 145px;
     padding: 22px;
     background-color: var(--blanco);
@@ -130,7 +130,7 @@
         border-color 0.3s ease;
 }
 
-.branch:hover .branch-card {
+.sucursal:hover .tarjeta-sucursal {
     transform: translateY(-5px);
     border-color: var(--azul);
     box-shadow:
@@ -140,14 +140,14 @@
 
 /* Cabecera sucursal */
 
-.branch-header {
+.cabecera-sucursal {
     display: flex;
     align-items: center;
     gap: 12px;
     margin-bottom: 15px;
 }
 
-.location-icon {
+.icono-ubicacion {
     width: 36px;
     height: 36px;
     flex-shrink: 0;
@@ -161,33 +161,33 @@
     font-size: 1.2rem;
 }
 
-.branch-header h3 {
+.cabecera-sucursal h3 {
     margin: 0;
     color: var(--gris-oscuro);
     font-size: 0.95rem;
     font-weight: 700;
 }
 
-.address {
+.direccion {
     margin-bottom: 4px;
     color: var(--gris-oscuro);
     font-size: 0.8rem;
 }
 
-.schedule {
+.horario {
     margin: 0;
     color: var(--gris);
     font-size: 0.75rem;
 }
 
-.schedule i {
+.horario i {
     margin-right: 5px;
     color: var(--beige);
 }
 
 /*  MAPAS */
 
-.branch-map {
+.mapa-sucursal {
     display: block;
     width: 100%;
     height: 205px;
@@ -202,7 +202,7 @@
         box-shadow 0.3s ease;
 }
 
-.branch:hover .branch-map {
+.sucursal:hover .mapa-sucursal {
     transform: scale(1.015);
     box-shadow:
         0 10px 25px
@@ -211,7 +211,7 @@
 
 /*  NOTA INFERIOR  */
 
-.animation-note {
+.nota-animacion {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -223,16 +223,16 @@
 
 /*  NUESTRO EQUIPO  */
 
-.team-section {
+.seccion-equipo {
     padding: 20px 0 60px;
 }
 
-.team-section .section-title {
+.seccion-equipo .titulo-seccion {
     text-align: center;
     margin-bottom: 40px;
 }
 
-.team-card {
+.tarjeta-equipo {
     background-color: var(--blanco);
     border: 1px solid #dddddd;
     border-radius: 12px;
@@ -241,41 +241,41 @@
     transition: transform 0.4s ease, box-shadow 0.4s ease;
 }
 
-.team-card:hover {
+.tarjeta-equipo:hover {
     transform: translateY(-8px);
     box-shadow: 0 15px 30px rgba(51, 51, 51, 0.15);
 }
 
-.team-img-wrapper {
+.contenedor-img-equipo {
     width: 100%;
     height: 220px;
     overflow: hidden;
     background-color: #f8f9fa;
 }
 
-.team-img {
+.img-equipo {
     width: 100%;
     height: 100%;
     object-fit: cover;
     transition: transform 0.5s ease;
 }
 
-.team-card:hover .team-img {
+.tarjeta-equipo:hover .img-equipo {
     transform: scale(1.08);
 }
 
-.team-info {
+.info-equipo {
     padding: 24px 20px;
 }
 
-.team-info h3 {
+.info-equipo h3 {
     margin: 0 0 5px;
     color: var(--gris-oscuro);
     font-size: 1.2rem;
     font-weight: 700;
 }
 
-.team-role {
+.rol-equipo {
     display: block;
     margin-bottom: 15px;
     color: var(--azul);
@@ -285,9 +285,12 @@
     letter-spacing: 0.5px;
 }
 
-.team-bio {
+.bio-equipo {
     margin: 0;
     color: var(--gris);
     font-size: 0.9rem;
     line-height: 1.5;
 }
+
+
+
