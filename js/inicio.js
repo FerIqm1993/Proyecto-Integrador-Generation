@@ -1,4 +1,4 @@
-// 1. ORDEN EXACTO DE CATEGORÍAS (De la más a la menos importante requerida)
+// ORDEN DE CATEGORÍAS
 const categoriasOrdenadas = [
   "Hogar",
   "Cervezas, Vinos y Licores",
@@ -9,7 +9,7 @@ const categoriasOrdenadas = [
   "Belleza y Cuidado Personal"
 ];
 
-// 2. PRODUCTOS DE MUESTRA
+// PRODUCTOS DE MUESTRA
 const productos = [
   { id: 1, nombre: "Aceite Vegetal Pureco 1L", categoria: "Alimentos", precio: 45.20, precioOriginal: 52.00, etiqueta: "Disponible", imagen: "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?auto=format&fit=crop&w=600&q=80" },
   { id: 2, nombre: "Leche Entera Cremosa 1L", categoria: "Alimentos", precio: 22.90, precioOriginal: 26.00, etiqueta: "Disponible", imagen: "https://images.unsplash.com/photo-1563636619-e9143da7973b?auto=format&fit=crop&w=600&q=80" },
@@ -24,7 +24,7 @@ const productos = [
 
 let categoriaActual = "Todos";
 
-// Inicializar Aplicación cuando cargue el DOM
+// Inicializar Aplicación
 document.addEventListener("DOMContentLoaded", () => {
   renderizarCategoriasHeader();
   renderizarCategoriasPildora();
@@ -112,7 +112,7 @@ function filtrarPorCategoria(categoria) {
 // LÓGICA DEL CARRITO CON SUMA Y RESTA (1 EN 1)
 // ==========================================
 
-// 1. Agregar producto al carrito desde la página
+// Agregar producto al carrito desde la página
 function agregarAlCarrito(idProducto) {
   const articulo = productos.find(p => p.id === idProducto);
   if (!articulo) return;
@@ -129,7 +129,7 @@ function agregarAlCarrito(idProducto) {
   actualizarUICarrito();
 }
 
-// 2. Cambiar cantidad uno por uno (Sumar +1 o Restar -1)
+// Cambiar cantidad uno por uno (Sumar +1 o Restar -1)
 function cambiarCantidad(idProducto, delta) {
   let carrito = obtenerCarrito();
   const articulo = carrito.find(p => p.id == idProducto);
@@ -138,13 +138,13 @@ function cambiarCantidad(idProducto, delta) {
   actualizarUICarrito();
 }
 
-// 3. Quitar por completo el producto
+// Quitar por completo el producto
 function eliminarProducto(idProducto) {
   eliminarDelCarritoLocal(idProducto);
   actualizarUICarrito();
 }
 
-// 4. Actualizar la vista del carrito
+// Actualizar la vista del carrito
 function actualizarUICarrito() {
   let carrito = typeof obtenerCarrito !== 'undefined' ? obtenerCarrito() : []; // desde global.js (fallback to [] if not defined)
   const contadorCarrito = document.querySelector(".contador-carrito");
