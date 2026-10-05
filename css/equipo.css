@@ -1,4 +1,4 @@
-/*  HERO EQUIPO */
+﻿/*  HERO EQUIPO */
 
 .team-hero {
     padding: 55px 0;
@@ -27,8 +27,8 @@
 
 /*  NUESTRO EQUIPO  */
 
-.main-team-section {
-    background-color: #f5f7fa;
+.seccion-principal-equipo {
+    background-color: #e8edf5;
     min-height: calc(100vh - 350px);
 }
 
@@ -144,3 +144,11 @@
     font-size: 0.9rem;
     font-weight: 600;
 }
+
+.descripcionProyecto {
+    text-align: justify;
+    line-height: 1.7;
+}
+
+
+
