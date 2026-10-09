@@ -1,8 +1,12 @@
 document.addEventListener('DOMContentLoaded', () => {
     // 1. Inicializar EmailJS con tu Public Key
-    emailjs.init({
-        publicKey: CONFIG.EMAILJS_PUBLIC_KEY,
-    });
+    if (typeof CONFIG !== 'undefined') {
+        emailjs.init({
+            publicKey: CONFIG.EMAILJS_PUBLIC_KEY,
+        });
+    } else {
+        console.warn("Advertencia: config.js no está presente o CONFIG no está definido.");
+    }
 
     const formularioContacto = document.getElementById('formularioContacto');
     const alertaFormulario = document.getElementById('alertaFormulario');
@@ -37,7 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Expresión regular para validar correos electrónicos
     function esCorreoValido(correo) {
-        const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        const regex = /^[^\s@]+@[^\s@]+\.[a-zA-Z]{2,}$/;
         return regex.test(correo);
     }
 
@@ -61,27 +65,27 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Validar Nombre
             const nombre = inputNombre.value.trim();
-            if (!nombre) {
-                inputNombre.setCustomValidity('Por favor, completa este campo.');
-                inputNombre.reportValidity();
+            if (!nombre || nombre.length < 3) {
+                mostrarAlerta('El nombre debe tener al menos 3 caracteres.', 'error');
+                inputNombre.classList.add('is-invalid');
                 return;
             }
 
             // Validar Correo Electrónico
             const correo = inputCorreo.value.trim();
             if (!correo || !esCorreoValido(correo)) {
-                inputCorreo.setCustomValidity('Incluye un signo "@" en la dirección de correo electrónico.');
-                inputCorreo.reportValidity();
+                mostrarAlerta('Por favor, ingresa un correo electrónico válido (ej. usuario@dominio.com).', 'error');
+                inputCorreo.classList.add('is-invalid');
                 return;
             }
 
-            // Validar Teléfono (Opcional, pero si se llena, solo acepta números y muestra globito nativo)
+            // Validar Teléfono (Opcional, pero si se llena, debe tener 10 dígitos)
             const telefono = inputTelefono.value.trim();
             if (telefono !== '') {
-                const regexTelefono = /^[0-9]+$/;
+                const regexTelefono = /^[0-9]{10}$/;
                 if (!regexTelefono.test(telefono)) {
-                    inputTelefono.setCustomValidity('El número de teléfono solo debe contener números (sin letras ni espacios).');
-                    inputTelefono.reportValidity(); // Muestra el mensaje nativo flotante estilo navegador
+                    mostrarAlerta('El número de teléfono debe contener exactamente 10 dígitos numéricos.', 'error');
+                    inputTelefono.classList.add('is-invalid');
                     return;
                 }
             }
@@ -89,16 +93,16 @@ document.addEventListener('DOMContentLoaded', () => {
             // Validar Motivo de Consulta
             const asunto = inputAsunto.value;
             if (!asunto) {
-                inputAsunto.setCustomValidity('Por favor, selecciona una opción.');
-                inputAsunto.reportValidity();
+                mostrarAlerta('Por favor, selecciona un motivo de consulta.', 'error');
+                inputAsunto.classList.add('is-invalid');
                 return;
             }
 
             // Validar Mensaje
             const mensaje = inputMensaje.value.trim();
-            if (!mensaje) {
-                inputMensaje.setCustomValidity('Por favor, completa este campo.');
-                inputMensaje.reportValidity();
+            if (!mensaje || mensaje.length < 10) {
+                mostrarAlerta('El mensaje debe tener al menos 10 caracteres.', 'error');
+                inputMensaje.classList.add('is-invalid');
                 return;
             }
 
@@ -114,19 +118,29 @@ document.addEventListener('DOMContentLoaded', () => {
             botonEnviar.innerHTML = `<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span> Enviando...`;
 
             // Enviar correo a través de EmailJS
-            emailjs.sendForm(CONFIG.EMAILJS_SERVICE_ID, CONFIG.EMAILJS_TEMPLATE_ID, formularioContacto)
-                .then(() => {
+            if (typeof CONFIG !== 'undefined') {
+                emailjs.sendForm(CONFIG.EMAILJS_SERVICE_ID, CONFIG.EMAILJS_TEMPLATE_ID, formularioContacto)
+                    .then(() => {
+                        botonEnviar.disabled = false;
+                        botonEnviar.innerHTML = textoBotonOriginal;
+                        mostrarAlerta('¡Mensaje recibido con éxito! Te responderemos en un plazo menor a 24 horas.', 'success');
+                        formularioContacto.reset();
+                    })
+                    .catch((error) => {
+                        botonEnviar.disabled = false;
+                        botonEnviar.innerHTML = textoBotonOriginal;
+                        console.error('Error de EmailJS:', error);
+                        mostrarAlerta('Ocurrió un error al enviar el correo. Por favor, intenta más tarde.', 'error');
+                    });
+            } else {
+                // Simulación en caso de que falte config.js
+                setTimeout(() => {
                     botonEnviar.disabled = false;
                     botonEnviar.innerHTML = textoBotonOriginal;
-                    mostrarAlerta('¡Mensaje recibido con éxito! Te responderemos en un plazo menor a 24 horas.', 'success');
+                    mostrarAlerta('¡Mensaje recibido con éxito! (Simulado, config.js no detectado)', 'success');
                     formularioContacto.reset();
-                })
-                .catch((error) => {
-                    botonEnviar.disabled = false;
-                    botonEnviar.innerHTML = textoBotonOriginal;
-                    console.error('Error de EmailJS:', error);
-                    mostrarAlerta('Ocurrió un error al enviar el correo. Por favor, intenta más tarde.', 'error');
-                });
+                }, 1500);
+            }
         });
     }
 });
