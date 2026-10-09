@@ -1,0 +1,131 @@
+/* ===================================================
+   ESTILOS NAVBAR Y BUSCADOR TIPO IMAGEN
+   =================================================== */
+
+/* Contenedor del buscador en forma de cápsula */
+form.search-box {
+  position: relative !important;
+  display: flex !important;
+  align-items: center !important;
+  width: 100%;
+  max-width: 460px;
+  background-color: #f4f7f9 !important;
+  border: 1px solid #e1e8ed !important;
+  border-radius: 50px !important;
+  padding: 4px 5px 4px 16px !important;
+  transition: all 0.25s ease;
+}
+
+/* Foco en el contenedor al hacer clic en el input */
+form.search-box:focus-within {
+  background-color: #ffffff !important;
+  border-color: #4361ee !important;
+  box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.12) !important;
+}
+
+/* Icono de lupa */
+form.search-box .search-icon {
+  color: #8d99ae !important;
+  font-size: 1.1rem !important;
+  margin-right: 10px;
+  pointer-events: none;
+}
+
+/* Campo de texto (Input) */
+form.search-box input[type="search"] {
+  border: none !important;
+  background: transparent !important;
+  outline: none !important;
+  box-shadow: none !important;
+  width: 100% !important;
+  font-size: 0.9rem !important;
+  color: #2b2d42 !important;
+  padding: 6px 0 !important;
+}
+
+form.search-box input[type="search"]::placeholder {
+  color: #94a3b8 !important;
+}
+
+/* Botón azul 'Buscar →' */
+.btn-buscar-pill {
+  background:  #4361ee !important;
+  color: #ffffff !important;
+  border: none !important;
+  border-radius: 50px !important;
+  padding: 8px 20px !important;
+  font-size: 0.85rem !important;
+  font-weight: 600 !important;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 6px rgba(67, 97, 238, 0.3);
+}
+
+.btn-buscar-pill:hover {
+  opacity: 0.95;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(67, 97, 238, 0.4);
+}
+
+/* Limpieza de la 'X' nativa de los navegadores */
+form.search-box input[type="search"]::-webkit-search-decoration,
+form.search-box input[type="search"]::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+}
+
+/* Contenedor de acciones */
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-left: 15px;
+}
+
+/* Botón Mi Cuenta (Circular con fondo claro) */
+.boton-micuenta {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid #e1e8ed;
+  background-color: #f4f7f9;
+  color: #495057;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.boton-micuenta:hover {
+  background-color: #e9ecef;
+  color: #212529;
+}
+
+/* Botón Carrito (Azul, ovalado y sin badge de número) */
+.btn-carrito {
+  height: 44px;
+  padding: 0 22px;
+  border-radius: 50px;
+  border: none;
+  background: #4361ee;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(67, 97, 238, 0.25);
+  transition: all 0.2s ease;
+}
+
+.btn-carrito:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(67, 97, 238, 0.35);
+}
+
+.btn-carrito i {
+  font-size: 1.1rem;
+}
