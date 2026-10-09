@@ -1,0 +1,77 @@
+/* ---------- BARRA LATERAL (SIDEBAR) ---------- */
+.filter-card{ background:var(--card); border:1px solid var(--border); border-radius:14px; padding:1.1rem; margin-bottom:1.2rem; }
+.filter-card h6{ font-weight:700; margin-bottom:.9rem; font-size:1rem; }
+.cat-list{ list-style:none; padding:0; margin:0; }
+.cat-list li{ display:flex; justify-content:space-between; align-items:center; padding:.5rem .7rem; border-radius:8px; cursor:pointer; font-weight:500; color:#374151; transition:background .18s, color .18s; margin-bottom:2px; }
+.cat-list li:hover{ background:#f3f4f6; }
+.cat-list li.active{ background:var(--primary-soft); color:var(--primary); font-weight:700; }
+.cat-list .count{ color:var(--muted); font-size:.82rem; font-weight:500; }
+.cat-list li.active .count{ color:var(--primary); }
+
+/* Control deslizante de doble rango */
+.price-inputs{ display:flex; gap:.6rem; align-items:center; margin-bottom:1.1rem; }
+.price-inputs .form-control{ font-weight:600; font-size:.9rem; }
+.range-wrap{ position:relative; height:5px; background:#e5e7eb; border-radius:5px; margin:1.2rem .4rem .4rem; }
+.range-fill{ position:absolute; height:100%; background:var(--primary); border-radius:5px; left:0; right:0; }
+.range-wrap input[type=range]{ position:absolute; top:-8px; left:0; width:100%; -webkit-appearance:none; appearance:none; background:transparent; pointer-events:none; margin:0; }
+.range-wrap input[type=range]::-webkit-slider-thumb{ -webkit-appearance:none; appearance:none; pointer-events:auto; width:20px; height:20px; border-radius:50%; background:#fff; border:2.5px solid var(--primary); cursor:pointer; box-shadow:0 1px 4px rgba(0,0,0,.2); transition:transform .15s; }
+.range-wrap input[type=range]::-webkit-slider-thumb:hover{ transform:scale(1.15); }
+.range-wrap input[type=range]::-moz-range-thumb{ pointer-events:auto; width:20px; height:20px; border-radius:50%; background:#fff; border:2.5px solid var(--primary); cursor:pointer; box-shadow:0 1px 4px rgba(0,0,0,.2); }
+.range-wrap input[type=range]:focus{ outline:none; }
+
+/* Interruptor (Toggle switch) */
+.form-check.form-switch{ padding-left:2.6rem; }
+.form-check-input{ width:3em !important; height:1.6em !important; cursor:pointer; }
+.form-check-input:checked{ background-color:var(--primary); border-color:var(--primary); }
+.form-check-label{ font-weight:600; color:#374151; padding-top:2px; }
+
+/* ---------- CABECERA DE PRODUCTOS ---------- */
+.page-title{ font-weight:700; font-size:1.6rem; }
+.count-muted{ color:var(--muted); font-weight:500; font-size:1rem; }
+.sort-select{ width:auto; min-width:210px; border-radius:10px; font-weight:600; font-size:.9rem; border-color:var(--primary); color:var(--primary); cursor:pointer; }
+.sort-select:focus{ border-color:var(--primary); box-shadow:0 0 0 .2rem rgba(37,99,235,.15); }
+
+/* ---------- TARJETA DE PRODUCTO ---------- */
+.product-card{ background:var(--card); border:1px solid var(--border); border-radius:14px; overflow:hidden; height:100%; display:flex; flex-direction:column; transition: transform .25s ease, box-shadow .25s ease; position:relative; }
+.product-card:hover{ transform:translateY(-5px); box-shadow:0 12px 28px rgba(37,99,235,.14); border-color:#bfdbfe; }
+.product-img-wrap{ position:relative; background:#f1f3f5; aspect-ratio:1/1; display:flex; align-items:center; justify-content:center; overflow:hidden; }
+.product-img-wrap img{ width:82%; height:82%; object-fit:contain; transition: transform .4s ease; }
+.product-card:hover .product-img-wrap img{ transform:scale(1.06); }
+.oferta-tag{ position:absolute; top:10px; left:-6px; background:var(--danger); color:#fff; font-size:.7rem; font-weight:700; padding:3px 12px 3px 10px; border-radius:0 6px 6px 0; letter-spacing:.3px; box-shadow:0 2px 6px rgba(239,68,68,.35); }
+.oferta-tag::after{ content:""; position:absolute; left:0; bottom:-5px; border-left:6px solid transparent; border-top:5px solid #b91c1c; }
+.add-btn{ position:absolute; top:10px; right:10px; width:30px; height:30px; border-radius:50%; background:var(--primary); color:#fff; border:none; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:.95rem; line-height:1; box-shadow:0 3px 8px rgba(37,99,235,.35); transition: background .2s, transform .2s; z-index:2; }
+.add-btn:hover{ background:var(--primary-dark); transform:rotate(90deg) scale(1.1); }
+.add-btn:active{ transform:scale(.9); }
+.add-btn.added{ background:var(--success); transform:scale(1.15); }
+.product-body{ padding:.85rem 1rem 1.1rem; display:flex; flex-direction:column; flex:1; }
+.stock-badge{ font-size:.8rem; font-weight:600; margin-bottom:.35rem; display:inline-flex; align-items:center; gap:3px; }
+.stock-badge.in{ color:var(--success); }
+.stock-badge.out{ color:var(--danger); }
+.product-name{ font-weight:600; font-size:.95rem; color:var(--text); margin-bottom:.4rem; line-height:1.3; flex:1; }
+.price-row{ display:flex; align-items:baseline; gap:.5rem; }
+.price-now{ color:var(--primary); font-weight:700; font-size:1.15rem; }
+.price-old{ color:var(--muted); text-decoration:line-through; font-size:.85rem; font-weight:500; }
+
+/* Animación de entrada de la tarjeta */
+@keyframes fadeInUp{ from{ opacity:0; transform:translateY(18px);} to{ opacity:1; transform:translateY(0);} }
+.card-anim{ opacity:0; animation: fadeInUp .45s ease forwards; }
+
+/* Estado vacío */
+.empty-state{ text-align:center; padding:4rem 1rem; color:var(--muted); }
+.empty-state i{ font-size:3.5rem; margin-bottom:1rem; color:#d1d5db; }
+
+/* ---------- PAGINACIÓN ---------- */
+.pagination .page-link{ border:none; color:#374151; font-weight:600; margin:0 3px; border-radius:8px !important; min-width:38px; text-align:center; }
+.pagination .page-link:hover{ background:var(--primary-soft); color:var(--primary); }
+.pagination .page-item.active .page-link{ background:var(--primary); color:#fff; box-shadow:0 3px 8px rgba(37,99,235,.3); }
+.pagination .page-item.disabled .page-link{ color:#d1d5db; background:transparent; }
+
+/* ---------- NOTIFICACIÓN TOAST ---------- */
+.toast-cart{ position:fixed; bottom:24px; right:24px; background:#111827; color:#fff; padding:.8rem 1.2rem; border-radius:12px; font-weight:600; font-size:.9rem; box-shadow:0 10px 30px rgba(0,0,0,.25); display:flex; align-items:center; gap:.6rem; z-index:2000; opacity:0; transform:translateY(20px); transition:opacity .3s, transform .3s; pointer-events:none; }
+.toast-cart.show{ opacity:1; transform:translateY(0); }
+.toast-cart i{ color:#4ade80; font-size:1.1rem; }
+
+/* Cabecera offcanvas en móviles */
+@media (max-width:991.98px){
+  .offcanvas{ border-radius: 14px 0 0 14px; }
+}
