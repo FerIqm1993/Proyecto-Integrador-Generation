@@ -20,54 +20,6 @@ body {
   background-color: #f9f9f9;
 }
 
-/* ==================== NAVBAR  CSS========================== */
-
-.navbar-tienda {
-    min-height: 88px;
-    background-color: var(--blanco);
-    border-bottom: 1px solid var(--borde);
-    padding: 10px 0;
-}
-
-/* Logotipo */
-
-.logo {
-    width: 100px;
-    height: 100px;
-    object-fit: contain;
-}
-
-.navbar-brand {
-    color: var(--azul);
-    font-size: 1.7rem;
-    font-weight: 800;
-}
-
-.navbar-brand:hover {
-    color: var(--azul);
-}
-
-/* Enlaces */
-
-.navbar-tienda .nav-link {
-    color: var(--gris-oscuro);
-    font-size: 0.95rem;
-    margin: 0 7px;
-    transition:
-        color 0.2s ease,
-        transform 0.2s ease;
-}
-
-.navbar-tienda .nav-link:hover {
-    color: var(--azul);
-    transform: translateY(-1px);
-}
-
-.navbar-tienda .nav-link.active {
-    color: var(--azul);
-    font-weight: 600;
-}
-
 /* ================BUSCADOR ======================== */
 
 .caja-busqueda {
@@ -99,66 +51,6 @@ body {
 .caja-busqueda input::placeholder {
     color: #999999;
 }
-
-/* ============= BOTONES NAVBAR ================= */
-
-.acciones-nav {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-left: 25px;
-}
-
-.boton-icono,
-.boton-carrito {
-    border: none;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    transition:
-        transform 0.2s ease,
-        background-color 0.2s ease;
-}
-
-.boton-icono {
-    width: 42px;
-    height: 42px;
-    background: transparent;
-    color: var(--gris-oscuro);
-    font-size: 1.25rem;
-}
-
-.boton-carrito {
-    min-width: 62px;
-    height: 44px;
-    gap: 8px;
-    padding: 0 13px;
-    border-radius: 8px;
-    background-color: rgba(74, 144, 226, 0.12);
-    color: var(--azul);
-    font-size: 1.2rem;
-}
-
-.boton-carrito:hover {
-    background-color: rgba(74, 144, 226, 0.2);
-    transform: translateY(-2px);
-}
-
-.contador-carrito {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 21px;
-    height: 21px;
-    border-radius: 50%;
-    background-color: var(--azul);
-    color: var(--blanco);
-    font-size: 0.7rem;
-    font-weight: 700;
-}
-
-
 
 
 /* ==================== FORMULARIOS =========================== */
@@ -221,4 +113,3 @@ footer {
     color: var(--crema);
     font-size: 0.85rem;
 }
-
