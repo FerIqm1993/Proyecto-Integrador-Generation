@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tienda 3V - Categorías</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../css/global.css" rel="stylesheet">
+    <link href="../css/categorias.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-tienda sticky-top">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center gap-2" href="../index.html">
+                <img src="../img/Logo.png" alt="Logo Tienda 3V" class="logo">
+                <span>Tienda 3V</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menuPrincipal"
+                    aria-controls="menuPrincipal" aria-expanded="false" aria-label="Abrir menú">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="menuPrincipal">
+                <ul class="navbar-nav ms-lg-4 mb-3 mb-lg-0">
+                    <li class="nav-item"><a class="nav-link" href="../index.html">Inicio</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="categorias.html">Categorías</a></li>
+                    <li class="nav-item"><a class="nav-link" href="acerca.html">Acerca</a></li>
+                    <li class="nav-item"><a class="nav-link" href="contacto.html">Contacto</a></li>
+                </ul>
+                <form class="search-box ms-lg-auto" role="search" onsubmit="return false;">
+                    <i class="bi bi-search"></i>
+                    <input type="search" placeholder="Busca abarrotes, lácteos, limpieza y más..." aria-label="Buscar productos">
+                </form>
+                <div class="nav-actions">
+                    <button type="button" class="icon-button" aria-label="Mi cuenta"><i class="bi bi-person"></i></button>
+                    <button type="button" class="cart-button" aria-label="Carrito" onclick="window.location.href='carrito.html'">
+                        <i class="bi bi-cart3"></i>
+                        <span class="cart-count" id="cartBadge">0</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container-fluid px-3 px-lg-4 py-4">
+        <div class="row g-4">
+            <aside class="col-lg-3">
+                <button class="btn btn-primary d-lg-none mb-3 w-100 fw-semibold" type="button"
+                        data-bs-toggle="collapse" data-bs-target="#filterCollapse"
+                        aria-expanded="false" aria-controls="filterCollapse">
+                    <i class="bi bi-funnel me-2"></i>Filtrar productos
+                </button>
+
+                <div class="collapse d-lg-block" id="filterCollapse">
+                    <div class="filter-card">
+                        <h6>Categorías</h6>
+                        <ul class="cat-list" id="catList">
+                            <li class="active" data-cat="alimentos">Alimentos <span class="count">(2)</span></li>
+                            <li data-cat="cervezas">Cervezas, Vinos y Licores <span class="count">(2)</span></li>
+                            <li data-cat="hogar">Hogar <span class="count">(2)</span></li>
+                            <li data-cat="ferreteria">Ferretería <span class="count">(2)</span></li>
+                            <li data-cat="bebidas">Bebidas <span class="count">(2)</span></li>
+                            <li data-cat="belleza">Belleza y cuidado personal <span class="count">(2)</span></li>
+                            <li data-cat="mascotas">Mascotas <span class="count">(2)</span></li>
+                        </ul>
+                    </div>
+
+                    <div class="filter-card">
+                        <h6>Rango de precio</h6>
+                        <div class="price-inputs">
+                            <div class="flex-fill">
+                                <label class="form-label small text-muted mb-1" for="minInput">Min</label>
+                                <input type="number" class="form-control" id="minInput" min="0" max="300" value="0">
+                            </div>
+                            <span class="text-muted pt-3">a</span>
+                            <div class="flex-fill">
+                                <label class="form-label small text-muted mb-1" for="maxInput">Max</label>
+                                <input type="number" class="form-control" id="maxInput" min="0" max="300" value="300">
+                            </div>
+                        </div>
+                        <div class="range-wrap">
+                            <div class="range-fill" id="rangeFill"></div>
+                            <input type="range" id="minRange" min="0" max="300" value="0" step="5" aria-label="Precio mínimo">
+                            <input type="range" id="maxRange" min="0" max="300" value="300" step="5" aria-label="Precio máximo">
+                        </div>
+                    </div>
+
+                    <div class="filter-card">
+                        <h6>Disponibilidad</h6>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="stockToggle" checked>
+                            <label class="form-check-label" for="stockToggle">Solo disponibles</label>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+
+            <section class="col-lg-9">
+                <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+                    <div>
+                        <h2 class="page-title d-inline me-2" id="catTitle">Alimentos</h2>
+                        <span class="count-muted" id="foundCount">(2 productos encontrados)</span>
+                    </div>
+                    <select class="form-select sort-select" id="sortSelect" aria-label="Ordenar">
+                        <option value="relevancia">Ordenar por: Relevancia</option>
+                        <option value="precio-asc">Precio: menor a mayor</option>
+                        <option value="precio-desc">Precio: mayor a menor</option>
+                        <option value="nombre">Nombre: A a Z</option>
+                    </select>
+                </div>
+
+                <div class="row g-3" id="productGrid"></div>
+
+                <div class="empty-state d-none" id="emptyState">
+                    <i class="bi bi-inbox"></i>
+                    <h5 class="fw-bold">No se encontraron productos</h5>
+                    <p class="mb-0">Ajusta los filtros de precio o disponibilidad para ver más resultados.</p>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer class="footer-contacto" id="contacto">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-item"><i class="bi bi-telephone-fill"></i><span>Llámanos: 800-3V-AYUDA (800-382-9832)</span></div>
+                <div class="footer-item"><i class="bi bi-envelope-fill"></i><span>contacto@tienda3v.mx</span></div>
+            </div>
+        </div>
+    </footer>
+
+    <div class="toast-cart" id="toastCart" role="status" aria-live="polite">
+        <i class="bi bi-check-circle-fill"></i>
+        <span id="toastText">Añadido al carrito</span>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../js/global.js"></script>
+    <script src="../js/categorias.js"></script>
+</body>
+</html>
