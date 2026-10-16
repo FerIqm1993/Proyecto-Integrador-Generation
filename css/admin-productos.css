@@ -1,0 +1,189 @@
+:root {
+    --azul: #4b91e4;
+    --oscuro: #284f9c;
+    --tinta: #17243a;
+    --fondo: #f4f8ff
+}
+
+* {
+    box-sizing: border-box
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: var(--fondo);
+    color: var(--tinta)
+}
+
+.topbar {
+    background: white;
+    box-shadow: 0 2px 12px #152b4b12
+}
+
+.brand-logo {
+    height: 62px;
+    width: 62px;
+    object-fit: contain
+}
+
+.brand-name {
+    color: var(--azul);
+    font-size: 1.7rem;
+    font-weight: 800;
+    text-decoration: none
+}
+
+.topbar .nav-link {
+    color: #15243b;
+    font-weight: 500
+}
+
+.topbar .nav-link:hover,
+.topbar .nav-link.active {
+    color: #2168d3
+}
+
+.hero-admin {
+    background: linear-gradient(110deg, #4b96e8, #2c4e9b);
+    color: #fff;
+    padding: 52px 16px;
+    text-align: center
+}
+
+.hero-admin h1 {
+    font-weight: 800;
+    font-size: clamp(1.9rem, 4vw, 3rem)
+}
+
+.main-admin {
+    max-width: 1180px;
+    margin: auto;
+    padding: 40px 16px 65px
+}
+
+.admin-card {
+    background: #fff;
+    border: 1px solid #e6edf7;
+    border-radius: 20px;
+    box-shadow: 0 12px 32px #21497a12;
+    padding: clamp(18px, 3vw, 32px);
+    margin-bottom: 28px
+}
+
+.admin-card h2 {
+    font-weight: 750;
+    font-size: 1.35rem
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: var(--azul);
+    box-shadow: 0 0 0 .2rem #4b91e42e
+}
+
+.btn-primary {
+    background: #397fd7;
+    border-color: #397fd7
+}
+
+.btn-primary:hover {
+    background: #2868b8;
+    border-color: #2868b8
+}
+
+.table thead th {
+    background: #eaf2ff;
+    color: #204e95;
+    white-space: nowrap
+}
+
+.table td {
+    vertical-align: middle
+}
+
+.table td:nth-child(2) {
+    min-width: 165px
+}
+
+.table td:last-child {
+    white-space: nowrap
+}
+
+.site-footer {
+    background: #203e76;
+    color: white;
+    padding: 30px 16px;
+    text-align: center
+}
+
+.site-footer a {
+    color: #dceaff
+}
+
+.pill-count {
+    display: inline-block;
+    background: #eaf2ff;
+    color: #2457a4;
+    padding: 5px 12px;
+    border-radius: 100px;
+    font-weight: 700
+}
+
+.nav-toggle {
+    border: 1px solid #ccd8e8;
+    border-radius: 8px;
+    padding: 7px 11px;
+    background: #fff
+}
+
+@media(max-width:767px) {
+    .topbar .navbar-nav {
+        padding-top: 12px
+    }
+
+    .brand-logo {
+        width: 46px;
+        height: 46px
+    }
+
+    .brand-name {
+        font-size: 1.35rem
+    }
+
+    .hero-admin {
+        padding: 36px 16px
+    }
+
+    .main-admin {
+        padding-top: 24px
+    }
+
+    .admin-card {
+        border-radius: 14px
+    }
+}
+
+/* Sección de cupones */
+#administrarCupones {
+    border: 1px solid #dbe8fb;
+    border-radius: 18px;
+    overflow: hidden
+}
+
+#administrarCupones h2 {
+    color: #284f9c;
+    font-weight: 750
+}
+
+#administrarCupones .table thead th {
+    background: #eaf2ff;
+    color: #204e95
+}
+
+#administrarCupones .badge {
+    font-size: .85rem
+}
+
+#administrarCupones .btn {
+    margin-bottom: 2px
+}
