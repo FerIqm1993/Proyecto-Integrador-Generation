@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tienda 3V - Registro</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="../css/inicio.css" rel="stylesheet">
+    <link href="../css/global.css" rel="stylesheet">
+    <link href="../css/navbar.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    
+</head>
+<body>
+  <!-- Encabezado -->
+
+  <!-- ===== NAVBAR ===== -->
+    <div id="navbar-container"></div>
+
+
+  <!-- Formulario de registro -->
+  <main class="container flex-grow-1 py-5">
+    <div class="row justify-content-center">
+      <div class="col-12 col-md-9 col-lg-7 col-xl-6">
+        <section class="form-container bg-white p-4 p-md-5 rounded shadow-sm">
+          <h2 class="mb-4">Formulario de Registro</h2>
+          <form>
+        <label for="nombre" class="form-label">Nombre(s)</label>
+        <input class="form-control mb-3" type="text" id="nombre" placeholder="Ej. Juan" required>
+
+        <label for="apellido" class="form-label">Apellido(s)</label>
+        <input class="form-control mb-3" type="text" id="apellido" placeholder="Ej. Pérez" required>
+
+        <label for="email" class="form-label">Email</label>
+        <input class="form-control mb-3" type="email" id="email" placeholder="ejemplo@correo.com" required>
+
+        <label for="telefono" class="form-label">Teléfono</label>
+        <input class="form-control mb-3" type="tel" id="telefono" placeholder="Ej. 5512345678" required>
+
+        <label for="password" class="form-label">Contraseña</label>
+        <input class="form-control mb-3" type="password" id="password" placeholder="Min. 8 caracteres" required>
+
+        <label for="confirmar" class="form-label">Confirmar Contraseña</label>
+        <input class="form-control mb-3" type="password" id="confirmar" placeholder="Repite contraseña" required>
+
+        <label class="form-check mb-3">
+          <input class="form-check-input" type="checkbox" required> Acepto los términos de servicio y condiciones
+        </label>
+
+        <button class="btn btn-primary w-100" type="submit">Crear cuenta</button>
+          </form>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+   <footer class="footer-contacto" id="contacto">
+    <div class="container">
+        <div class="contenido-footer">
+
+            <!-- Teléfono -->
+            <div class="item-footer">
+                <i class="bi bi-telephone-fill"></i>
+                <span>Llámanos: 800-3V-AYUDA (800-382-9832)</span>
+            </div>
+
+            <!-- Correo -->
+            <div class="item-footer">
+                <i class="bi bi-envelope-fill"></i>
+                <span>contacto@tienda3v.mx</span>
+            </div>
+
+        </div>
+    </div>
+    </footer>
+ 
+ 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../js/global.js"></script>
+    <script src="../js/navbar.js"></script>
+
+</body>
+</html>
