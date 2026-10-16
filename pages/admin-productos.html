@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Administrar productos | Tienda 3V</title>
+        <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="../css/global.css" rel="stylesheet">
+    <link href="../css/contacto.css" rel="stylesheet">
+    <link href="../css/admin-productos.css" rel="stylesheet">
+    <link rel="stylesheet" href="../css/navbar.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+</head>
+
+<body class="bg-light">
+
+    <!-- Aquí se inserta el navbar desde el archivo navbar.html -->
+    <div id="navbar-container"></div>
+
+    <main class="container py-4">
+        <h1 class="h3">Formulario de productos</h1>
+        <p class="text-secondary">Registra, consulta, modifica y elimina productos.</p>
+        <div id="alertas" aria-live="polite"></div>
+        <div class="card shadow-sm mb-4">
+            <div class="card-body">
+                <h2 class="h5" id="tituloFormulario">Nuevo producto</h2>
+                <form id="productoForm" novalidate>
+                    <div class="row g-3">
+                        <div class="col-md-3"><label class="form-label" for="id">ID del producto *</label>
+                            <input class="form-control" type="number" id="id" min="1" step="1" placeholder="Ej. 1" required>
+                            <div class="form-text" id="ayudaId">Escribe un ID para buscar el producto.</div></div>
+                        <div class="col-md-3"><label class="form-label" for="nombre">Nombre del producto *</label>
+                            <input class="form-control" id="nombre" maxlength="100" required readonly>
+                            <div class="form-text">Se autocompleta si el ID existe. Para un ID nuevo, escribe el nombre.</div></div>
+                        <div class="col-md-3"><label class="form-label" for="precio">Precio actual *</label><input
+                                class="form-control" type="number" id="precio" min="0.01" step="0.01" required></div>
+                        <div class="col-md-3"><label class="form-label" for="anterior">Precio anterior
+                                (opcional)</label><input class="form-control" type="number" id="anterior" min="0.01"
+                                step="0.01"></div>
+
+                        <div class="col-md-6"><label class="form-label" for="cat">Categoría *</label><select
+                                class="form-select" id="cat" required>
+                                <option value="">Selecciona una categoría</option>
+                                <option value="alimentos">Alimentos</option>
+                                <option value="cervezas">Cervezas, Vinos y Licores</option>
+                                <option value="hogar">Hogar</option>
+                                <option value="ferreteria">Ferretería</option>
+                                <option value="bebidas">Bebidas</option>
+                                <option value="belleza">Belleza y cuidado personal</option>
+                                <option value="mascotas">Mascotas</option>
+                            </select></div>
+
+                        <div class="col-md-6">
+                            <label for="img" class="form-label">Imagen del producto</label>
+                            <input type="file" id="img" class="form-control" accept="image/*">
+                            <!-- Aquí aparecerá la imagen seleccionada -->
+                            <img id="vistaPrevia" class="img-fluid mt-3" style="max-width: 150px; display: none;" alt="Vista previa del producto">
+                        </div>
+                                                    
+                        <div class="col-12">
+                            <div class="form-check"><input class="form-check-input" type="checkbox" id="disp"
+                                    checked><label class="form-check-label" for="disp">Producto disponible</label></div>
+                        </div>
+                    </div>
+                    <div class="mt-3 d-flex gap-2"><button class="btn btn-primary" type="submit" id="guardar">Guardar
+                            producto</button><button class="btn btn-outline-secondary" type="button"
+                            id="cancelar">Cancelar edición</button></div>
+                </form>
+            </div>
+        </div>
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <div class="d-flex justify-content-between flex-wrap gap-2">
+                    <h2 class="h5">Productos registrados</h2><button class="btn btn-outline-primary btn-sm"
+                        id="exportar" type="button">Descargar JSON</button>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-striped align-middle">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nombre</th>
+                                <th>Precio</th>
+                                <th>Anterior</th>
+                                <th>Categoría</th>
+                                <th>Disponible</th>
+                                <th>Imagen</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tablaProductos"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- CRUD de cupones: independiente del CRUD de productos -->
+        <section class="card shadow-sm mt-4 mb-4" id="administrarCupones" aria-labelledby="tituloCupones">
+          <div class="card-body">
+            <h2 class="h4" id="tituloCupones"><i class="bi bi-ticket-perforated"></i> Administración de cupones</h2>
+            <p class="text-secondary">Crea códigos de descuento con el porcentaje que elijas.</p>
+            <div id="alertasCupones" aria-live="polite"></div>
+            <form id="cuponForm" novalidate>
+              <input type="hidden" id="cuponId">
+              <div class="row g-3">
+                <div class="col-md-5">
+                  <label class="form-label" for="cuponCodigo">Código del cupón *</label>
+                  <input class="form-control" id="cuponCodigo" maxlength="30" placeholder="EJ. TIENDA3V20" required>
+                  <div class="form-text">Letras, números, guiones y guion bajo; sin espacios.</div>
+                </div>
+                <div class="col-md-4">
+                  <label class="form-label" for="cuponPorcentaje">Porcentaje de descuento *</label>
+                  <div class="input-group"><input class="form-control" type="number" id="cuponPorcentaje" min="1" max="100" step="1" value="10" required><span class="input-group-text">%</span></div>
+                </div>
+                <div class="col-md-3 d-flex align-items-end pb-2">
+                  <div class="form-check"><input class="form-check-input" type="checkbox" id="cuponActivo" checked><label class="form-check-label" for="cuponActivo">Cupón activo</label></div>
+                </div>
+              </div>
+              <div class="d-flex flex-wrap gap-2 mt-3">
+                <button type="submit" class="btn btn-primary" id="guardarCupon">Crear cupón</button>
+                <button type="button" class="btn btn-outline-secondary" id="cancelarCupon">Cancelar edición</button>
+                <button type="button" class="btn btn-outline-primary" id="exportarCupones">Descargar cupones JSON</button>
+              </div>
+            </form>
+            <div class="table-responsive mt-4">
+              <table class="table table-striped align-middle">
+                <thead><tr><th>Código</th><th>Descuento</th><th>Estado</th><th>Acciones</th></tr></thead>
+                <tbody id="tablaCupones"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+    </main>
+
+        <!-- Sección Footer -->
+    <div id="footer-container"></div>
+
+
+        <!-- Bootstrap JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../js/global.js"></script>
+    <script src="../js/admin-metodos.js"></script>
+    <script src="../js/admin-productos.js""></script>
+
+    <!-- Navar -->
+    <script src="../js/navbar.js"></script>
+    <!-- Footer -->
+    <script src="../js/footer.js"></script>
+</body>
+
+</html>
