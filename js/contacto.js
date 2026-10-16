@@ -1,11 +1,11 @@
 document.addEventListener('DOMContentLoaded', () => {
     // 1. Inicializar EmailJS con tu Public Key
-    if (typeof CONFIG !== 'undefined') {
+    if (typeof CONFIG !== 'undefined' && CONFIG.EMAILJS_PUBLIC_KEY) {
         emailjs.init({
             publicKey: CONFIG.EMAILJS_PUBLIC_KEY,
         });
     } else {
-        console.warn("Advertencia: config.js no está presente o CONFIG no está definido.");
+        console.warn("Aviso: EmailJS no configurado o credenciales vacías en config.js. Se usará el modo simulación.");
     }
 
     const formularioContacto = document.getElementById('formularioContacto');
