@@ -1,0 +1,115 @@
+/* Contenedor de la tarjeta del formulario */
+main .card {
+    border: 1px solid #e1e8ed !important;
+    border-radius: 50px !important;
+    background-color: #ffffff !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05) !important;
+    padding: 2rem !important;
+}
+
+/* Título principal del formulario */
+main h2 {
+    font-family: 'Inter', sans-serif;
+    text-align: center !important;
+    font-weight: 700;
+    color: #2b2d42;
+    font-size: 1.6rem;
+    margin-bottom: 1.5rem !important;
+}
+
+/* Etiquetas de los campos (coincidiendo con las fuentes del sitio) */
+.form-label {
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: #495057;
+    margin-bottom: 0.4rem;
+}
+
+/* Campos de entrada (Inputs) con el mismo estilo del buscador */
+.form-control {
+    border: 1px solid #e1e8ed !important;
+    background-color: #f4f7f9 !important;
+    border-radius: 50px !important;
+    padding: 10px 14px !important;
+    font-size: 0.9rem !important;
+    color: #2b2d42 !important;
+    transition: all 0.25s ease;
+}
+
+.form-control::placeholder {
+    color: #94a3b8 !important;
+}
+
+/* Efecto al enfocar los inputs (idéntico al focus del buscador del navbar) */
+.form-control:focus {
+    background-color: #ffffff !important;
+    border-color: #4361ee !important;
+    box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.12) !important;
+}
+
+/* Casilla de términos y condiciones */
+.form-check {
+    font-size: 0.85rem;
+    color: #495057;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding-left: 0;
+}
+
+.form-check-input {
+    width: 18px;
+    height: 18px;
+    margin-top: 0;
+    border: 1px solid #e1e8ed;
+    background-color: #f4f7f9;
+    border-radius: 4px !important;
+    cursor: pointer;
+}
+
+.form-check-input:checked {
+    background-color: #4361ee !important;
+    border-color: #4361ee !important;
+}
+
+/* Botón principal de registro ("Crear cuenta") */
+#formularioRegistro .btn-primary {
+    background: #4361ee !important;
+    color: #ffffff !important;
+    border: none !important;
+    border-radius: 50px !important; 
+    padding: 10px 20px !important;
+    font-size: 0.95rem !important;
+    font-weight: 600 !important;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(67, 97, 238, 0.25);
+    transition: all 0.2s ease;
+    margin-top: 1rem;
+}
+
+#formularioRegistro .btn-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(67, 97, 238, 0.35);
+    opacity: 0.95;
+}
+
+/* Estilos personalizados para las alertas de validación */
+.alert {
+    border-radius: 10px !important;
+    font-size: 0.85rem !important;
+    border: none !important;
+    padding: 12px 16px !important;
+    margin-bottom: 1.25rem !important;
+}
+
+.alert-danger {
+    background-color: #fef2f2 !important;
+    color: #991b1b !important;
+    border-left: 4px solid #ef4444 !important;
+}
+
+.alert-success {
+    background-color: #f0fdf4 !important;
+    color: #166534 !important;
+    border-left: 4px solid #22c55e !important;
+}
