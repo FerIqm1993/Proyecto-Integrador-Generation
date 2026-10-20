@@ -172,6 +172,7 @@ function agregarAlCarrito(idProducto) {
       img: rutaImagen,
       cantidad: 1
     });
+    
     actualizarUICarrito();
 
     // Abrir canvas lateral del carrito para retroalimentación visual

@@ -36,6 +36,15 @@ formulario.addEventListener("submit", function (evento) {
     ) {
         errores.push("Todos los campos son obligatorios.");
     }
+
+    if (nombre !== "" && nombre.length <= 3) {
+        errores.push("El nombre debe tener más de 3 caracteres.");
+    }
+
+    if (apellido !== "" && apellido.length <= 3) {
+        errores.push("El apellido debe tener más de 3 caracteres.");
+    }
+
 //-----CORREO-----
     //Validar el formato del correo electrónico
     const formatoEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -48,6 +57,10 @@ formulario.addEventListener("submit", function (evento) {
     //Limpiar espacios, guiones y paréntesis del teléfono
     // Esto permite validar los números aunque estén separados
     const telefonoLimpio = telefono.replace(/[\s()-]/g, "");
+
+    if (telefonoLimpio.startsWith("0")) {
+        errores.push("El teléfono no puede comenzar con 0.");
+    }
 
     // Comprobar que el teléfono tenga exactamente 10 dígitos
     if (telefono !== "" && !/^\d{10}$/.test(telefonoLimpio)) {
