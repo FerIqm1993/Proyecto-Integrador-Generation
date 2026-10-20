@@ -36,23 +36,37 @@ formulario.addEventListener("submit", function (evento) {
     ) {
         errores.push("Todos los campos son obligatorios.");
     }
+    //-----validación de nombre y apellido-----
+
+     if (nombre !== "" && nombre.length <= 3) {
+        errores.push("El nombre debe tener más de 3 caracteres.");
+    }
+    if (apellido !== "" && apellido.length <= 3) {
+        errores.push("El apellido debe tener más de 3 caracteres.");
+    }
+    
 //-----CORREO-----
     //Validar el formato del correo electrónico
     const formatoEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     if (email !== "" && !formatoEmail.test(email)) {
-        errores.push("Ingresa un correo electrónico válido.");
+        errores.push("Ingresa un correo electrónico válido. Ejemplo: correo@dominio.com");
     }
 
 //-----TELÉFONO-----
     //Limpiar espacios, guiones y paréntesis del teléfono
     // Esto permite validar los números aunque estén separados
     const telefonoLimpio = telefono.replace(/[\s()-]/g, "");
+    
+     if (telefonoLimpio.startsWith("0")) {
+        errores.push("El teléfono no puede comenzar con 0.");
+    }
 
     // Comprobar que el teléfono tenga exactamente 10 dígitos
     if (telefono !== "" && !/^\d{10}$/.test(telefonoLimpio)) {
         errores.push("El teléfono debe contener exactamente 10 números.");
     }
+
 
     //Validar que no haya más de 3 números iguales consecutivos
     // La expresión detecta 4 o más números iguales seguidos
@@ -138,6 +152,32 @@ formulario.addEventListener("submit", function (evento) {
 
         </div>
     `;
+
+    // ===== GUARDAR EL USUARIO EN LOCALSTORAGE =====
+// asi podra iniciar sesion despues
+let usuariosGuardados = JSON.parse(localStorage.getItem('usuarios') || '[]');
+
+// reviso si el correo ya esta registrado
+let correoYaExiste = false;
+for (let i = 0; i < usuariosGuardados.length; i++) {
+    if (usuariosGuardados[i].email == email) {
+        correoYaExiste = true;
+    }
+}
+
+if (correoYaExiste == false) {
+    // creo el objeto con los datos
+    let nuevoUsuario = {
+        nombre: nombre + " " + apellido,
+        email: email,
+        telefono: telefonoLimpio,
+        contrasena: btoa(password)  // codifico la contraseña
+    };
+    // lo agrego a la lista y guardo
+    usuariosGuardados.push(nuevoUsuario);
+    localStorage.setItem('usuarios', JSON.stringify(usuariosGuardados));
+    console.log("Usuario guardado en localStorage: " + email);
+}
 
     formulario.reset();
 
