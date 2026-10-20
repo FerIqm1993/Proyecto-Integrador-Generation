@@ -1,18 +1,18 @@
 // EJECUCIÓN: eventos y carga inicial
 
 // Vista previa de la imagen seleccionada.
+// Mostramos una vista previa de la imagen seleccionada.
 obtenerElemento("img").addEventListener("change", function() {
     let archivo = obtenerElemento("img").files[0];
-    if (!archivo) return;
     let vistaPrevia = obtenerElemento("vistaPrevia");
+    // Si no hay imagen seleccionada, no hacemos nada.
+    if (!archivo) return;
+    // Mostramos la imagen antes de guardar.
     vistaPrevia.src = URL.createObjectURL(archivo);
     vistaPrevia.style.display = "block";
 });
 
 // CONECTAMOS LOS BOTONES DEL HTML CON LAS FUNCIONES
-
-// Cuando se escribe un ID, buscamos el producto.
-obtenerElemento("id").addEventListener("input", buscarProductoPorId);
 
 // Cuando se envía cada formulario, guardamos sus datos.
 obtenerElemento("productoForm").addEventListener("submit", guardarFormularioProducto);
@@ -33,3 +33,4 @@ obtenerElemento("exportarCupones").addEventListener("click", function() {
 // Al abrir la página, mostramos los productos y cupones guardados.
 mostrarProductos();
 mostrarCupones();
+limpiarFormularioProducto();
