@@ -89,7 +89,7 @@ function iniciarSesion() {
     // espero un momento para que vea el mensaje y luego lo llevo al inicio
     setTimeout(function() {
         window.location.href = "../index.html";
-    }, 3000); // 1.5 segundos para que alcance a leer
+    }, 1500); // 1.5 segundos para que alcance a leer
 }
 
 // conecto el boton con la funcion
