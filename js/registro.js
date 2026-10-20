@@ -181,4 +181,9 @@ if (correoYaExiste == false) {
 
     formulario.reset();
 
+    // espero 1.5 segundos para que vea el mensaje y lo llevo al login
+    setTimeout(function () {
+        window.location.href = "login.html";
+    }, 1500);
+
 });
