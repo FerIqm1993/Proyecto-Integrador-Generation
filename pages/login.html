@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar Sesion - Tienda 3V</title>
+    <!-- bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- mis estilos -->
+    <link href="../css/global.css" rel="stylesheet">
+    <link href="../css/login.css" rel="stylesheet">
+</head>
+<body>
+
+    <div id="navbar-container"></div>
+
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-6 col-lg-4">
+                
+                <div class="card p-4 shadow">
+                    <h2 class="text-center mb-4">Iniciar Sesión</h2>
+
+                    <!-- aqui salen los mensajes de error o exito -->
+                    <div id="mensaje"></div>
+
+                    <label class="form-label">Correo electrónico:</label>
+                    <input type="email" id="correo" class="form-control mb-3" placeholder="corrreo@dominio.com">
+
+                    <label class="form-label">Contraseña:</label>
+                    <input type="password" id="contrasena" class="form-control mb-3" placeholder="******">
+
+                    <button id="botonEntrar" class="btn btn-primary w-100 mb-3">
+                        Entrar
+                    </button>
+
+                    <p class="text-center small mb-0">
+                        ¿No tienes cuenta? 
+                        <a href="registro.html">Registrate aquí</a>
+                    </p>
+
+                     <p class="text-center small mb-0">
+                        ¿Olvidaste tu contraseña? 
+                        <a href="registro.html">Recupera aquí</a>
+                    </p>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div style="flex-grow: 1;"></div>
+    <div id="footer-container"></div>
+
+    <!-- bootstrap js -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../js/navbar.js"></script>
+    <script src="../js/footer.js"></script>
+    <!-- mi logica, en archivo separado -->
+    <script src="../js/login.js"></script>
+</body>
+</html>
