@@ -1,4 +1,14 @@
 // ORDEN DE CATEGORÍAS
+const CATEGORIAS = {
+  alimentos: "Alimentos",
+  cervezas: "Cervezas, Vinos y Licores",
+  hogar: "Hogar",
+  ferreteria: "Ferretería",
+  bebidas: "Bebidas",
+  belleza: "Belleza y Cuidado Personal",
+  mascotas: "Mascotas"
+};
+
 const categoriasOrdenadas = [
   "Hogar",
   "Cervezas, Vinos y Licores",
@@ -9,18 +19,23 @@ const categoriasOrdenadas = [
   "Belleza y Cuidado Personal"
 ];
 
-// PRODUCTOS DE MUESTRA
+// PRODUCTOS HOMOLOGADOS CON EL CATÁLOGO
 const productos = [
-  { id: 1, nombre: "Aceite Vegetal Pureco 1L", categoria: "Alimentos", precio: 45.20, precioOriginal: 52.00, etiqueta: "Disponible", imagen: "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?auto=format&fit=crop&w=600&q=80" },
-  { id: 2, nombre: "Leche Entera Cremosa 1L", categoria: "Alimentos", precio: 22.90, precioOriginal: 26.00, etiqueta: "Disponible", imagen: "https://images.unsplash.com/photo-1563636619-e9143da7973b?auto=format&fit=crop&w=600&q=80" },
-  { id: 3, nombre: "Detergente Multiusos 1kg", categoria: "Hogar", precio: 39.00, precioOriginal: 45.00, etiqueta: "Disponible", imagen: "https://images.unsplash.com/photo-1563453392212-326f5e854473?auto=format&fit=crop&w=600&q=80" },
-  { id: 4, nombre: "Jabón de Barra Premium 400g", categoria: "Belleza y Cuidado Personal", precio: 18.00, precioOriginal: 22.00, etiqueta: "Disponible", imagen: "https://images.unsplash.com/photo-1608248543803-ba4f8c70ae0b?auto=format&fit=crop&w=600&q=80" },
-  { id: 5, nombre: "Cerveza Clara 6 Pack", categoria: "Cervezas, Vinos y Licores", precio: 98.00, precioOriginal: 115.00, etiqueta: "Disponible", imagen: "https://images.unsplash.com/photo-1481215919404-66ba77de043f?auto=format&fit=crop&w=600&q=80" },
-  { id: 6, nombre: "Alimento para Perro 2kg", categoria: "Mascotas", precio: 145.00, precioOriginal: 160.00, etiqueta: "Disponible", imagen: "https://images.unsplash.com/photo-1589924691995-400dc9ecc119?auto=format&fit=crop&w=600&q=80" },
-  { id: 7, nombre: "Juego de Desarmadores 4 pzs", categoria: "Ferretería", precio: 89.00, precioOriginal: 110.00, etiqueta: "Disponible", imagen: "https://images.unsplash.com/photo-1504148455328-c376907d081c?auto=format&fit=crop&w=600&q=80" },
-  { id: 8, nombre: "Agua Mineral 1.5L", categoria: "Bebidas", precio: 16.50, precioOriginal: 20.00, etiqueta: "Disponible", imagen: "https://images.unsplash.com/photo-1546924282-0f057bc9dd5a?auto=format&fit=crop&w=600&q=80" }
+  { id: 1,  nombre: "Aceite vegetal 1L",    precio: 45.90, anterior: 65,   cat: "alimentos",   disp: true, img: "aceite.jpg" },
+  { id: 2,  nombre: "Leche entera 1L",      precio: 28.50, anterior: 34,   cat: "alimentos",   disp: true, img: "leche.jpg" },
+  { id: 3,  nombre: "Vino tinto 750ml",     precio: 145,   anterior: 180,  cat: "cervezas",    disp: true, img: "vino.jpg" },
+  { id: 4,  nombre: "Cerveza clara 6pk",    precio: 98,    anterior: null, cat: "cervezas",    disp: true, img: "cerveza.jpg" },
+  { id: 5,  nombre: "Detergente 3kg",       precio: 89,    anterior: 120,  cat: "hogar",       disp: true, img: "detergente.jpg" },
+  { id: 6,  nombre: "Papel higiénico 12pk", precio: 65,    anterior: null, cat: "hogar",       disp: true, img: "papel.jpg" },
+  { id: 7,  nombre: "Martillo de uña",      precio: 129,   anterior: null, cat: "ferreteria",  disp: true, img: "martillo.jpg" },
+  { id: 8,  nombre: "Juego de desarmadores",precio: 159,   anterior: 179,  cat: "ferreteria",  disp: true, img: "desarmadores.jpg" },
+  { id: 9,  nombre: "Refresco 2L",          precio: 24,    anterior: null, cat: "bebidas",     disp: true, img: "refresco.jpg" },
+  { id: 10, nombre: "Agua mineral 1.5L",   precio: 12.50, anterior: null, cat: "bebidas",     disp: true, img: "agua.jpg" },
+  { id: 11, nombre: "Shampoo 750ml",       precio: 54.90, anterior: null, cat: "belleza",     disp: true, img: "shampoo.jpg" },
+  { id: 12, nombre: "Jabón 3pk",           precio: 42,    anterior: null, cat: "belleza",     disp: true, img: "jabon.jpg" },
+  { id: 13, nombre: "Croquetas perro 2kg", precio: 189,   anterior: 210,  cat: "mascotas",    disp: true, img: "croquetas.jpg" },
+  { id: 14, nombre: "Arena para gato 4kg", precio: 115,   anterior: null, cat: "mascotas",    disp: true, img: "arena.jpg" }
 ];
-
 
 let categoriaActual = "Todos";
 
@@ -30,6 +45,7 @@ document.addEventListener("DOMContentLoaded", () => {
   renderizarCategoriasPildora();
   renderizarProductos(productos);
   configurarEventos();
+  actualizarUICarrito();
 });
 
 // Cargar categorías en el menú desplegable del Header
@@ -60,7 +76,7 @@ function renderizarCategoriasPildora() {
   contenedor.innerHTML = html;
 }
 
-// Renderizar tarjetas de productos
+// Renderizar tarjetas de productos adaptadas al nuevo array
 function renderizarProductos(articulos) {
   const contenedor = document.getElementById("cuadriculaProductos");
   if (!contenedor) return;
@@ -70,32 +86,58 @@ function renderizarProductos(articulos) {
     return;
   }
 
-  contenedor.innerHTML = articulos.map(producto => `
+  contenedor.innerHTML = articulos.map(producto => {
+    const nombreCat = CATEGORIAS[producto.cat] || producto.categoria || producto.cat || "General";
+    const rutaImagen = producto.img 
+      ? (producto.img.startsWith('http') || producto.img.startsWith('img/') ? producto.img : `img/productos/${producto.img}`)
+      : (producto.imagen || 'img/productos/producto.img.png');
+    
+    // Etiqueta de oferta o disponibilidad
+    let etiquetaBadge = '';
+    if (producto.anterior && producto.anterior > producto.precio) {
+      etiquetaBadge = `<span class="badge bg-danger text-white border mb-1">Oferta</span>`;
+    } else if (producto.disp === false) {
+      etiquetaBadge = `<span class="badge bg-light text-danger border mb-1">Agotado</span>`;
+    } else {
+      etiquetaBadge = `<span class="badge bg-light text-success border mb-1">${producto.etiqueta || "Disponible"}</span>`;
+    }
+
+    // Precio anterior tachado si aplica
+    const precioTachado = (producto.anterior || producto.precioOriginal)
+      ? `<span class="small text-muted text-decoration-line-through ms-2">$${Number(producto.anterior || producto.precioOriginal).toFixed(2)}</span>`
+      : '';
+
+    return `
     <div class="col-6 col-md-4 col-lg-3">
       <div class="product-card d-flex flex-column justify-content-between p-3">
         <div>
           <div class="product-img-wrapper mb-2">
-            <a href="pages/producto.html"><img class="product-img" src="${producto.imagen}" alt="${producto.nombre}" loading="lazy"></a>
+            <a href="pages/categorias.html">
+              <img class="product-img" src="${rutaImagen}" alt="${producto.nombre}" loading="lazy" style="object-fit: contain;">
+            </a>
             <button class="btn-add-cart d-flex align-items-center justify-content-center text-white fw-bold fs-5" onclick="agregarAlCarrito(${producto.id})" title="Agregar al carrito" style="line-height: 1;">
-            +
+              +
             </button>
           </div>
-          <span class="badge bg-light text-success border mb-1">${producto.etiqueta}</span>
-          <span class="d-block text-muted small fw-semibold text-uppercase">${producto.categoria}</span>
-          <a href="pages/producto.html" style="text-decoration:none; color:inherit;"><h6 class="fw-bold text-dark text-truncate mb-2" title="${producto.nombre}">${producto.nombre}</h6></a>
+          ${etiquetaBadge}
+          <span class="d-block text-muted small fw-semibold text-uppercase">${nombreCat}</span>
+          <a href="pages/categorias.html" style="text-decoration:none; color:inherit;">
+            <h6 class="fw-bold text-dark text-truncate mb-2" title="${producto.nombre}">${producto.nombre}</h6>
+          </a>
         </div>
         <div>
-          <div class="d-flex align-items-baseline gap-2">
-            <span class="fs-5 fw-bold text-primary">$${producto.precio.toFixed(2)}</span>
-            <span class="small text-muted text-decoration-line-through">$${producto.precioOriginal.toFixed(2)}</span>
+          <div class="d-flex align-items-baseline">
+            <span class="fs-5 fw-bold text-primary">$${Number(producto.precio).toFixed(2)}</span>
+            ${precioTachado}
           </div>
         </div>
       </div>
     </div>
-  `).join('');
+  `;
+  }).join('');
 }
 
-// Filtrar Productos por categoría
+// Filtrar Productos por categoría (soporta tanto nombre completo como clave interna)
 function filtrarPorCategoria(categoria) {
   categoriaActual = categoria;
   renderizarCategoriasPildora();
@@ -103,8 +145,41 @@ function filtrarPorCategoria(categoria) {
   if (categoria === "Todos") {
     renderizarProductos(productos);
   } else {
-    const filtrados = productos.filter(p => p.categoria === categoria);
+    const catBuscada = categoria.toLowerCase();
+    const filtrados = productos.filter(p => {
+      const catNombre = (CATEGORIAS[p.cat] || p.categoria || p.cat || "").toLowerCase();
+      const catClave = (p.cat || "").toLowerCase();
+      return catNombre === catBuscada || catClave === catBuscada;
+    });
     renderizarProductos(filtrados);
+  }
+}
+
+// Agregar producto al carrito desde la cuadrícula de inicio
+function agregarAlCarrito(idProducto) {
+  const prod = productos.find(p => p.id === idProducto);
+  if (!prod) return;
+
+  const rutaImagen = prod.img 
+    ? (prod.img.startsWith('http') || prod.img.startsWith('img/') ? prod.img : `img/productos/${prod.img}`)
+    : (prod.imagen || '');
+
+  if (typeof agregarProductoAlCarrito === "function") {
+    agregarProductoAlCarrito({
+      id: prod.id,
+      nombre: prod.nombre,
+      precio: prod.precio,
+      img: rutaImagen,
+      cantidad: 1
+    });
+    actualizarUICarrito();
+
+    // Abrir canvas lateral del carrito para retroalimentación visual
+    const canvasEl = document.getElementById("canvasCarrito");
+    if (canvasEl && typeof bootstrap !== "undefined") {
+      const bsOffcanvas = bootstrap.Offcanvas.getOrCreateInstance(canvasEl);
+      bsOffcanvas.show();
+    }
   }
 }
 
@@ -112,10 +187,9 @@ function filtrarPorCategoria(categoria) {
 // LÓGICA DEL CARRITO CON SUMA Y RESTA (1 EN 1)
 // ==========================================
 
-
 // Cambiar cantidad uno por uno (Sumar +1 o Restar -1)
 function cambiarCantidad(idProducto, delta) {
-  let carrito = obtenerCarrito();
+  let carrito = typeof obtenerCarrito !== 'undefined' ? obtenerCarrito() : [];
   const articulo = carrito.find(p => p.id == idProducto);
   if (!articulo) return;
   actualizarCantidad(idProducto, articulo.cantidad + delta);
@@ -124,13 +198,15 @@ function cambiarCantidad(idProducto, delta) {
 
 // Quitar por completo el producto
 function eliminarProducto(idProducto) {
-  eliminarDelCarritoLocal(idProducto);
+  if (typeof eliminarDelCarritoLocal === 'function') {
+    eliminarDelCarritoLocal(idProducto);
+  }
   actualizarUICarrito();
 }
 
 // Actualizar la vista del carrito
 function actualizarUICarrito() {
-  let carrito = typeof obtenerCarrito !== 'undefined' ? obtenerCarrito() : []; // desde global.js (fallback to [] if not defined)
+  let carrito = typeof obtenerCarrito !== 'undefined' ? obtenerCarrito() : [];
   const contadorCarrito = document.querySelector(".contador-carrito");
   const listaItemsCarrito = document.getElementById("listaItemsCarrito");
   const totalCarrito = document.getElementById("totalCarrito");
@@ -163,9 +239,9 @@ function actualizarUICarrito() {
           <button class="btn btn-sm text-secondary p-0 px-2 fw-bold" onclick="cambiarCantidad(${articulo.id}, 1)">+</button>
         </div>
 
-        <!-- Botón de basurero para eliminar de golpe -->
+        <!-- Botón para eliminar de golpe -->
         <button class="btn btn-sm text-danger p-0 ms-1" onclick="eliminarProducto(${articulo.id})" title="Eliminar todo">
-          <i class="fa-regular fa-trash-can"></i>
+          <i class="bi bi-trash"></i>
         </button>
       </div>
     </div>
@@ -181,8 +257,12 @@ function configurarEventos() {
   const botonRestablecerFiltro = document.getElementById("btnRestablecerFiltro");
 
   const manejarBusqueda = (e) => {
-    const consulta = e.target.value.toLowerCase();
-    const filtrados = productos.filter(p => p.nombre.toLowerCase().includes(consulta) || p.categoria.toLowerCase().includes(consulta));
+    const consulta = e.target.value.toLowerCase().trim();
+    const filtrados = productos.filter(p => {
+      const nombre = (p.nombre || "").toLowerCase();
+      const cat = (CATEGORIAS[p.cat] || p.categoria || p.cat || "").toLowerCase();
+      return nombre.includes(consulta) || cat.includes(consulta);
+    });
     renderizarProductos(filtrados);
   };
 
@@ -198,5 +278,4 @@ function configurarEventos() {
   if (botonRestablecerFiltro) {
     botonRestablecerFiltro.addEventListener("click", () => filtrarPorCategoria("Todos"));
   }
-  
 }
