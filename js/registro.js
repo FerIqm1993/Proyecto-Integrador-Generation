@@ -48,15 +48,6 @@ formulario.addEventListener("submit", function (evento) {
     
 
 
-    if (nombre !== "" && nombre.length <= 3) {
-        errores.push("El nombre debe tener más de 3 caracteres.");
-    }
-
-    if (apellido !== "" && apellido.length <= 3) {
-        errores.push("El apellido debe tener más de 3 caracteres.");
-    }
-
-
 //-----CORREO-----
     //Validar el formato del correo electrónico
     const formatoEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
