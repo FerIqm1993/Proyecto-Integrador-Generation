@@ -29,14 +29,28 @@ function obtenerElemento(idElemento) { // Buscamos un elemento del HTML utilizan
     return document.getElementById(idElemento);
 }
 
-function cargarLista(clave, listaInicial) { // Recuperamos una lista guardada o usamos la lista inicial.
-    try { // Obtenemos y convertimos los datos guardados.
-        let datos = JSON.parse(localStorage.getItem(clave));
-        if (Array.isArray(datos)) return datos; // Si los datos son una lista, los devolvemos.
-    } catch (error) {
-        console.log("Error al cargar datos:", error);
-    }// Si no hay datos válidos, devolvemos una copia de la lista inicial.
-    return listaInicial.map(elemento => ({ ...elemento }));
+function cargarLista(clave, listaInicial) {
+
+    try {
+
+        let datos = JSON.parse(
+            localStorage.getItem(clave)
+        );
+
+        if (Array.isArray(datos)) {
+            return datos;
+        }
+
+    } catch(error) {
+        console.log(error);
+    }
+
+    localStorage.setItem(
+        clave,
+        JSON.stringify(listaInicial)
+    );
+
+    return [...listaInicial];
 }
 
 // Dos listas distintas, pero dentro del mismo archivo JavaScript.
