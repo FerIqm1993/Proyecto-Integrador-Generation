@@ -63,7 +63,7 @@ main h2 {
     margin-top: 0;
     border: 1px solid #e1e8ed;
     background-color: #f4f7f9;
-    border-radius: 4px !important;
+    border-radius: 50px !important;
     cursor: pointer;
 }
 
@@ -76,8 +76,8 @@ main h2 {
 #formularioRegistro .btn-primary {
     background: #4361ee !important;
     color: #ffffff !important;
-    border: none !important;
-    border-radius: 50px !important; 
+    border: 1px solid #e1e8ed !important;
+    border-radius: 50px !important;
     padding: 10px 20px !important;
     font-size: 0.95rem !important;
     font-weight: 600 !important;
@@ -112,4 +112,19 @@ main h2 {
     background-color: #f0fdf4 !important;
     color: #166534 !important;
     border-left: 4px solid #22c55e !important;
+}
+
+.tarjeta-login .form-control {
+    border: 1px solid var(--borde);
+    border-radius: 50px;
+    padding: 10px 16px;
+}
+
+.tarjeta-login .form-control:focus {
+    border-color: var(--azul);
+    box-shadow: 0 0 0 0.2rem var(--primary-soft);
+}
+
+.tarjeta-login .btn {
+    border-radius: 50px;
 }

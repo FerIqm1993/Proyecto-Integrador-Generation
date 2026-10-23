@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recuperar Contraseña - Tienda 3V</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- Estilos del proyecto -->
+    <link href="../css/global.css" rel="stylesheet">
+    <link href="../css/login.css" rel="stylesheet">
+</head>
+<body style="min-height: 100vh; display: flex; flex-direction: column;">
+
+    <div id="navbar-container"></div>
+
+    <div class="container py-5" style="flex: 1;">
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-6 col-lg-4">
+                
+                <div class="card p-4 shadow">
+                    <h2 class="text-center mb-4">Recuperar Contraseña</h2>
+
+                    <!-- mensajes de error o exito -->
+                    <div id="mensaje"></div>
+
+                    <!-- paso 1: pedir correo -->
+                    <div id="pasoCorreo">
+                        <label class="form-label">Correo electrónico registrado:</label>
+                        <input type="email" id="correoRecuperar" class="form-control mb-3" 
+                               placeholder="tucorreo@ejemplo.com">
+                        
+                        <button id="btnVerificar" class="btn btn-primary w-100 mb-3">
+                            Verificar correo
+                        </button>
+                        
+                        <p class="text-center small mb-0">
+                            ¿Ya recordaste tu contraseña? 
+                            <a href="login.html">Inicia sesión aquí</a>
+                        </p>
+                    </div>
+
+                    <!-- paso 2: nueva contraseña (oculto al inicio) -->
+                    <div id="pasoNuevaContrasena" style="display: none;">
+                        <p class="text-success mb-3">
+                            <i class="bi bi-check-circle-fill"></i> Correo verificado. 
+                            Escribe tu nueva contraseña:
+                        </p>
+                        
+                        <label class="form-label">Nueva contraseña:</label>
+                        <input type="password" id="nuevaContrasena" class="form-control mb-2" 
+                               placeholder="Min. 8 caracteres, con mayuscula y numero">
+                        
+                        <label class="form-label">Confirmar contraseña:</label>
+                        <input type="password" id="confirmarNueva" class="form-control mb-3" 
+                               placeholder="Repite la contraseña">
+                        
+                        <button id="btnCambiar" class="btn btn-primary w-100 mb-3">
+                            Actualizar contraseña
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div id="footer-container"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../js/navbar.js"></script>
+    <script src="../js/footer.js"></script>
+    <script src="../js/recuperar.js"></script>
+</body>
+</html>

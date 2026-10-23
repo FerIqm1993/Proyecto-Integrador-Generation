@@ -75,6 +75,12 @@ function encontrarProducto(idBuscado) { // Buscamos un producto en la lista comp
     return listaProductos.find(producto => producto.id === idBuscado) || null;
 }
 
+function generarIdProducto() { // Generamos el siguiente ID sin repetir los anteriores.
+    let ultimoId = Number(localStorage.getItem("ultimoIdProducto")) || 0;
+    let mayorId = Math.max(0, ...listaProductos.map(p => p.id));
+    return Math.max(ultimoId, mayorId) + 1;
+}
+
 function mostrarProductos() { // Dibujamos todos los productos en la tabla del HTML.
     let tabla = obtenerElemento("tablaProductos");
     tabla.innerHTML = "";
@@ -113,42 +119,39 @@ function mostrarProductos() { // Dibujamos todos los productos en la tabla del H
     }
 }
 
-function limpiarFormularioProducto() { // Limpiamos el formulario para registrar otro producto.
-    obtenerElemento("productoForm").reset(); // Reiniciamos todos los campos del formulario.
-    obtenerElemento("id").value = ""; // Limpiamos el ID y bloqueamos el nombre.
-    obtenerElemento("nombre").value = "";
-    obtenerElemento("nombre").readOnly = true;
-    obtenerElemento("ayudaId").textContent = "Escribe un ID para buscar el producto."; // Restauramos los textos originales.
-    obtenerElemento("tituloFormulario").textContent = "Nuevo producto";
+function limpiarFormularioProducto() {
+    obtenerElemento("productoForm").reset();
+    obtenerElemento("id").value = generarIdProducto(); // Mostramos el siguiente ID, sin permitir modificarlo.
+    obtenerElemento("nombre").readOnly = false;
+
+    let vistaPrevia = obtenerElemento("vistaPrevia");// Quitamos la imagen que se mostraba anteriormente
+    vistaPrevia.removeAttribute("src");
+    vistaPrevia.style.display = "none";
+
+    obtenerElemento("tituloFormulario").textContent = "Nuevo producto"; // Restauramos el formulario.
     obtenerElemento("guardar").textContent = "Guardar producto";
 }
 
-function buscarProductoPorId() { // Cuando escribimos un ID, buscamos el producto y completamos sus datos.
-    let textoId = obtenerElemento("id").value.trim();
-    let numeroId = Number(textoId);
-    let idValido = textoId !== "" && Number.isSafeInteger(numeroId) && numeroId > 0;
-    let productoEncontrado = idValido ? encontrarProducto(numeroId) : null;
-// Completamos los campos si existe el producto o los limpiamos si es nuevo.
-    obtenerElemento("nombre").value = productoEncontrado?.nombre || "";
-    obtenerElemento("nombre").readOnly = !!productoEncontrado || !idValido;
-    obtenerElemento("precio").value = productoEncontrado?.precio ?? "";
-    obtenerElemento("anterior").value = productoEncontrado?.anterior ?? "";
-    obtenerElemento("cat").value = productoEncontrado?.cat || "";
-    obtenerElemento("disp").checked = productoEncontrado?.disp ?? true;
-// Cambiamos los textos dependiendo de si estamos editando o registrando.
-    obtenerElemento("tituloFormulario").textContent = productoEncontrado
-        ? "Editar producto #" + numeroId : "Nuevo producto";
-    obtenerElemento("guardar").textContent = productoEncontrado
-        ? "Actualizar producto" : "Guardar producto";
-    obtenerElemento("ayudaId").textContent = productoEncontrado // Mostramos un mensaje según el resultado de la búsqueda.
-        ? "Producto encontrado: puedes actualizar sus datos." : idValido
-        ? "ID disponible: escribe el nombre del producto nuevo." : "Escribe un ID entero mayor que cero.";
-}
+function editarProducto(idProducto) {
+    let producto = encontrarProducto(idProducto);
+    if (!producto) return; // Mostramos sus datos en el formulario.
+    obtenerElemento("id").value = producto.id;
+    obtenerElemento("nombre").value = producto.nombre;
+    obtenerElemento("nombre").readOnly = false;
+    obtenerElemento("precio").value = producto.precio;
+    obtenerElemento("anterior").value = producto.anterior ?? "";
+    obtenerElemento("cat").value = producto.cat;
+    obtenerElemento("disp").checked = producto.disp; // Mostramos su imagen actual.
+    let imagen = obtenerElemento("vistaPrevia");
+    imagen.src = producto.img.startsWith("data:image/")
+        ? producto.img
+        : "../img/productos/" + producto.img;
+    imagen.style.display = "block";
 
-function editarProducto(idProducto) { // El botón Editar coloca el ID y reutiliza el autocompletado.
-    obtenerElemento("id").value = idProducto;
-    buscarProductoPorId();
+    obtenerElemento("tituloFormulario").textContent = "Editar producto #" + producto.id;
+    obtenerElemento("guardar").textContent = "Actualizar producto";
     obtenerElemento("productoForm").scrollIntoView({ behavior: "smooth" });
+    obtenerElemento("img").value = "";
 }
 
 function eliminarProducto(idProducto) { // Eliminamos un producto solamente si la persona confirma.
@@ -163,11 +166,12 @@ function eliminarProducto(idProducto) { // Eliminamos un producto solamente si l
     mostrarAlerta("alertas", "Producto eliminado correctamente.", "success");
 }
 
-async function guardarFormularioProducto(evento) { // Guardamos un producto nuevo o actualizamos uno existente.
-    evento.preventDefault(); // Evitamos que se recargue la página.
+// Guardamos productos nuevos o actualizamos los existentes.
+async function guardarFormularioProducto(evento) {
+    evento.preventDefault();
     // Obtenemos los datos del formulario.
-    let textoId = obtenerElemento("id").value.trim();
-    let id = Number(textoId);
+    let id = Number(obtenerElemento("id").value);
+    let existente = encontrarProducto(id);
     let nombre = obtenerElemento("nombre").value.trim();
     let textoPrecio = obtenerElemento("precio").value.trim();
     let precio = Number(textoPrecio);
@@ -175,39 +179,42 @@ async function guardarFormularioProducto(evento) { // Guardamos un producto nuev
     let anterior = textoAnterior === "" ? null : Number(textoAnterior);
     let cat = obtenerElemento("cat").value;
     let disp = obtenerElemento("disp").checked;
-    let existente = encontrarProducto(id); // Buscamos si el producto ya existe.
-    let error = ""; 
-    // Validamos los datos antes de guardarlos.
-    if (!textoId || !Number.isSafeInteger(id) || id <= 0) 
-        error = "Escribe un ID entero mayor que cero.";
-    else if (nombre.length < 2)
-        error = "El nombre debe tener al menos 2 caracteres.";
-    else if (!textoPrecio || !Number.isFinite(precio) || precio <= 0)
-        error = "Ingresa un precio mayor que cero.";
-    else if (anterior !== null && (!Number.isFinite(anterior) || anterior <= 0))
-        error = "El precio anterior debe ser mayor que cero.";
-    else if (!["alimentos", "cervezas", "hogar", "ferreteria", "bebidas", "belleza", "mascotas"].includes(cat))
-        error = "Selecciona una categoría válida.";
-    else if (existente && nombre !== existente.nombre)
-        error = "No puedes cambiar el nombre de un producto existente.";
-    // Si hay un error, mostramos el mensaje y detenemos el guardado.
-    if (error) {
-        mostrarAlerta("alertas", error, "danger");
-        return;
-    }
-    let img = existente ? existente.img : "producto.jpg";  // Conservamos la imagen anterior o usamos una predeterminada.
     let archivo = obtenerElemento("img").files[0];
-
-    if (archivo) { // Si seleccionamos una imagen, validamos su formato y tamaño.
-        if (!["image/jpeg", "image/png", "image/webp"].includes(archivo.type))
-            error = "Selecciona una imagen JPG, PNG o WEBP.";
-        else if (archivo.size > 500 * 1024)
-            error = "La imagen debe pesar menos de 500 KB.";
-        if (error) {
-            mostrarAlerta("alertas", error, "danger");
+    let palabras = nombre ? nombre.split(/\s+/) : []; // Contamos las palabras del nombre.
+        let cantidadLetras = (nombre.match(/\p{L}/gu) || []).length;
+        if (cantidadLetras < 4) {
+            mostrarAlerta("alertas", "El nombre debe tener mínimo 4 letras.", "danger");
             return;
         }
-        try {  // Convertimos la imagen a texto para guardarla.
+        if (!textoPrecio || !Number.isFinite(precio) || precio <= 0) {
+        mostrarAlerta("alertas", "Ingresa un precio mayor que cero.", "danger");
+        return;
+        }
+        if (anterior !== null && (!Number.isFinite(anterior) || anterior <= 0)) {
+        mostrarAlerta("alertas", "El precio anterior debe ser mayor que cero.", "danger");
+        return;
+        }
+        if (!["alimentos", "cervezas", "hogar", "ferreteria", "bebidas", "belleza", "mascotas"].includes(cat)) {
+        mostrarAlerta("alertas", "Selecciona una categoría válida.", "danger");
+        return;
+        }
+        if (!existente && !archivo) { // La imagen es obligatoria solamente para productos nuevos.
+        mostrarAlerta("alertas", "Debes seleccionar una imagen del producto.", "danger");
+        return;
+        }
+    let img = existente ? existente.img : ""; // Conservamos la imagen anterior al editar.
+        if (archivo) { // Revisamos que el formato sea válido.
+            if (!["image/jpeg", "image/png", "image/webp"].includes(archivo.type)) {
+                mostrarAlerta("alertas", "Selecciona una imagen JPG, PNG o WEBP.", "danger");
+                return;
+            }
+            if (archivo.size > 500 * 1024) { // Revisamos que no pese más de 500 KB.
+            mostrarAlerta("alertas", "La imagen debe pesar máximo 500 KB.", "danger");
+            return;
+            }
+
+        try {
+            // Convertimos la imagen para guardarla en localStorage.
             img = await new Promise((resolve, reject) => {
                 let lector = new FileReader();
                 lector.onload = () => resolve(lector.result);
@@ -220,19 +227,32 @@ async function guardarFormularioProducto(evento) { // Guardamos un producto nuev
         }
     }
 
-    let producto = { id, nombre, precio, anterior, cat, disp, img }; // Creamos el objeto del producto.
-    if (existente) { // Agregamos el producto o actualizamos el existente.
-        listaProductos[listaProductos.indexOf(existente)] = producto;
-    } else {
-        listaProductos.push(producto);
+    if (!existente) { // Generamos el ID automáticamente si es un producto nuevo.
+        id = generarIdProducto();
     }
 
-    guardarProductos(); // Guardamos los cambios y actualizamos la tabla.
+    let producto = { id, nombre, precio, anterior, cat, disp, img }; // Creamos el producto con sus datos.
+        if (existente) { // Actualizamos el producto seleccionado.
+            listaProductos[listaProductos.indexOf(existente)] = producto;
+        } else { // Agregamos el nuevo producto.
+            listaProductos.push(producto);
+        }
+
+    try { // Guardamos la lista actualizada.
+        guardarProductos();
+        if (!existente) { // Registramos el último ID asignado.
+            localStorage.setItem("ultimoIdProducto", id);
+        }
+    } catch (error) { // Revertimos el cambio en memoria si no se pudo guardar.
+        listaProductos = cargarLista(CLAVE_PRODUCTOS, productosIniciales);
+        mostrarAlerta("alertas", "No se pudo guardar. Revisa el espacio disponible.", "danger");
+        return;
+    }
+
+    // Actualizamos la tabla y limpiamos el formulario.
     mostrarProductos();
     limpiarFormularioProducto();
-    mostrarAlerta("alertas", existente // Mostramos un mensaje de confirmación.
-        ? "Producto actualizado correctamente." : "Producto registrado correctamente.", "success");
-    console.log("Producto en JSON:", JSON.stringify(producto, null, 2));
+    mostrarAlerta("alertas", existente ? "Producto actualizado correctamente." : "Producto registrado correctamente.", "success");
 }
 
 // CRUD DE CUPONES
@@ -360,4 +380,9 @@ function guardarFormularioCupon(evento) { // Creamos o actualizamos un cupón.
     ? "Cupón actualizado correctamente." : "Cupón creado correctamente.", "success");
     console.log("Cupón en JSON:", JSON.stringify(nuevoCupon, null, 2));
 }
+
+// Mostramos los productos y cupones guardados.
+mostrarProductos();
+mostrarCupones();
+limpiarFormularioProducto(); // Preparamos el formulario con el próximo ID.
 
