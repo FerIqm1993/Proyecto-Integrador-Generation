@@ -1,45 +1,74 @@
-// funcion para validar formato de correo
+// correo admin
+const CORREO_ADMIN = "contacto.tiendas3v@gmail.com";
+const CONTRASENA_ADMIN = "Pollitosenfuga3";  // contrseña
+
+function crearAdminAutomatico() {
+    let usuarios = JSON.parse(localStorage.getItem('usuarios') || '[]');
+    
+    // busco si ya existe el admin
+    let existe = false;
+    for (let i = 0; i < usuarios.length; i++) {
+        if (usuarios[i].email === CORREO_ADMIN) {
+            existe = true;
+            break;
+        }
+    }
+    
+    if (!existe) {
+        let admin = {
+            nombre: "Administrador Tienda 3V",
+            email: CORREO_ADMIN,
+            telefono: "5500000000",
+            contrasena: btoa(CONTRASENA_ADMIN),  //
+            rol: "admin"
+        };
+        usuarios.push(admin);
+        localStorage.setItem('usuarios', JSON.stringify(usuarios));
+        console.log("✅ Admin creado automaticamente");
+        console.log("Correo: " + CORREO_ADMIN);
+        console.log("Contraseña: " + CONTRASENA_ADMIN);
+    }
+}
+
+// ejecuto la funcion al cargar la pagina
+crearAdminAutomatico();
+
+// valido formato de correo
 function validarCorreo(correo) {
     let formato = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return formato.test(correo);
 }
 
-// funcion principal de inicio de sesion
+// funcion principal
 function iniciarSesion() {
-    // limpio mensajes anteriores
+    // limpio mensajes
     document.getElementById('mensaje').innerHTML = "";
-
-    // obtengo los valores que escribe el usuario
+    
+    // tomo los valores
     let correo = document.getElementById('correo').value.trim();
     let contrasena = document.getElementById('contrasena').value;
-
-    // ---- revisar que no esten vacios ----
+    
+    // valido campos vacios
     if (correo == "" || contrasena == "") {
         document.getElementById('mensaje').innerHTML = 
-            '<div class="alert alert-danger">' +
-            '<i class="bi bi-exclamation-circle-fill me-1"></i>' +
-            'Llena todos los campos por favor.' +
-            '</div>';
+            '<div class="alert alert-danger">Llena todos los campos.</div>';
         return;
     }
-
-    // ---- revisar que el correo tenga formato correcto ----
-    if (validarCorreo(correo) == false) {
+    
+    // valido formato de correo
+    if (!validarCorreo(correo)) {
         document.getElementById('mensaje').innerHTML = 
-            '<div class="alert alert-danger">' +
-            '<i class="bi bi-exclamation-circle-fill me-1"></i>' +
-            'Escribe un correo válido (ejemplo@correo.com).' +
-            '</div>';
+            '<div class="alert alert-danger">Escribe un correo válido.</div>';
         return;
     }
-
-    // ---- buscar el correo en los usuarios registrados ----
+    
+    // busco en usuarios guardados
     let usuarios = JSON.parse(localStorage.getItem('usuarios') || '[]');
     let contrasenaCodificada = btoa(contrasena);
-
+    
     let correoEncontrado = null;
     let contrasenaCorrecta = false;
-
+    
     for (let i = 0; i < usuarios.length; i++) {
         if (usuarios[i].email == correo) {
             correoEncontrado = usuarios[i];
@@ -48,54 +77,57 @@ function iniciarSesion() {
             }
         }
     }
-
-    // ---- el correo no existe ----
+    
+    // no existe el correo
     if (correoEncontrado == null) {
         document.getElementById('mensaje').innerHTML = 
-            '<div class="alert alert-warning">' +
-            '<i class="bi bi-info-circle-fill me-1"></i>' +
-            '<strong>Este correo no está registrado.</strong><br>' +
-            'Revisa que lo escribiste bien o <a href="registro.html" class="alert-link">regístrate aquí</a>.' +
-            '</div>';
+            '<div class="alert alert-warning">Este correo no está registrado. <a href="registro.html" class="alert-link">Regístrate aquí</a>.</div>';
         return;
     }
-
-    // ---- el correo existe pero la contraseña está mal ----
-    if (contrasenaCorrecta == false) {
+    
+    // contraseña incorrecta
+    if (!contrasenaCorrecta) {
         document.getElementById('mensaje').innerHTML = 
-            '<div class="alert alert-danger">' +
-            '<i class="bi bi-x-circle-fill me-1"></i>' +
-            'Contraseña incorrecta. Intenta de nuevo.' +
-            '</div>';
+            '<div class="alert alert-danger">Contraseña incorrecta.</div>';
         document.getElementById('contrasena').value = "";
         return;
     }
-
-    // ---- todo está correcto - ALERTA DE ÉXITO ----
+    
+    // ===== TODO BIEN - reviso si es admin =====
+    let esAdmin = false;
+    if (correoEncontrado.email === CORREO_ADMIN) {
+        esAdmin = true;
+    }
+    
+    // guardo la sesion
     let sesion = {
         email: correoEncontrado.email,
-        nombre: correoEncontrado.nombre
+        nombre: correoEncontrado.nombre,
+        rol: esAdmin ? "admin" : "usuario"
     };
     localStorage.setItem('sesionActiva', JSON.stringify(sesion));
-
-    // ALERTA DE BIENVENIDA
+    
+    // mensaje de bienvenida
     document.getElementById('mensaje').innerHTML = 
         '<div class="alert alert-success">' +
-        '<i class="bi bi-check-circle-fill me-1"></i>' +
         '<strong>¡Bienvenido, ' + correoEncontrado.nombre + '!</strong><br>' +
-        'Inicio de sesión exitoso. Redirigiendo a la página principal...' +
+        'Redirigiendo...' +
         '</div>';
-
-    // espero un momento para que vea el mensaje y luego lo llevo al inicio
+    
+    // redirijo segun el rol
     setTimeout(function() {
-        window.location.href = "../index.html";
-    }, 1500); // 1.5 segundos para que alcance a leer
+        if (esAdmin) {
+            window.location.href = "admin-productos.html";  // tu pagina de admin
+        } else {
+            window.location.href = "../index.html";
+        }
+    }, 1500);
 }
 
-// conecto el boton con la funcion
+// conecto el boton
 document.getElementById('botonEntrar').addEventListener('click', iniciarSesion);
 
-// tambien funciona al presionar Enter
+// tambien con enter
 document.getElementById('contrasena').addEventListener('keypress', function(e) {
     if (e.key == 'Enter') {
         iniciarSesion();
