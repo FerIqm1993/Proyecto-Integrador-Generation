@@ -2,22 +2,21 @@
   "use strict"; // Evita algunos usos inseguros o errores comunes de JavaScript.
 
   // Catálogo: cada objeto contiene los datos de un producto.
-  const PRODUCTOS = [
-    { id: 1,  nombre: "Aceite vegetal 1L",    precio: 45.90, anterior: 65,  cat: "alimentos",   disp: true, img: "aceite.jpg" },
-    { id: 2,  nombre: "Leche entera 1L",      precio: 28.50, anterior: 34,  cat: "alimentos",   disp: true, img: "leche.jpg" },
-    { id: 3,  nombre: "Vino tinto 750ml",     precio: 145,   anterior: 180, cat: "cervezas",    disp: true, img: "vino.jpg" },
-    { id: 4,  nombre: "Cerveza clara 6pk",    precio: 98,    anterior: null,cat: "cervezas",    disp: true, img: "cerveza.jpg" },
-    { id: 5,  nombre: "Detergente 3kg",       precio: 89,    anterior: 120, cat: "hogar",       disp: true, img: "detergente.jpg" },
-    { id: 6,  nombre: "Papel higiénico 12pk", precio: 65,    anterior: null,cat: "hogar",       disp: true, img: "papel.jpg" },
-    { id: 7,  nombre: "Martillo de uña",      precio: 129,   anterior: null,cat: "ferreteria",  disp: true, img: "martillo.jpg" },
-    { id: 8,  nombre: "Juego de desarmadores",precio: 159,  anterior: 179, cat: "ferreteria",  disp: true, img: "desarmadores.jpg" },
-    { id: 9,  nombre: "Refresco 2L",          precio: 24,    anterior: null,cat: "bebidas",     disp: true, img: "refresco.jpg" },
-    { id: 10, nombre: "Agua mineral 1.5L",   precio: 12.50, anterior: null,cat: "bebidas",     disp: true, img: "agua.jpg" },
-    { id: 11, nombre: "Shampoo 750ml",       precio: 54.90, anterior: null,cat: "belleza",     disp: true, img: "shampoo.jpg" },
-    { id: 12, nombre: "Jabón 3pk",           precio: 42,    anterior: null,cat: "belleza",     disp: true, img: "jabon.jpg" },
-    { id: 13, nombre: "Croquetas perro 2kg", precio: 189,   anterior: 210, cat: "mascotas",    disp: true, img: "croquetas.jpg" },
-    { id: 14, nombre: "Arena para gato 4kg", precio: 115,   anterior: null,cat: "mascotas",    disp: true, img: "arena.jpg" }
-  ];
+const CLAVE_PRODUCTOS = "tienda3v_productos";
+
+function obtenerProductos() {
+  try {
+    return JSON.parse(
+      localStorage.getItem(CLAVE_PRODUCTOS)
+    ) || [];
+  } catch (error) {
+    console.error(error);
+    return [];
+  }
+}
+
+const PRODUCTOS = obtenerProductos();
+
 
   // Relaciona la clave interna de cada categoría con el nombre que ve el usuario.
   const CATEGORIAS = {
@@ -39,6 +38,10 @@
     orden: "relevancia",
     carrito: 0
   };
+  const categoriaSolicitada = new URLSearchParams(window.location.search).get("categoria");
+  if (Object.prototype.hasOwnProperty.call(CATEGORIAS, categoriaSolicitada)) {
+    state.categoria = categoriaSolicitada;
+  }
 
   // Obtiene elementos HTML que JavaScript actualizará.
   const grid = document.getElementById("productGrid");
@@ -55,6 +58,10 @@
   const rangeFill = document.getElementById("rangeFill");
   const MAX = 300; // Precio máximo permitido por el filtro.
   const GAP = 5;   // Diferencia mínima entre los dos precios.
+
+  document.querySelectorAll("#catList li").forEach(item => {
+    item.classList.toggle("active", item.dataset.cat === state.categoria);
+  });
 
   // Convierte un número a formato de precio.
   const dinero = n => `$${n.toFixed(2).replace(".", ",")}`;
