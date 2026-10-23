@@ -188,18 +188,18 @@
     if (!prod) return;
 
     // Si existe la función del carrito principal, envía el producto a esa función.
-    if (typeof addProductToCart === "function") {
-      addProductToCart({
+    if (typeof agregarProductoAlCarrito === "function") {
+      agregarProductoAlCarrito({
         id: prod.id,
-        name: prod.nombre,
-        price: prod.precio,
+        nombre: prod.nombre,
+        precio: prod.precio,
         img: `../img/productos/${prod.img}`,
-        quantity: 1
+        cantidad: 1
       });
     }
 
     // Actualiza el contador y muestra una confirmación visual.
-    state.carrito += 1;
+    state.carrito = obtenerCarrito().reduce((total, articulo) => total + articulo.cantidad, 0);
     cartBadge.textContent = state.carrito;
     btn.classList.add("added");
     btn.innerHTML = '<i class="bi bi-check-lg"></i>';
@@ -216,6 +216,7 @@
   });
 
   // Estado inicial: contador, controles de precio y catálogo.
+  state.carrito = obtenerCarrito().reduce((total, articulo) => total + articulo.cantidad, 0);
   cartBadge.textContent = state.carrito;
   actualizarRangoUI();
   render();

@@ -3,11 +3,126 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>En construcción...</title>
+    <title>Tienda 3V - Carrito</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../css/global.css" rel="stylesheet">
+    <link href="../css/carrito.css" rel="stylesheet">
+    <link rel="stylesheet" href="../css/navbar.css">
+    <link rel="stylesheet" href="../css/footer.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
 </head>
 <body>
-    <div>
-        <img src="../img/polloconstructor.png" alt="Pollo en construcción" style="display: block; width: min(100%, 500px); height: auto; margin: 2rem auto;">
+     <!-- Aquí se inserta el navbar desde el archivo navbar.html -->
+    <div id="navbar-container"></div>
+
+<div class="container-fluid px-4 py-4">
+        <h2 class="fw-bold mb-4 text-dark">Tu Carrito <span class="text-muted fs-5 fw-normal" id="cart-title-count">(0 productos)</span></h2>
+
+        <div class="row g-4">
+            <!-- Columna Izquierda: Tabla de Productos -->
+            <div class="col-lg-8">
+                <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+                    <div class="table-responsive">
+                        <table class="table align-middle mb-0">
+                            <thead style="background-color: #f0f7ff; font-size: 17px;">
+                                <tr>
+                                    <th class="py-3 ps-4 text-primary">Producto</th>
+                                    <th class="py-3 text-primary">Precio</th>
+                                    <th class="py-3 text-primary">Cantidad</th>
+                                    <th class="py-3 text-primary">Subtotal</th>
+                                    <th class="py-3"></th>
+                                </tr>
+                            </thead>
+                            <tbody id="cart-items">
+                                <!-- Los productos se renderizarán dinámicamente mediante JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Columna Derecha: Resumen del Pedido -->
+            <div class="col-lg-4">
+                <div class="card border-0 shadow-sm rounded-4 p-4">
+                    <h5 class="fw-bold mb-3 text-dark">Resumen del pedido</h5>
+
+                    <div class="d-flex justify-content-between mb-2 text-muted" style="font-size: 14px;">
+                        <span>Subtotal</span>
+                        <span id="summary-subtotal">$0.00</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-3 text-success" style="font-size: 14px;">
+                        <span>Descuento cupón</span>
+                        <span id="summary-discount">-$0.00</span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label text-muted mb-1" for="coupon-code" style="font-size: 12px;">Ingresa tu cupón</label>
+                        <div class="input-group">
+                            <input class="form-control" id="coupon-code" type="text" maxlength="30" placeholder="Ej. BIENVENIDO10" autocomplete="off">
+                            <button class="btn btn-outline-primary" id="apply-coupon" type="button">Aplicar</button>
+                        </div>
+                        <div id="coupon-message" class="small mt-1" aria-live="polite"></div>
+                    </div>
+
+                    <hr class="text-muted opacity-25 my-3">
+
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <span class="fw-bold text-dark fs-5">Total a pagar</span>
+                        <span class="fw-bold text-dark fs-4" id="summary-total">$0.00</span>
+                    </div>
+
+                    <!-- Sección Pickup -->
+                    <div class="mb-3">
+                        <div class="d-flex align-items-center gap-1 text-primary fw-bold mb-2 pickup-title" style="font-size: 13px;">
+                            <span>📌</span> Pickup en sucursal
+                        </div>
+                        <label class="form-label text-muted mb-1" style="font-size: 12px;">Selecciona Sucursal</label>
+                        <select class="form-select form-select-sm text-secondary shadow-none bg-light border-0 py-2" id="branch-select" style="font-size: 13px;">
+                            <option selected>Sucursal Insurgentes Centro, CDMX</option>
+                            <option value="1">Sucursal Roma Norte, CDMX</option>
+                            <option value="2">Sucursal Del Valle, CDMX</option>
+                        </select>
+                    </div>
+
+                    <!-- Fecha de recolección -->
+                    <div class="mb-3">
+                        <label class="form-label text-muted mb-1" style="font-size: 12px;">Fecha de recolección</label>
+                        <div class="input-group input-group-sm bg-light rounded border">
+                            <span class="input-group-text bg-transparent border-0 text-muted"><i class="bi bi-calendar"></i></span>
+                            <input type="text" class="form-control bg-transparent border-0 text-secondary shadow-none py-2" id="pickup-date" value="Hoy, 28 de Septiembre 2026" style="font-size: 13px;">
+                        </div>
+                    </div>
+
+                    <!-- Horario disponible -->
+                    <div class="mb-4">
+                        <label class="form-label text-muted mb-2" style="font-size: 12px;">Horario disponible</label>
+                        <div class="d-flex gap-2" id="time-slots">
+                            <button class="btn btn-outline-primary btn-sm flex-fill py-2 fw-medium time-slot active-slot" type="button" style="font-size: 12px;">14:00 - 16:00</button>
+                            <button class="btn btn-outline-secondary btn-sm flex-fill py-2 text-muted bg-light border-0 time-slot" type="button" style="font-size: 12px;">16:00 - 18:00</button>
+                            <button class="btn btn-outline-secondary btn-sm flex-fill py-2 text-muted bg-light border-0 time-slot" type="button" style="font-size: 12px;">18:00 - 20:00</button>
+                        </div>
+                    </div>
+
+                    <!-- Botón de Confirmación -->
+                    <button class="btn btn-warning w-100 fw-bold text-dark py-3 rounded-3 shadow-sm" id="btn-checkout" type="button" style="font-size: 15px;">Confirmar pedido $181.30</button>
+                </div>
+            </div>
+        </div>
     </div>
+
+
+
+    <!-- Sección Footer -->
+    <div id="footer-container"></div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../js/global.js"></script>
+    <script src="../js/carrito.js"></script>
+     <!-- Navar -->
+    <script src="../js/navbar.js"></script>
+    <!-- Footer -->
+    <script src="../js/footer.js"></script>
 </body>
 </html>
