@@ -15,7 +15,7 @@ function obtenerProductos() {
   }
 }
 
-const PRODUCTOS = obtenerProductos();
+let PRODUCTOS = obtenerProductos();
 
 
   // Relaciona la clave interna de cada categoría con el nombre que ve el usuario.
@@ -36,7 +36,6 @@ const PRODUCTOS = obtenerProductos();
     maxPrecio: 300,
     soloDisponibles: true,
     orden: "relevancia",
-    carrito: 0
   };
   const categoriaSolicitada = new URLSearchParams(window.location.search).get("categoria");
   if (Object.prototype.hasOwnProperty.call(CATEGORIAS, categoriaSolicitada)) {
@@ -48,7 +47,7 @@ const PRODUCTOS = obtenerProductos();
   const emptyState = document.getElementById("emptyState");
   const foundCount = document.getElementById("foundCount");
   const catTitle = document.getElementById("catTitle");
-  const cartBadge = document.getElementById("cartBadge");
+  const catList = document.getElementById("catList");
   const toast = document.getElementById("toastCart");
   const toastText = document.getElementById("toastText");
   const minRange = document.getElementById("minRange");
@@ -59,6 +58,21 @@ const PRODUCTOS = obtenerProductos();
   const MAX = 300; // Precio máximo permitido por el filtro.
   const GAP = 5;   // Diferencia mínima entre los dos precios.
 
+  function obtenerRutaImagen(img) {
+    return img && img.startsWith("data:image/")
+      ? img
+      : `../img/productos/${img}`;
+  }
+
+  function actualizarConteosCategorias() {
+    catList.querySelectorAll("li[data-cat]").forEach(item => {
+      const contador = item.querySelector(".count");
+      if (!contador) return;
+      const cantidad = filtrar(item.dataset.cat).length;
+      contador.textContent = `(${cantidad})`;
+    });
+  }
+
   document.querySelectorAll("#catList li").forEach(item => {
     item.classList.toggle("active", item.dataset.cat === state.categoria);
   });
@@ -67,9 +81,9 @@ const PRODUCTOS = obtenerProductos();
   const dinero = n => `$${n.toFixed(2).replace(".", ",")}`;
 
   // Devuelve productos de la categoría, rango de precio y disponibilidad elegidos.
-  function filtrar() {
+  function filtrar(categoria = state.categoria) {
     return PRODUCTOS
-      .filter(p => p.cat === state.categoria && p.precio >= state.minPrecio && p.precio <= state.maxPrecio)
+      .filter(p => p.cat === categoria && p.precio >= state.minPrecio && p.precio <= state.maxPrecio)
       .filter(p => !state.soloDisponibles || p.disp);
   }
 
@@ -84,6 +98,7 @@ const PRODUCTOS = obtenerProductos();
 
   // Dibuja o actualiza las tarjetas de productos y los textos de la página.
   function render() {
+    actualizarConteosCategorias();
     const lista = ordenar(filtrar());
     catTitle.textContent = CATEGORIAS[state.categoria] || "Productos";
     foundCount.textContent = `(${lista.length} productos encontrados)`;
@@ -95,7 +110,7 @@ const PRODUCTOS = obtenerProductos();
           <div class="product-img-wrap">
             ${p.anterior ? '<span class="oferta-tag">OFERTA</span>' : ''}
             ${p.disp ? `<button class="add-btn" data-id="${p.id}" aria-label="Añadir ${p.nombre}"><i class="bi bi-plus-lg"></i></button>` : ''}
-            <a href="producto.html"><img src="../img/productos/${p.img}" alt="${p.nombre}" loading="lazy"></a>
+            <a href="producto.html"><img src="${obtenerRutaImagen(p.img)}" alt="${p.nombre}" loading="lazy"></a>
           </div>
           <div class="product-body">
             <span class="stock-badge ${p.disp ? 'in' : 'out'}">
@@ -159,7 +174,7 @@ const PRODUCTOS = obtenerProductos();
   maxInput.addEventListener("change", cambiarInputPrecio);
 
   // Detecta clics en las categorías y actualiza la categoría seleccionada.
-  document.getElementById("catList").addEventListener("click", e => {
+  catList.addEventListener("click", e => {
     const li = e.target.closest("li[data-cat]");
     if (!li) return;
     document.querySelectorAll("#catList li").forEach(item => item.classList.remove("active"));
@@ -200,14 +215,12 @@ const PRODUCTOS = obtenerProductos();
         id: prod.id,
         nombre: prod.nombre,
         precio: prod.precio,
-        img: `../img/productos/${prod.img}`,
+        img: obtenerRutaImagen(prod.img),
         cantidad: 1
       });
     }
 
     // Actualiza el contador y muestra una confirmación visual.
-    state.carrito = obtenerCarrito().reduce((total, articulo) => total + articulo.cantidad, 0);
-    cartBadge.textContent = state.carrito;
     btn.classList.add("added");
     btn.innerHTML = '<i class="bi bi-check-lg"></i>';
     setTimeout(() => {
@@ -223,8 +236,13 @@ const PRODUCTOS = obtenerProductos();
   });
 
   // Estado inicial: contador, controles de precio y catálogo.
-  state.carrito = obtenerCarrito().reduce((total, articulo) => total + articulo.cantidad, 0);
-  cartBadge.textContent = state.carrito;
   actualizarRangoUI();
   render();
+
+  window.addEventListener("storage", event => {
+    if (event.key !== CLAVE_PRODUCTOS && event.key !== null) return;
+    PRODUCTOS = obtenerProductos();
+    actualizarConteosCategorias();
+    render();
+  });
 })();

@@ -9,9 +9,19 @@ document.addEventListener("DOMContentLoaded", function () {
     const couponCodeInput = document.getElementById("coupon-code");
     const applyCouponButton = document.getElementById("apply-coupon");
     const couponMessage = document.getElementById("coupon-message");
+    const branchSelect = document.getElementById("branch-select");
     const timeSlots = document.querySelectorAll(".time-slot");
     const pickupDateInput = document.getElementById("pickup-date");
+    const checkoutMessageModal = document.getElementById("checkout-message-modal");
+    const checkoutMessageTitle = document.getElementById("checkout-message-title");
+    const checkoutMessageBody = document.getElementById("checkout-message-body");
     let appliedCoupon = null;
+
+    function showCheckoutMessage(title, message) {
+        checkoutMessageTitle.textContent = title;
+        checkoutMessageBody.textContent = message;
+        bootstrap.Modal.getOrCreateInstance(checkoutMessageModal).show();
+    }
 
     function showCouponMessage(message, type) {
         couponMessage.textContent = message;
@@ -184,6 +194,27 @@ document.addEventListener("DOMContentLoaded", function () {
             this.classList.remove("btn-outline-secondary", "text-muted", "bg-light", "border-0");
             this.classList.add("active-slot", "btn-outline-primary", "fw-medium");
         });
+    });
+
+    btnCheckout.addEventListener("click", function () {
+        if (obtenerCarrito().length === 0) {
+            showCheckoutMessage("Carrito vacío", "Agrega al menos un producto antes de confirmar el pedido.");
+            return;
+        }
+
+        const branch = branchSelect.options[branchSelect.selectedIndex].textContent.trim();
+        const pickupDate = pickupDateInput.value.trim();
+        const selectedTimeSlot = document.querySelector(".time-slot.active-slot");
+
+        if (!pickupDate || !selectedTimeSlot) {
+            showCheckoutMessage("Faltan datos", "Selecciona una fecha y un horario para recoger tu pedido.");
+            return;
+        }
+
+        showCheckoutMessage(
+            "Pedido confirmado",
+            `Sucursal: ${branch}\nFecha de recolección: ${pickupDate}\nHorario: ${selectedTimeSlot.textContent.trim()}`
+        );
     });
 
     // Cargar la fecha actual en el selector de fecha

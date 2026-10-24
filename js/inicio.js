@@ -81,6 +81,16 @@ function recargarProductos() {
   });
 }
 
+function obtenerRutaImagen(producto) {
+  if (producto.img) {
+    if (producto.img.startsWith("data:image/") || producto.img.startsWith("http") || producto.img.startsWith("img/")) {
+      return producto.img;
+    }
+    return `img/productos/${producto.img}`;
+  }
+  return producto.imagen || "img/productos/producto.img.png";
+}
+
 // Inicializar Aplicación
 document.addEventListener("DOMContentLoaded", () => {
 
@@ -137,9 +147,7 @@ function renderizarProductos(articulos) {
 
   contenedor.innerHTML = articulos.map(producto => {
     const nombreCat = CATEGORIAS[producto.cat] || producto.categoria || producto.cat || "General";
-    const rutaImagen = producto.img 
-      ? (producto.img.startsWith('http') || producto.img.startsWith('img/') ? producto.img : `img/productos/${producto.img}`)
-      : (producto.imagen || 'img/productos/producto.img.png');
+    const rutaImagen = obtenerRutaImagen(producto);
     
     // Etiqueta de oferta o disponibilidad
     let etiquetaBadge = '';
@@ -209,9 +217,7 @@ function agregarAlCarrito(idProducto) {
   const prod = productos.find(p => p.id === idProducto);
   if (!prod) return;
 
-  const rutaImagen = prod.img 
-    ? (prod.img.startsWith('http') || prod.img.startsWith('img/') ? prod.img : `img/productos/${prod.img}`)
-    : (prod.imagen || '');
+  const rutaImagen = obtenerRutaImagen(prod);
 
   if (typeof agregarProductoAlCarrito === "function") {
     agregarProductoAlCarrito({

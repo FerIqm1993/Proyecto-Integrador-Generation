@@ -103,8 +103,9 @@ form.search-box input[type="search"]::-webkit-search-cancel-button {
   color: #212529;
 }
 
-/* Botón Carrito (Azul, ovalado y sin badge de número) */
+/* Botón Carrito */
 .btn-carrito {
+  position: relative;
   height: 44px;
   padding: 0 22px;
   border-radius: 50px;
@@ -128,4 +129,27 @@ form.search-box input[type="search"]::-webkit-search-cancel-button {
 
 .btn-carrito i {
   font-size: 1.1rem;
+}
+
+.contador-carrito {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 5px;
+  border: 2px solid #ffffff;
+  border-radius: 999px;
+  background: #dc3545;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.contador-carrito[hidden] {
+  display: none;
 }
