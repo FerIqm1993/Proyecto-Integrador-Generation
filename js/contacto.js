@@ -1,22 +1,22 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // 1. Inicializar EmailJS con tu Public Key
+    // inicializo emailjs con mi clave publica
     if (typeof CONFIG !== 'undefined' && CONFIG.EMAILJS_PUBLIC_KEY) {
         emailjs.init({
             publicKey: CONFIG.EMAILJS_PUBLIC_KEY,
         });
     } else {
-        console.warn("Aviso: EmailJS no configurado o credenciales vacías en config.js. Se usará el modo simulación.");
+        console.warn("aviso: emailjs no configurado o credenciales vacias en config.js. se usara el modo simulacion.");
     }
 
     const formularioContacto = document.getElementById('formularioContacto');
     const alertaFormulario = document.getElementById('alertaFormulario');
     const botonEnviar = formularioContacto.querySelector('button[type="submit"]');
 
-    // Función auxiliar para mostrar alertas generales (éxito o error)
+    // funcion para mostrar mensajes de alerta
     function mostrarAlerta(mensaje, tipo = 'success') {
         const elementoIcono = alertaFormulario.querySelector('i');
         const elementoTexto = alertaFormulario.querySelector('div');
-
+        
         if (tipo === 'success') {
             alertaFormulario.style.backgroundColor = '#E6F4EA';
             alertaFormulario.style.borderColor = '#CEEAD6';
@@ -28,18 +28,18 @@ document.addEventListener('DOMContentLoaded', () => {
             alertaFormulario.style.color = '#C5221F';
             elementoIcono.className = 'bi bi-exclamation-triangle me-2 fs-5';
         }
-
+        
         elementoTexto.textContent = mensaje;
         alertaFormulario.classList.remove('d-none');
         alertaFormulario.classList.add('d-flex');
-
+        
         setTimeout(() => {
             alertaFormulario.classList.add('d-none');
             alertaFormulario.classList.remove('d-flex');
         }, 6000);
     }
 
-    // Expresión regular para validar correos electrónicos
+    // valido formato de correo
     function esCorreoValido(correo) {
         const regex = /^[^\s@]+@[^\s@]+\.[a-zA-Z]{2,}$/;
         return regex.test(correo);
@@ -47,8 +47,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (formularioContacto) {
         formularioContacto.addEventListener('submit', (e) => {
-            e.preventDefault(); // Evita que la página se recargue
+            e.preventDefault(); // evito que la pagina se recargue
 
+            // tomo los valores del formulario
             const inputNombre = document.getElementById('nombre');
             const inputCorreo = document.getElementById('correo');
             const inputTelefono = document.getElementById('telefono');
@@ -56,14 +57,14 @@ document.addEventListener('DOMContentLoaded', () => {
             const inputMensaje = document.getElementById('mensaje');
             const politicaPrivacidad = document.getElementById('politicaPrivacidad');
 
-            // Limpiar errores visuales y validaciones nativas previas de todos los campos
+            // limpio errores anteriores
             const inputs = formularioContacto.querySelectorAll('.form-control, .form-select');
             inputs.forEach(input => {
                 input.classList.remove('is-invalid');
-                input.setCustomValidity(''); // Resetea el mensaje
+                input.setCustomValidity('');
             });
 
-            // Validar Nombre
+            // valido nombre
             const nombre = inputNombre.value.trim();
             if (!nombre || nombre.length < 3) {
                 mostrarAlerta('El nombre debe tener al menos 3 caracteres.', 'error');
@@ -71,7 +72,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-            // Validar Correo Electrónico
+            // valido correo
             const correo = inputCorreo.value.trim();
             if (!correo || !esCorreoValido(correo)) {
                 mostrarAlerta('Por favor, ingresa un correo electrónico válido (ej. usuario@dominio.com).', 'error');
@@ -79,7 +80,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-            // Validar Teléfono (Opcional, pero si se llena, debe tener 10 dígitos)
+            // valido telefono (si se llena)
             const telefono = inputTelefono.value.trim();
             if (telefono !== '') {
                 const regexTelefono = /^[0-9]{10}$/;
@@ -90,7 +91,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
 
-            // Validar Motivo de Consulta
+            // valido asunto
             const asunto = inputAsunto.value;
             if (!asunto) {
                 mostrarAlerta('Por favor, selecciona un motivo de consulta.', 'error');
@@ -98,7 +99,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-            // Validar Mensaje
+            // valido mensaje
             const mensaje = inputMensaje.value.trim();
             if (!mensaje || mensaje.length < 10) {
                 mostrarAlerta('El mensaje debe tener al menos 10 caracteres.', 'error');
@@ -106,20 +107,30 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-            // Validar Aviso de Privacidad
+            // valido aviso de privacidad
             if (!politicaPrivacidad.checked) {
                 mostrarAlerta('Debes aceptar el Aviso de Privacidad.', 'error');
                 return;
             }
 
-            // Cambiar texto y deshabilitar botón mientras se envía
+            // deshabilito boton mientras se envia
             const textoBotonOriginal = botonEnviar.innerHTML;
             botonEnviar.disabled = true;
             botonEnviar.innerHTML = `<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span> Enviando...`;
 
-            // Enviar correo a través de EmailJS
+            // envio el correo con datos limpios ✅
             if (typeof CONFIG !== 'undefined') {
-                emailjs.sendForm(CONFIG.EMAILJS_SERVICE_ID, CONFIG.EMAILJS_TEMPLATE_ID, formularioContacto)
+                // armo el objeto con los datos para que salgan bien
+                const datos = {
+                    de_nombre: nombre,
+                    correo_usuario: correo,
+                    telefono: telefono,
+                    asunto: asunto, // asi llega SIN codigos raros
+                    mensaje: mensaje
+                };
+
+                // uso send en lugar de sendForm
+                emailjs.send(CONFIG.EMAILJS_SERVICE_ID, CONFIG.EMAILJS_TEMPLATE_ID, datos)
                     .then(() => {
                         botonEnviar.disabled = false;
                         botonEnviar.innerHTML = textoBotonOriginal;
@@ -133,7 +144,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         mostrarAlerta('Ocurrió un error al enviar el correo. Por favor, intenta más tarde.', 'error');
                     });
             } else {
-                // Simulación en caso de que falte config.js
+                // modo simulacion
                 setTimeout(() => {
                     botonEnviar.disabled = false;
                     botonEnviar.innerHTML = textoBotonOriginal;
