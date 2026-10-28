@@ -1,0 +1,144 @@
+erDiagram
+    %% Comentarios de negocio:
+    %% detalle_pedido usa PK compuesta pedido+producto, con cantidad entera positiva.
+    %% precio_unitario y descuentos se conservan como fotografías históricas.
+    %% Totales e importes de línea se calculan en vistas, no son columnas persistidas.
+    %% Un solo cupón global en el primer pedido; puede combinarse con descuentos de producto.
+    %% Un pedido siempre requiere usuario, sucursal y método de pago.
+    ROLES ||--o{ USUARIOS : asigna
+    USUARIOS ||--o{ RECUPERACIONES_CONTRASENA : solicita
+    USUARIOS ||--o{ PEDIDOS : realiza
+    SUCURSALES ||--o{ PEDIDOS : recibe
+    METODOS_PAGO ||--o{ PEDIDOS : utiliza
+    CUPONES o|--o{ PEDIDOS : aplica
+    PEDIDOS ||--|{ DETALLE_PEDIDO : contiene
+    PRODUCTOS ||--o{ DETALLE_PEDIDO : aparece_en
+    CATEGORIAS ||--o{ PRODUCTOS : clasifica
+    SUCURSALES ||--o{ INVENTARIO_SUCURSAL : almacena
+    PRODUCTOS ||--o{ INVENTARIO_SUCURSAL : tiene_existencias
+    PRODUCTOS ||--o{ DESCUENTOS_PRODUCTO : recibe
+    USUARIOS ||--o| REDENCIONES_CUPON : consume_una_vez
+    PEDIDOS ||--o| REDENCIONES_CUPON : registra
+    CUPONES ||--o{ REDENCIONES_CUPON : identifica
+    USUARIOS o|--o{ MENSAJES_CONTACTO : envia
+
+    ROLES {
+        tinyint id_rol PK
+        varchar nombre UK
+    }
+    USUARIOS {
+        int id_usuario PK
+        tinyint id_rol_fk FK
+        varchar nombre_usuario
+        varchar apellido_usuario
+        varchar correo_usuario UK
+        varchar telefono_usuario
+        varchar password_hash
+        boolean acepta_terminos
+        boolean activo
+        timestamp fecha_registro
+    }
+    RECUPERACIONES_CONTRASENA {
+        int id_recuperacion PK
+        int id_usuario_fk FK
+        char token_hash UK
+        timestamp fecha_creacion
+        datetime fecha_expiracion
+        datetime fecha_uso
+    }
+    CATEGORIAS {
+        int id_categoria PK
+        varchar nombre UK
+        varchar slug UK
+        boolean activa
+    }
+    PRODUCTOS {
+        int id_producto PK
+        int id_categoria_fk FK
+        varchar nombre_producto
+        text descripcion_producto
+        varchar marca
+        varchar sku UK
+        decimal precio_unitario
+        varchar imagen_url
+        boolean activo
+        timestamp fecha_creacion
+    }
+    SUCURSALES {
+        int id_sucursal PK
+        varchar nombre
+        varchar direccion
+        varchar ciudad
+        varchar estado
+        varchar codigo_postal
+        varchar telefono
+        varchar correo
+        varchar horario
+        boolean pick_up_disponible
+        boolean activa
+    }
+    INVENTARIO_SUCURSAL {
+        int id_sucursal_fk PK, FK
+        int id_producto_fk PK, FK
+        int stock
+        timestamp actualizado_en
+    }
+    DESCUENTOS_PRODUCTO {
+        int id_descuento_producto PK
+        int id_producto_fk FK
+        decimal porcentaje_descuento
+        datetime fecha_inicio
+        datetime fecha_fin
+        boolean activo
+    }
+    METODOS_PAGO {
+        tinyint id_metodo_pago PK
+        varchar tipo_pago UK
+        boolean activo
+    }
+    CUPONES {
+        int id_cupon PK
+        varchar codigo UK
+        decimal porcentaje_descuento
+        datetime fecha_inicio
+        datetime fecha_vencimiento
+        int maximo_usos
+        int usos
+        boolean activo
+    }
+    PEDIDOS {
+        int id_pedido PK
+        int id_usuario_fk FK
+        int id_sucursal_fk FK
+        tinyint id_metodo_pago_fk FK
+        int id_cupon_fk FK
+        decimal porcentaje_cupon_aplicado
+        timestamp fecha_pedido
+        varchar estado_pedido
+        varchar estado_pago
+    }
+    DETALLE_PEDIDO {
+        int id_pedido_fk PK, FK
+        int id_producto_fk PK, FK
+        int cantidad_producto
+        decimal precio_unitario
+        decimal porcentaje_descuento_producto
+    }
+    REDENCIONES_CUPON {
+        int id_usuario_fk PK, FK
+        int id_pedido_fk UK, FK
+        int id_cupon_fk FK
+        timestamp fecha_redencion
+    }
+    MENSAJES_CONTACTO {
+        int id_mensaje PK
+        int id_usuario_fk FK
+        varchar nombre
+        varchar correo
+        varchar telefono
+        varchar motivo
+        text mensaje
+        boolean acepta_aviso_privacidad
+        varchar estado
+        timestamp fecha_creacion
+    }
