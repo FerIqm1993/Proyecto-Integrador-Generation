@@ -20,33 +20,92 @@ const categoriasOrdenadas = [
 ];
 
 // PRODUCTOS HOMOLOGADOS CON EL CATÁLOGO
-const productos = [
-  { id: 1,  nombre: "Aceite vegetal 1L",    precio: 45.90, anterior: 65,   cat: "alimentos",   disp: true, img: "aceite.jpg" },
-  { id: 2,  nombre: "Leche entera 1L",      precio: 28.50, anterior: 34,   cat: "alimentos",   disp: true, img: "leche.jpg" },
-  { id: 3,  nombre: "Vino tinto 750ml",     precio: 145,   anterior: 180,  cat: "cervezas",    disp: true, img: "vino.jpg" },
-  { id: 4,  nombre: "Cerveza clara 6pk",    precio: 98,    anterior: null, cat: "cervezas",    disp: true, img: "cerveza.jpg" },
-  { id: 5,  nombre: "Detergente 3kg",       precio: 89,    anterior: 120,  cat: "hogar",       disp: true, img: "detergente.jpg" },
-  { id: 6,  nombre: "Papel higiénico 12pk", precio: 65,    anterior: null, cat: "hogar",       disp: true, img: "papel.jpg" },
-  { id: 7,  nombre: "Martillo de uña",      precio: 129,   anterior: null, cat: "ferreteria",  disp: true, img: "martillo.jpg" },
-  { id: 8,  nombre: "Juego de desarmadores",precio: 159,   anterior: 179,  cat: "ferreteria",  disp: true, img: "desarmadores.jpg" },
-  { id: 9,  nombre: "Refresco 2L",          precio: 24,    anterior: null, cat: "bebidas",     disp: true, img: "refresco.jpg" },
-  { id: 10, nombre: "Agua mineral 1.5L",   precio: 12.50, anterior: null, cat: "bebidas",     disp: true, img: "agua.jpg" },
-  { id: 11, nombre: "Shampoo 750ml",       precio: 54.90, anterior: null, cat: "belleza",     disp: true, img: "shampoo.jpg" },
-  { id: 12, nombre: "Jabón 3pk",           precio: 42,    anterior: null, cat: "belleza",     disp: true, img: "jabon.jpg" },
-  { id: 13, nombre: "Croquetas perro 2kg", precio: 189,   anterior: 210,  cat: "mascotas",    disp: true, img: "croquetas.jpg" },
-  { id: 14, nombre: "Arena para gato 4kg", precio: 115,   anterior: null, cat: "mascotas",    disp: true, img: "arena.jpg" }
+const CLAVE_PRODUCTOS = "tienda3v_productos";
+const CLAVE_PRODUCTOS_LEGACY = "productos_tienda3v";
+const PRODUCTOS_INICIALES = [
+  { id: 1, nombre: "Aceite vegetal 1L", precio: 45.90, anterior: 65, cat: "alimentos", disp: true, img: "aceite.jpg" },
+  { id: 2, nombre: "Leche entera 1L", precio: 28.50, anterior: 34, cat: "alimentos", disp: true, img: "leche.jpg" },
+  { id: 3, nombre: "Vino tinto 750ml", precio: 145, anterior: 180, cat: "cervezas", disp: true, img: "vino.jpg" },
+  { id: 4, nombre: "Cerveza clara 6pk", precio: 98, anterior: null, cat: "cervezas", disp: true, img: "cerveza.jpg" },
+  { id: 5, nombre: "Detergente 3kg", precio: 89, anterior: 120, cat: "hogar", disp: true, img: "detergente.jpg" },
+  { id: 6, nombre: "Papel higiénico 12pk", precio: 65, anterior: null, cat: "hogar", disp: true, img: "papel.jpg" },
+  { id: 7, nombre: "Martillo de uña", precio: 129, anterior: null, cat: "ferreteria", disp: true, img: "martillo.jpg" },
+  { id: 8, nombre: "Juego de desarmadores", precio: 159, anterior: 179, cat: "ferreteria", disp: true, img: "desarmadores.jpg" },
+  { id: 9, nombre: "Refresco 2L", precio: 24, anterior: null, cat: "bebidas", disp: true, img: "refresco.jpg" },
+  { id: 10, nombre: "Agua mineral 1.5L", precio: 12.50, anterior: null, cat: "bebidas", disp: true, img: "agua.jpg" },
+  { id: 11, nombre: "Shampoo 750ml", precio: 54.90, anterior: null, cat: "belleza", disp: true, img: "shampoo.jpg" },
+  { id: 12, nombre: "Jabón 3pk", precio: 42, anterior: null, cat: "belleza", disp: true, img: "jabon.jpg" },
+  { id: 13, nombre: "Croquetas perro 2kg", precio: 189, anterior: 210, cat: "mascotas", disp: true, img: "croquetas.jpg" },
+  { id: 14, nombre: "Arena para gato 4kg", precio: 115, anterior: null, cat: "mascotas", disp: true, img: "arena.jpg" }
 ];
 
+function inicializarProductos() {
+  const productosGuardados = localStorage.getItem(CLAVE_PRODUCTOS);
+  const productosLegacy = localStorage.getItem(CLAVE_PRODUCTOS_LEGACY);
+
+  if (productosGuardados) {
+    return JSON.parse(productosGuardados);
+  }
+
+  if (productosLegacy) {
+    localStorage.setItem(CLAVE_PRODUCTOS, productosLegacy);
+    localStorage.removeItem(CLAVE_PRODUCTOS_LEGACY);
+    return JSON.parse(productosLegacy);
+  }
+
+  localStorage.setItem(CLAVE_PRODUCTOS, JSON.stringify(PRODUCTOS_INICIALES));
+  return PRODUCTOS_INICIALES;
+}
+
+function obtenerProductos() {
+  try {
+    const productos = inicializarProductos();
+    return Array.isArray(productos)
+      ? productos
+      : [];
+  } catch (error) {
+    console.error("Error cargando productos:", error);
+    return PRODUCTOS_INICIALES;
+  }
+}
+
 let categoriaActual = "Todos";
+let productos = obtenerProductos();
+
+//recarga Productos
+function recargarProductos() {
+  productos.length = 0;
+
+  obtenerProductos().forEach(producto => {
+    productos.push(producto);
+  });
+}
+
+function obtenerRutaImagen(producto) {
+  if (producto.img) {
+    if (producto.img.startsWith("data:image/") || producto.img.startsWith("http") || producto.img.startsWith("img/")) {
+      return producto.img;
+    }
+    return `img/productos/${producto.img}`;
+  }
+  return producto.imagen || "img/productos/producto.img.png";
+}
 
 // Inicializar Aplicación
 document.addEventListener("DOMContentLoaded", () => {
+
+  recargarProductos();
+
   renderizarCategoriasHeader();
   renderizarCategoriasPildora();
   renderizarProductos(productos);
+
   configurarEventos();
   actualizarUICarrito();
 });
+
+
+
 
 // Cargar categorías en el menú desplegable del Header
 function renderizarCategoriasHeader() {
@@ -88,9 +147,7 @@ function renderizarProductos(articulos) {
 
   contenedor.innerHTML = articulos.map(producto => {
     const nombreCat = CATEGORIAS[producto.cat] || producto.categoria || producto.cat || "General";
-    const rutaImagen = producto.img 
-      ? (producto.img.startsWith('http') || producto.img.startsWith('img/') ? producto.img : `img/productos/${producto.img}`)
-      : (producto.imagen || 'img/productos/producto.img.png');
+    const rutaImagen = obtenerRutaImagen(producto);
     
     // Etiqueta de oferta o disponibilidad
     let etiquetaBadge = '';
@@ -112,7 +169,7 @@ function renderizarProductos(articulos) {
       <div class="product-card d-flex flex-column justify-content-between p-3">
         <div>
           <div class="product-img-wrapper mb-2">
-            <a href="pages/categorias.html">
+            <a href="pages/categorias.html?categoria=${encodeURIComponent(producto.cat || "")}">
               <img class="product-img" src="${rutaImagen}" alt="${producto.nombre}" loading="lazy" style="object-fit: contain;">
             </a>
             <button class="btn-add-cart d-flex align-items-center justify-content-center text-white fw-bold fs-5" onclick="agregarAlCarrito(${producto.id})" title="Agregar al carrito" style="line-height: 1;">
@@ -121,7 +178,7 @@ function renderizarProductos(articulos) {
           </div>
           ${etiquetaBadge}
           <span class="d-block text-muted small fw-semibold text-uppercase">${nombreCat}</span>
-          <a href="pages/categorias.html" style="text-decoration:none; color:inherit;">
+          <a href="pages/categorias.html?categoria=${encodeURIComponent(producto.cat || "")}" style="text-decoration:none; color:inherit;">
             <h6 class="fw-bold text-dark text-truncate mb-2" title="${producto.nombre}">${producto.nombre}</h6>
           </a>
         </div>
@@ -160,9 +217,7 @@ function agregarAlCarrito(idProducto) {
   const prod = productos.find(p => p.id === idProducto);
   if (!prod) return;
 
-  const rutaImagen = prod.img 
-    ? (prod.img.startsWith('http') || prod.img.startsWith('img/') ? prod.img : `img/productos/${prod.img}`)
-    : (prod.imagen || '');
+  const rutaImagen = obtenerRutaImagen(prod);
 
   if (typeof agregarProductoAlCarrito === "function") {
     agregarProductoAlCarrito({
@@ -172,6 +227,7 @@ function agregarAlCarrito(idProducto) {
       img: rutaImagen,
       cantidad: 1
     });
+    
     actualizarUICarrito();
 
     // Abrir canvas lateral del carrito para retroalimentación visual
@@ -279,3 +335,17 @@ function configurarEventos() {
     botonRestablecerFiltro.addEventListener("click", () => filtrarPorCategoria("Todos"));
   }
 }
+
+window.addEventListener("storage", function (event) {
+
+  if (event.key === CLAVE_PRODUCTOS) {
+
+    productos = obtenerProductos();
+
+    if (categoriaActual === "Todos") {
+      renderizarProductos(productos);
+    } else {
+      filtrarPorCategoria(categoriaActual);
+    }
+  }
+});

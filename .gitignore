@@ -1,1 +1,13 @@
+# ===== mac =====
 .DS_Store
+
+# Archivos de entorno y credenciales sensibles
+*.env
+database/conexion.env
+.env.local
+.env.*.local
+
+# IDEs y editores
+.vscode/
+.idea/
+*.swp

@@ -36,6 +36,7 @@ formulario.addEventListener("submit", function (evento) {
     ) {
         errores.push("Todos los campos son obligatorios.");
     }
+
     //-----validación de nombre y apellido-----
 
      if (nombre !== "" && nombre.length <= 3) {
@@ -45,6 +46,8 @@ formulario.addEventListener("submit", function (evento) {
         errores.push("El apellido debe tener más de 3 caracteres.");
     }
     
+
+
 //-----CORREO-----
     //Validar el formato del correo electrónico
     const formatoEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -59,6 +62,10 @@ formulario.addEventListener("submit", function (evento) {
     const telefonoLimpio = telefono.replace(/[\s()-]/g, "");
     
      if (telefonoLimpio.startsWith("0")) {
+        errores.push("El teléfono no puede comenzar con 0.");
+    }
+
+    if (telefonoLimpio.startsWith("0")) {
         errores.push("El teléfono no puede comenzar con 0.");
     }
 
