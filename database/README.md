@@ -1,46 +1,52 @@
 # Base de datos de Tienda 3V
 
-Esquema relacional para MySQL 8.0.16 o posterior, ajustado a las páginas actuales y al PDF de reglas de negocio. Esta carpeta incluye el modelo, scripts por actividad, datos de prueba, plantilla de conexión y guías PDF.
+Esquema relacional para MySQL 8.0.16 o posterior. El archivo vigente es `esquema.sql`; crea la base `tienda3v`, sus 11 tablas y los datos iniciales de roles, categorías, sucursales y métodos de pago.
 
 ## Archivos
 
-- [Reglas de negocio (PDF)](./documentos/reglas_de_negocio.pdf)
+- [Esquema SQL](./esquema.sql)
 - [Modelo entidad-relación (Mermaid)](./modelo_entidad_relacion.mmd)
-- [Guía paso a paso (PDF)](./documentos/guia_paso_a_paso.pdf)
-- [Plantilla de usuario MySQL](./plantillas/crear_usuario_prueba.sql)
-- [Plantilla de variables de conexión](./plantillas/conexion.env.example)
+- [Diagrama entidad-relación (PNG)](./diagrama-entidad-relacion.png)
 
-## Orden de ejecución
+## Ejecución
 
-Ejecuta desde la raíz del repositorio, en una terminal. MySQL pedirá la contraseña de una cuenta que ya tenga permiso para crear la base:
+Desde la raíz del repositorio, en una terminal compatible con la redirección de entrada:
 
 ```sh
-mysql -u root -p < database/scripts/01_crear_base.sql
-mysql -u root -p tienda3v < database/scripts/02_catalogos_y_sucursales.sql
-mysql -u root -p tienda3v < database/scripts/03_usuarios.sql
-mysql -u root -p tienda3v < database/scripts/04_catalogo_inventario_promociones.sql
-mysql -u root -p tienda3v < database/scripts/05_pedidos_detalles_cupones.sql
-mysql -u root -p tienda3v < database/scripts/06_contacto.sql
-mysql -u root -p tienda3v < database/scripts/07_reglas_y_vistas.sql
-mysql -u root -p tienda3v < database/scripts/08_datos_prueba.sql
+mysql -u root -p < database/esquema.sql
 ```
 
-Usa estos scripts como esquema vigente. `schema.sql` es un borrador monolítico anterior; no lo combines con los scripts 01–08.
+MySQL solicitará la contraseña de una cuenta que tenga permiso para crear la base de datos. En el cliente MySQL también puedes ejecutar `source database/esquema.sql` desde la raíz del repositorio.
 
-Los scripts de estructura crean relaciones y restricciones. Ejecuta `08_datos_prueba.sql` una sola vez en una base vacía. El script inserta al menos cinco filas por entidad, salvo las tres sucursales; roles y métodos de pago conservan únicamente las opciones reales que establecen las reglas.
+`create table if not exists` permite conservar tablas existentes, pero no renombra sus columnas. Este archivo define el esquema para una instalación nueva; una base creada con nombres anteriores requiere una migración antes de usar los nombres actualizados.
+
+## Convención de nombres
+
+Los nombres de tablas, columnas, índices y restricciones están en minúsculas y usan guiones bajos. Los identificadores son descriptivos y comienzan por `id_`; las claves foráneas usan el mismo nombre que la clave primaria referenciada, sin sufijo `_fk`.
+
+| Tabla | Clave primaria |
+| --- | --- |
+| `roles` | `id_rol` |
+| `usuarios` | `id_usuario` |
+| `categorias` | `id_categoria` |
+| `productos` | `id_producto` |
+| `sucursales` | `id_sucursal` |
+| `inventario_sucursal` | `id_sucursal`, `id_producto` (compuesta) |
+| `cupones` | `id_cupon` |
+| `metodos_pago` | `id_metodo_pago` |
+| `pedidos` | `id_pedido` |
+| `detalle_pedido` | `id_detalle_pedido` |
+| `mensajes_contacto` | `id_mensaje_contacto` |
 
 ## Reglas implementadas
 
-- Un pedido requiere un usuario y una sucursal; cliente, sucursal y método de pago deben existir.
-- La clave primaria de detalle es `(id_pedido_fk, id_producto_fk)`, por lo que el producto aparece una sola vez por pedido; la cantidad debe ser un entero mayor que cero.
-- El precio unitario y descuento de producto se guardan como fotografías del momento de compra.
-- Promociones por producto y cupones globales son entidades distintas. Se aplica como máximo un cupón en el primer pedido; puede combinarse con descuentos por producto, y su uso se consume al crear el pedido aun si después se cancela.
-- El total y el importe de línea no se almacenan: se calculan en `vw_totales_pedido` y `vw_importes_detalle_pedido`.
-- El efectivo solo se permite en sucursal; tarjeta de crédito y débito son las opciones de tarjeta web.
-- La contraseña persistida es un hash. Los valores `password_hash` de prueba son marcadores inválidos, nunca contraseñas reales.
-- La recuperación de contraseña persiste únicamente hashes de tokens de un solo uso y con vencimiento; el flujo actual del frontend debe migrar a backend para aplicarlo.
-- El carrito continúa en `localStorage` según el frontend actual; no se agrega una tabla de carrito persistente.
+- Cada usuario requiere un rol y un correo único. La contraseña se almacena en `password_hash`.
+- Cada producto requiere una categoría y un precio mayor que cero. Si tiene `precio_anterior`, debe ser mayor que el precio actual.
+- El inventario registra una existencia no negativa por combinación de sucursal y producto.
+- Un pedido requiere sucursal y método de pago; el usuario y el cupón son opcionales. Conserva los datos de contacto del cliente.
+- El subtotal, el descuento y el total del pedido se almacenan; deben ser no negativos y cumplir `total = subtotal - descuento`.
+- Cada detalle tiene un identificador propio, requiere pedido y cantidad entera positiva, y conserva nombre de producto, precio unitario y subtotal. Debe cumplir `subtotal = cantidad * precio_unitario`. El producto puede quedar sin referencia si se elimina del catálogo.
+- Un cupón tiene un código único y un porcentaje de descuento mayor que cero y menor o igual a cien. Si se indican ambas fechas de vigencia, el final debe ser posterior al inicio.
+- Los mensajes de contacto pueden asociarse a un usuario o conservar únicamente los datos de contacto.
 
-## Conexión local
-
-Revisa [la guía PDF](./documentos/guia_paso_a_paso.pdf). Si prefieres una cuenta dedicada, edita el marcador de la plantilla SQL antes de ejecutarla con una cuenta administradora existente. La cuenta propuesta queda restringida a `tienda3v.*`; no uses credenciales de ejemplo fuera del desarrollo local.
+Las relaciones y las acciones de actualización y eliminación se definen en `esquema.sql`. El esquema no incluye vistas, promociones por producto, recuperación de contraseñas ni una tabla de carrito.

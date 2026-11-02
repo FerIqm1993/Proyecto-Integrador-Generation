@@ -1,138 +1,118 @@
 erDiagram
-    %% Comentarios de negocio:
-    %% detalle_pedido usa PK compuesta pedido+producto, con cantidad entera positiva.
-    %% precio_unitario y descuentos se conservan como fotografías históricas.
-    %% Totales e importes de línea se calculan en vistas, no son columnas persistidas.
-    %% Un solo cupón global en el primer pedido; puede combinarse con descuentos de producto.
-    %% Un pedido siempre requiere usuario, sucursal y método de pago.
-    ROLES ||--o{ USUARIOS : asigna
-    USUARIOS ||--o{ RECUPERACIONES_CONTRASENA : solicita
-    USUARIOS ||--o{ PEDIDOS : realiza
-    SUCURSALES ||--o{ PEDIDOS : recibe
-    METODOS_PAGO ||--o{ PEDIDOS : utiliza
-    CUPONES o|--o{ PEDIDOS : aplica
-    PEDIDOS ||--|{ DETALLE_PEDIDO : contiene
-    PRODUCTOS ||--o{ DETALLE_PEDIDO : aparece_en
-    CATEGORIAS ||--o{ PRODUCTOS : clasifica
-    SUCURSALES ||--o{ INVENTARIO_SUCURSAL : almacena
-    PRODUCTOS ||--o{ INVENTARIO_SUCURSAL : tiene_existencias
-    PRODUCTOS ||--o{ DESCUENTOS_PRODUCTO : recibe
-    USUARIOS ||--o| REDENCIONES_CUPON : consume_una_vez
-    PEDIDOS ||--o| REDENCIONES_CUPON : registra
-    CUPONES ||--o{ REDENCIONES_CUPON : identifica
-    USUARIOS o|--o{ MENSAJES_CONTACTO : envia
+    %% Modelo de database/esquema.sql.
+    %% Identificadores en minúsculas; las FK conservan el nombre de la PK referenciada.
+    %% inventario_sucursal usa una PK compuesta; detalle_pedido tiene una PK propia.
+    %% Los importes se almacenan y se validan mediante restricciones check.
+    roles ||--o{ usuarios : asigna
+    usuarios o|--o{ pedidos : realiza
+    sucursales ||--o{ pedidos : recibe
+    metodos_pago ||--o{ pedidos : utiliza
+    cupones o|--o{ pedidos : aplica
+    pedidos ||--o{ detalle_pedido : contiene
+    productos o|--o{ detalle_pedido : aparece_en
+    categorias ||--o{ productos : clasifica
+    sucursales ||--o{ inventario_sucursal : almacena
+    productos ||--o{ inventario_sucursal : tiene_existencias
+    usuarios o|--o{ mensajes_contacto : envia
 
-    ROLES {
-        tinyint id_rol PK
+    roles {
+        bigint id_rol PK
         varchar nombre UK
     }
-    USUARIOS {
-        int id_usuario PK
-        tinyint id_rol_fk FK
-        varchar nombre_usuario
-        varchar apellido_usuario
-        varchar correo_usuario UK
-        varchar telefono_usuario
+    usuarios {
+        bigint id_usuario PK
+        bigint id_rol FK
+        varchar nombre
+        varchar apellido
+        varchar correo UK
+        varchar telefono
         varchar password_hash
         boolean acepta_terminos
         boolean activo
-        timestamp fecha_registro
+        timestamp creado_en
+        timestamp actualizado_en
     }
-    RECUPERACIONES_CONTRASENA {
-        int id_recuperacion PK
-        int id_usuario_fk FK
-        char token_hash UK
-        timestamp fecha_creacion
-        datetime fecha_expiracion
-        datetime fecha_uso
-    }
-    CATEGORIAS {
-        int id_categoria PK
+    categorias {
+        bigint id_categoria PK
         varchar nombre UK
         varchar slug UK
         boolean activa
     }
-    PRODUCTOS {
-        int id_producto PK
-        int id_categoria_fk FK
-        varchar nombre_producto
-        text descripcion_producto
-        varchar marca
-        varchar sku UK
-        decimal precio_unitario
+    productos {
+        bigint id_producto PK
+        bigint id_categoria FK
+        varchar nombre
+        text descripcion
+        decimal precio
+        decimal precio_anterior
         varchar imagen_url
         boolean activo
-        timestamp fecha_creacion
+        timestamp creado_en
+        timestamp actualizado_en
     }
-    SUCURSALES {
-        int id_sucursal PK
+    sucursales {
+        bigint id_sucursal PK
         varchar nombre
         varchar direccion
         varchar ciudad
         varchar estado
         varchar codigo_postal
-        varchar telefono
-        varchar correo
         varchar horario
-        boolean pick_up_disponible
+        varchar mapa_url
         boolean activa
     }
-    INVENTARIO_SUCURSAL {
-        int id_sucursal_fk PK, FK
-        int id_producto_fk PK, FK
-        int stock
+    inventario_sucursal {
+        bigint id_sucursal PK, FK
+        bigint id_producto PK, FK
+        int existencia
         timestamp actualizado_en
     }
-    DESCUENTOS_PRODUCTO {
-        int id_descuento_producto PK
-        int id_producto_fk FK
-        decimal porcentaje_descuento
-        datetime fecha_inicio
-        datetime fecha_fin
-        boolean activo
-    }
-    METODOS_PAGO {
-        tinyint id_metodo_pago PK
-        varchar tipo_pago UK
-        boolean activo
-    }
-    CUPONES {
-        int id_cupon PK
+    cupones {
+        bigint id_cupon PK
         varchar codigo UK
-        decimal porcentaje_descuento
-        datetime fecha_inicio
-        datetime fecha_vencimiento
+        decimal descuento_porcentaje
+        boolean activo
+        datetime valido_desde
+        datetime valido_hasta
         int maximo_usos
         int usos
+        timestamp creado_en
+    }
+    metodos_pago {
+        bigint id_metodo_pago PK
+        varchar nombre UK
         boolean activo
     }
-    PEDIDOS {
-        int id_pedido PK
-        int id_usuario_fk FK
-        int id_sucursal_fk FK
-        tinyint id_metodo_pago_fk FK
-        int id_cupon_fk FK
-        decimal porcentaje_cupon_aplicado
-        timestamp fecha_pedido
-        varchar estado_pedido
+    pedidos {
+        bigint id_pedido PK
+        bigint id_usuario FK
+        bigint id_sucursal FK
+        bigint id_metodo_pago FK
+        bigint id_cupon FK
+        varchar estado
         varchar estado_pago
+        varchar nombre_cliente
+        varchar correo_cliente
+        varchar telefono_cliente
+        varchar codigo_cupon
+        decimal subtotal
+        decimal descuento
+        decimal total
+        timestamp creado_en
+        timestamp actualizado_en
     }
-    DETALLE_PEDIDO {
-        int id_pedido_fk PK, FK
-        int id_producto_fk PK, FK
-        int cantidad_producto
+    detalle_pedido {
+        bigint id_detalle_pedido PK
+        bigint id_pedido FK
+        bigint id_producto FK
+        varchar nombre_producto
+        int cantidad
         decimal precio_unitario
-        decimal porcentaje_descuento_producto
+        decimal subtotal
     }
-    REDENCIONES_CUPON {
-        int id_usuario_fk PK, FK
-        int id_pedido_fk UK, FK
-        int id_cupon_fk FK
-        timestamp fecha_redencion
-    }
-    MENSAJES_CONTACTO {
-        int id_mensaje PK
-        int id_usuario_fk FK
+    mensajes_contacto {
+        bigint id_mensaje_contacto PK
+        bigint id_usuario FK
         varchar nombre
         varchar correo
         varchar telefono
@@ -140,5 +120,5 @@ erDiagram
         text mensaje
         boolean acepta_aviso_privacidad
         varchar estado
-        timestamp fecha_creacion
+        timestamp creado_en
     }
