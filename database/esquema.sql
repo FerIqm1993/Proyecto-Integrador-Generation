@@ -1,19 +1,20 @@
 -- Esquema relacional para Tienda 3V (MySQL 8+).
 -- Ejecutar este archivo con un usuario que tenga permisos para crear bases de datos.
+-- Identificadores en minúsculas y snake_case; claves con formato id_<entidad>.
 CREATE DATABASE IF NOT EXISTS tienda3v
     CHARACTER SET utf8mb4;
 USE tienda3v;
 
 CREATE TABLE IF NOT EXISTS roles (
-    id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+    id_rol BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
     nombre VARCHAR(30) NOT NULL,
-    PRIMARY KEY (id),
+    PRIMARY KEY (id_rol),
     UNIQUE KEY uq_roles_nombre (nombre)
 ) ENGINE=InnoDB;
 
 CREATE TABLE IF NOT EXISTS usuarios (
-    id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-    rol_id BIGINT UNSIGNED NOT NULL,
+    id_usuario BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+    id_rol BIGINT UNSIGNED NOT NULL,
     nombre VARCHAR(80) NOT NULL,
     apellido VARCHAR(100) NOT NULL,
     correo VARCHAR(254) NOT NULL,
@@ -23,27 +24,27 @@ CREATE TABLE IF NOT EXISTS usuarios (
     activo BOOLEAN NOT NULL DEFAULT TRUE,
     creado_en TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     actualizado_en TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    PRIMARY KEY (id),
+    PRIMARY KEY (id_usuario),
     UNIQUE KEY uq_usuarios_correo (correo),
-    KEY idx_usuarios_rol (rol_id),
+    KEY idx_usuarios_rol (id_rol),
     CONSTRAINT fk_usuarios_rol
-        FOREIGN KEY (rol_id) REFERENCES roles (id)
+        FOREIGN KEY (id_rol) REFERENCES roles (id_rol)
         ON UPDATE CASCADE ON DELETE RESTRICT
 ) ENGINE=InnoDB;
 
 CREATE TABLE IF NOT EXISTS categorias (
-    id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+    id_categoria BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
     nombre VARCHAR(100) NOT NULL,
     slug VARCHAR(100) NOT NULL,
     activa BOOLEAN NOT NULL DEFAULT TRUE,
-    PRIMARY KEY (id),
+    PRIMARY KEY (id_categoria),
     UNIQUE KEY uq_categorias_nombre (nombre),
     UNIQUE KEY uq_categorias_slug (slug)
 ) ENGINE=InnoDB;
 
 CREATE TABLE IF NOT EXISTS productos (
-    id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-    categoria_id BIGINT UNSIGNED NOT NULL,
+    id_producto BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+    id_categoria BIGINT UNSIGNED NOT NULL,
     nombre VARCHAR(150) NOT NULL,
     descripcion TEXT NULL,
     precio DECIMAL(10,2) NOT NULL,
@@ -52,18 +53,18 @@ CREATE TABLE IF NOT EXISTS productos (
     activo BOOLEAN NOT NULL DEFAULT TRUE,
     creado_en TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     actualizado_en TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    PRIMARY KEY (id),
-    KEY idx_productos_categoria_activo (categoria_id, activo),
+    PRIMARY KEY (id_producto),
+    KEY idx_productos_categoria_activo (id_categoria, activo),
     CONSTRAINT chk_productos_precio CHECK (precio > 0),
     CONSTRAINT chk_productos_precio_anterior
         CHECK (precio_anterior IS NULL OR precio_anterior > precio),
     CONSTRAINT fk_productos_categoria
-        FOREIGN KEY (categoria_id) REFERENCES categorias (id)
+        FOREIGN KEY (id_categoria) REFERENCES categorias (id_categoria)
         ON UPDATE CASCADE ON DELETE RESTRICT
 ) ENGINE=InnoDB;
 
 CREATE TABLE IF NOT EXISTS sucursales (
-    id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+    id_sucursal BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
     nombre VARCHAR(120) NOT NULL,
     direccion VARCHAR(255) NOT NULL,
     ciudad VARCHAR(100) NOT NULL,
@@ -72,26 +73,26 @@ CREATE TABLE IF NOT EXISTS sucursales (
     horario VARCHAR(150) NULL,
     mapa_url VARCHAR(500) NULL,
     activa BOOLEAN NOT NULL DEFAULT TRUE,
-    PRIMARY KEY (id),
+    PRIMARY KEY (id_sucursal),
     UNIQUE KEY uq_sucursales_nombre_direccion (nombre, direccion)
 ) ENGINE=InnoDB;
 
 CREATE TABLE IF NOT EXISTS inventario_sucursal (
-    sucursal_id BIGINT UNSIGNED NOT NULL,
-    producto_id BIGINT UNSIGNED NOT NULL,
+    id_sucursal BIGINT UNSIGNED NOT NULL,
+    id_producto BIGINT UNSIGNED NOT NULL,
     existencia INT UNSIGNED NOT NULL DEFAULT 0,
     actualizado_en TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    PRIMARY KEY (sucursal_id, producto_id),
+    PRIMARY KEY (id_sucursal, id_producto),
     CONSTRAINT fk_inventario_sucursal
-        FOREIGN KEY (sucursal_id) REFERENCES sucursales (id)
+        FOREIGN KEY (id_sucursal) REFERENCES sucursales (id_sucursal)
         ON UPDATE CASCADE ON DELETE CASCADE,
     CONSTRAINT fk_inventario_producto
-        FOREIGN KEY (producto_id) REFERENCES productos (id)
+        FOREIGN KEY (id_producto) REFERENCES productos (id_producto)
         ON UPDATE CASCADE ON DELETE CASCADE
 ) ENGINE=InnoDB;
 
 CREATE TABLE IF NOT EXISTS cupones (
-    id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+    id_cupon BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
     codigo VARCHAR(30) NOT NULL,
     descuento_porcentaje DECIMAL(5,2) NOT NULL,
     activo BOOLEAN NOT NULL DEFAULT TRUE,
@@ -100,7 +101,7 @@ CREATE TABLE IF NOT EXISTS cupones (
     maximo_usos INT UNSIGNED NULL,
     usos INT UNSIGNED NOT NULL DEFAULT 0,
     creado_en TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY (id),
+    PRIMARY KEY (id_cupon),
     UNIQUE KEY uq_cupones_codigo (codigo),
     CONSTRAINT chk_cupones_descuento CHECK (descuento_porcentaje > 0 AND descuento_porcentaje <= 100),
     CONSTRAINT chk_cupones_vigencia
@@ -108,19 +109,19 @@ CREATE TABLE IF NOT EXISTS cupones (
 ) ENGINE=InnoDB;
 
 CREATE TABLE IF NOT EXISTS metodos_pago (
-    id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+    id_metodo_pago BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
     nombre VARCHAR(50) NOT NULL,
     activo BOOLEAN NOT NULL DEFAULT TRUE,
-    PRIMARY KEY (id),
+    PRIMARY KEY (id_metodo_pago),
     UNIQUE KEY uq_metodos_pago_nombre (nombre)
 ) ENGINE=InnoDB;
 
 CREATE TABLE IF NOT EXISTS pedidos (
-    id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-    usuario_id BIGINT UNSIGNED NULL,
-    sucursal_id BIGINT UNSIGNED NOT NULL,
-    metodo_pago_id BIGINT UNSIGNED NOT NULL,
-    cupon_id BIGINT UNSIGNED NULL,
+    id_pedido BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+    id_usuario BIGINT UNSIGNED NULL,
+    id_sucursal BIGINT UNSIGNED NOT NULL,
+    id_metodo_pago BIGINT UNSIGNED NOT NULL,
+    id_cupon BIGINT UNSIGNED NULL,
     estado VARCHAR(30) NOT NULL DEFAULT 'pendiente',
     estado_pago VARCHAR(30) NOT NULL DEFAULT 'pendiente',
     nombre_cliente VARCHAR(180) NOT NULL,
@@ -132,50 +133,50 @@ CREATE TABLE IF NOT EXISTS pedidos (
     total DECIMAL(10,2) NOT NULL,
     creado_en TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     actualizado_en TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    PRIMARY KEY (id),
-    KEY idx_pedidos_usuario_fecha (usuario_id, creado_en),
-    KEY idx_pedidos_sucursal_estado (sucursal_id, estado),
+    PRIMARY KEY (id_pedido),
+    KEY idx_pedidos_usuario_fecha (id_usuario, creado_en),
+    KEY idx_pedidos_sucursal_estado (id_sucursal, estado),
     CONSTRAINT chk_pedidos_totales
         CHECK (subtotal >= 0 AND descuento >= 0 AND total >= 0 AND total = subtotal - descuento),
     CONSTRAINT fk_pedidos_usuario
-        FOREIGN KEY (usuario_id) REFERENCES usuarios (id)
+        FOREIGN KEY (id_usuario) REFERENCES usuarios (id_usuario)
         ON UPDATE CASCADE ON DELETE SET NULL,
     CONSTRAINT fk_pedidos_sucursal
-        FOREIGN KEY (sucursal_id) REFERENCES sucursales (id)
+        FOREIGN KEY (id_sucursal) REFERENCES sucursales (id_sucursal)
         ON UPDATE CASCADE ON DELETE RESTRICT,
     CONSTRAINT fk_pedidos_metodo_pago
-        FOREIGN KEY (metodo_pago_id) REFERENCES metodos_pago (id)
+        FOREIGN KEY (id_metodo_pago) REFERENCES metodos_pago (id_metodo_pago)
         ON UPDATE CASCADE ON DELETE RESTRICT,
     CONSTRAINT fk_pedidos_cupon
-        FOREIGN KEY (cupon_id) REFERENCES cupones (id)
+        FOREIGN KEY (id_cupon) REFERENCES cupones (id_cupon)
         ON UPDATE CASCADE ON DELETE SET NULL
 ) ENGINE=InnoDB;
 
 CREATE TABLE IF NOT EXISTS detalle_pedido (
-    id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-    pedido_id BIGINT UNSIGNED NOT NULL,
-    producto_id BIGINT UNSIGNED NULL,
+    id_detalle_pedido BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+    id_pedido BIGINT UNSIGNED NOT NULL,
+    id_producto BIGINT UNSIGNED NULL,
     nombre_producto VARCHAR(150) NOT NULL,
     cantidad INT UNSIGNED NOT NULL,
     precio_unitario DECIMAL(10,2) NOT NULL,
     subtotal DECIMAL(10,2) NOT NULL,
-    PRIMARY KEY (id),
-    KEY idx_detalle_pedido_pedido (pedido_id),
-    KEY idx_detalle_pedido_producto (producto_id),
+    PRIMARY KEY (id_detalle_pedido),
+    KEY idx_detalle_pedido_pedido (id_pedido),
+    KEY idx_detalle_pedido_producto (id_producto),
     CONSTRAINT chk_detalle_pedido_cantidad CHECK (cantidad > 0),
     CONSTRAINT chk_detalle_pedido_importes
         CHECK (precio_unitario >= 0 AND subtotal = cantidad * precio_unitario),
     CONSTRAINT fk_detalle_pedido_pedido
-        FOREIGN KEY (pedido_id) REFERENCES pedidos (id)
+        FOREIGN KEY (id_pedido) REFERENCES pedidos (id_pedido)
         ON UPDATE CASCADE ON DELETE CASCADE,
     CONSTRAINT fk_detalle_pedido_producto
-        FOREIGN KEY (producto_id) REFERENCES productos (id)
+        FOREIGN KEY (id_producto) REFERENCES productos (id_producto)
         ON UPDATE CASCADE ON DELETE SET NULL
 ) ENGINE=InnoDB;
 
 CREATE TABLE IF NOT EXISTS mensajes_contacto (
-    id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-    usuario_id BIGINT UNSIGNED NULL,
+    id_mensaje_contacto BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+    id_usuario BIGINT UNSIGNED NULL,
     nombre VARCHAR(180) NOT NULL,
     correo VARCHAR(254) NOT NULL,
     telefono VARCHAR(20) NULL,
@@ -184,10 +185,10 @@ CREATE TABLE IF NOT EXISTS mensajes_contacto (
     acepta_aviso_privacidad BOOLEAN NOT NULL,
     estado VARCHAR(20) NOT NULL DEFAULT 'nuevo',
     creado_en TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY (id),
+    PRIMARY KEY (id_mensaje_contacto),
     KEY idx_mensajes_contacto_estado_fecha (estado, creado_en),
     CONSTRAINT fk_mensajes_contacto_usuario
-        FOREIGN KEY (usuario_id) REFERENCES usuarios (id)
+        FOREIGN KEY (id_usuario) REFERENCES usuarios (id_usuario)
         ON UPDATE CASCADE ON DELETE SET NULL
 ) ENGINE=InnoDB;
 
