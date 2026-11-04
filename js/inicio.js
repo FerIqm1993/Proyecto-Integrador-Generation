@@ -92,7 +92,7 @@ function obtenerRutaImagen(producto) {
 }
 
 // Inicializar Aplicación
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
 
   recargarProductos();
 
@@ -102,10 +102,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
   configurarEventos();
   actualizarUICarrito();
+
+  // Sincronizar con el Backend API (Spring Boot + MySQL)
+  if (typeof sincronizarProductosDesdeApi === "function") {
+    const desdeApi = await sincronizarProductosDesdeApi();
+    if (Array.isArray(desdeApi) && desdeApi.length > 0) {
+      productos = desdeApi;
+      if (categoriaActual === "Todos") {
+        renderizarProductos(productos);
+      } else {
+        filtrarPorCategoria(categoriaActual);
+      }
+    }
+  }
 });
-
-
-
 
 // Cargar categorías en el menú desplegable del Header
 function renderizarCategoriasHeader() {

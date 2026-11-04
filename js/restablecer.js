@@ -1,23 +1,21 @@
 // leo el correo que viene en el enlace (?correo=...)
 const parametros = new URLSearchParams(window.location.search);
 const correo = parametros.get('correo');
+const URL_API_RESTABLECER = window.API_BASE_URL || "http://localhost:8080/api";
 
 const cajaMensaje = document.getElementById('mensaje');
 const correoMostrado = document.getElementById('correoMostrado');
 
-// si no hay correo en el enlace, algo esta mal
 if (!correo) {
     cajaMensaje.innerHTML = '<div class="alert alert-danger">Enlace no valido. Pide uno nuevo.</div>';
 } else {
     correoMostrado.textContent = 'Cambiando contraseña para: ' + correo;
 }
 
-// cuando le dan click a guardar
-document.getElementById('btnGuardar').addEventListener('click', function () {
+document.getElementById('btnGuardar').addEventListener('click', async function () {
     const nueva = document.getElementById('nueva').value;
     const confirmar = document.getElementById('confirmar').value;
 
-    // validaciones (mismas que en registro)
     if (!nueva || !confirmar) {
         cajaMensaje.innerHTML = '<div class="alert alert-danger">Llena ambos campos.</div>';
         return;
@@ -35,18 +33,35 @@ document.getElementById('btnGuardar').addEventListener('click', function () {
         return;
     }
 
-    // actualizo en localStorage
+    const passwordCodificado = btoa(nueva);
+    let actualizadoEnApi = false;
+
+    try {
+        const resp = await fetch(`${URL_API_RESTABLECER}/usuarios/password`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                correo: correo.toLowerCase(),
+                passwordHash: passwordCodificado
+            })
+        });
+        if (resp.ok) {
+            actualizadoEnApi = true;
+        }
+    } catch (err) {
+        console.warn("Actualizando contraseña en localStorage:", err.message);
+    }
+
     const usuarios = JSON.parse(localStorage.getItem('usuarios') || '[]');
-    const usuario = usuarios.find(u => u.email === correo);
+    const usuario = usuarios.find(u => u.email.toLowerCase() === correo.toLowerCase());
     
-    if (!usuario) {
+    if (usuario) {
+        usuario.contrasena = passwordCodificado;
+        localStorage.setItem('usuarios', JSON.stringify(usuarios));
+    } else if (!actualizadoEnApi) {
         cajaMensaje.innerHTML = '<div class="alert alert-danger">Usuario no encontrado.</div>';
         return;
     }
-
-    // guardo la contraseña nueva codificada
-    usuario.contrasena = btoa(nueva);
-    localStorage.setItem('usuarios', JSON.stringify(usuarios));
 
     cajaMensaje.innerHTML = '<div class="alert alert-success">✅ ¡Contraseña actualizada! Yendo a iniciar sesion...</div>';
     

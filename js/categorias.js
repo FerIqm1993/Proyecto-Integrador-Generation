@@ -1,22 +1,26 @@
 (() => {
   "use strict"; // Evita algunos usos inseguros o errores comunes de JavaScript.
 
+  // Obtiene elementos HTML que JavaScript actualizará.
+  const grid = document.getElementById("productGrid");
+  const catList = document.getElementById("catList");
+  if (!grid || !catList) return; // Solo ejecutar en la página de categorías.
+
   // Catálogo: cada objeto contiene los datos de un producto.
-const CLAVE_PRODUCTOS = "tienda3v_productos";
+  const CLAVE_PRODUCTOS = "tienda3v_productos";
 
-function obtenerProductos() {
-  try {
-    return JSON.parse(
-      localStorage.getItem(CLAVE_PRODUCTOS)
-    ) || [];
-  } catch (error) {
-    console.error(error);
-    return [];
+  function obtenerProductos() {
+    try {
+      return JSON.parse(
+        localStorage.getItem(CLAVE_PRODUCTOS)
+      ) || [];
+    } catch (error) {
+      console.error(error);
+      return [];
+    }
   }
-}
 
-let PRODUCTOS = obtenerProductos();
-
+  let PRODUCTOS = obtenerProductos();
 
   // Relaciona la clave interna de cada categoría con el nombre que ve el usuario.
   const CATEGORIAS = {
@@ -42,12 +46,9 @@ let PRODUCTOS = obtenerProductos();
     state.categoria = categoriaSolicitada;
   }
 
-  // Obtiene elementos HTML que JavaScript actualizará.
-  const grid = document.getElementById("productGrid");
   const emptyState = document.getElementById("emptyState");
   const foundCount = document.getElementById("foundCount");
   const catTitle = document.getElementById("catTitle");
-  const catList = document.getElementById("catList");
   const toast = document.getElementById("toastCart");
   const toastText = document.getElementById("toastText");
   const minRange = document.getElementById("minRange");
@@ -59,9 +60,14 @@ let PRODUCTOS = obtenerProductos();
   const GAP = 5;   // Diferencia mínima entre los dos precios.
 
   function obtenerRutaImagen(img) {
-    return img && img.startsWith("data:image/")
-      ? img
-      : `../img/productos/${img}`;
+    if (!img) return "../img/productos/aceite.jpg";
+    if (img.startsWith("data:image/") || img.startsWith("http") || img.startsWith("../img/")) {
+      return img;
+    }
+    if (img.startsWith("img/")) {
+      return `../${img}`;
+    }
+    return `../img/productos/${img}`;
   }
 
   function actualizarConteosCategorias() {
@@ -78,7 +84,7 @@ let PRODUCTOS = obtenerProductos();
   });
 
   // Convierte un número a formato de precio.
-  const dinero = n => `$${n.toFixed(2).replace(".", ",")}`;
+  const dinero = n => `$${Number(n).toFixed(2).replace(".", ",")}`;
 
   // Devuelve productos de la categoría, rango de precio y disponibilidad elegidos.
   function filtrar(categoria = state.categoria) {
@@ -238,6 +244,23 @@ let PRODUCTOS = obtenerProductos();
   // Estado inicial: contador, controles de precio y catálogo.
   actualizarRangoUI();
   render();
+
+  // Sincronizar con el Backend API (Spring Boot + MySQL)
+  if (typeof sincronizarProductosDesdeApi === "function") {
+    sincronizarProductosDesdeApi().then(desdeApi => {
+      if (Array.isArray(desdeApi) && desdeApi.length > 0) {
+        PRODUCTOS = desdeApi;
+        const maxEnCat = Math.max(MAX, ...PRODUCTOS.map(p => Number(p.precio) || 0));
+        if (maxEnCat > state.maxPrecio && state.maxPrecio === MAX) {
+          state.maxPrecio = Math.ceil(maxEnCat);
+          maxRange.max = state.maxPrecio;
+          maxInput.max = state.maxPrecio;
+          actualizarRangoUI();
+        }
+        render();
+      }
+    });
+  }
 
   window.addEventListener("storage", event => {
     if (event.key !== CLAVE_PRODUCTOS && event.key !== null) return;

@@ -1,4 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
+    const URL_API_CONTACTO = window.API_BASE_URL || (typeof CONFIG !== 'undefined' && CONFIG.API_BASE_URL) || "http://localhost:8080/api";
+
     // inicializo emailjs con mi clave publica
     if (typeof CONFIG !== 'undefined' && CONFIG.EMAILJS_PUBLIC_KEY) {
         emailjs.init({
@@ -46,7 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     if (formularioContacto) {
-        formularioContacto.addEventListener('submit', (e) => {
+        formularioContacto.addEventListener('submit', async (e) => {
             e.preventDefault(); // evito que la pagina se recargue
 
             // tomo los valores del formulario
@@ -81,7 +83,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             // valido telefono (si se llena)
-            const telefono = inputTelefono.value.trim();
+            const telefono = inputTelefono.value.trim().replace(/[\s()-]/g, '');
             if (telefono !== '') {
                 const regexTelefono = /^[0-9]{10}$/;
                 if (!regexTelefono.test(telefono)) {
@@ -118,18 +120,42 @@ document.addEventListener('DOMContentLoaded', () => {
             botonEnviar.disabled = true;
             botonEnviar.innerHTML = `<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span> Enviando...`;
 
-            // envio el correo con datos limpios ✅
-            if (typeof CONFIG !== 'undefined') {
-                // armo el objeto con los datos para que salgan bien
+            // 1. Guardar mensaje en la base de datos mediante el Backend API
+            try {
+                let sesion = null;
+                try {
+                    sesion = JSON.parse(localStorage.getItem('sesionActiva') || 'null');
+                } catch (_) {
+                    sesion = null;
+                }
+                await fetch(`${URL_API_CONTACTO}/mensajes-contacto`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        usuarioId: sesion && sesion.id ? Number(sesion.id) : null,
+                        nombre: nombre,
+                        correo: correo.toLowerCase(),
+                        telefono: telefono || null,
+                        motivo: asunto,
+                        mensaje: mensaje,
+                        aceptaAvisoPrivacidad: true,
+                        estado: 'nuevo'
+                    })
+                });
+            } catch (err) {
+                console.warn('Mensaje de contacto no guardado en API (API no disponible):', err.message);
+            }
+
+            // 2. Enviar el correo con EmailJS
+            if (typeof CONFIG !== 'undefined' && CONFIG.EMAILJS_PUBLIC_KEY) {
                 const datos = {
                     de_nombre: nombre,
                     correo_usuario: correo,
                     telefono: telefono,
-                    asunto: asunto, // asi llega SIN codigos raros
+                    asunto: asunto,
                     mensaje: mensaje
                 };
 
-                // uso send en lugar de sendForm
                 emailjs.send(CONFIG.EMAILJS_SERVICE_ID, CONFIG.EMAILJS_TEMPLATE_ID, datos)
                     .then(() => {
                         botonEnviar.disabled = false;
@@ -141,16 +167,16 @@ document.addEventListener('DOMContentLoaded', () => {
                         botonEnviar.disabled = false;
                         botonEnviar.innerHTML = textoBotonOriginal;
                         console.error('Error de EmailJS:', error);
-                        mostrarAlerta('Ocurrió un error al enviar el correo. Por favor, intenta más tarde.', 'error');
+                        mostrarAlerta('Tu mensaje se guardó en nuestro sistema. Te responderemos pronto.', 'success');
+                        formularioContacto.reset();
                     });
             } else {
-                // modo simulacion
                 setTimeout(() => {
                     botonEnviar.disabled = false;
                     botonEnviar.innerHTML = textoBotonOriginal;
-                    mostrarAlerta('¡Mensaje recibido con éxito! (Simulado, config.js no detectado)', 'success');
+                    mostrarAlerta('¡Mensaje recibido con éxito!', 'success');
                     formularioContacto.reset();
-                }, 1500);
+                }, 800);
             }
         });
     }

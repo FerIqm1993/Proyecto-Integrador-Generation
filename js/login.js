@@ -1,11 +1,11 @@
 // correo admin
 const CORREO_ADMIN = "contacto.tiendas3v@gmail.com";
-const CONTRASENA_ADMIN = "Pollitosenfuga3";  // contrseña
+const CONTRASENA_ADMIN = "Pollitosenfuga3";
+const URL_API_LOGIN = window.API_BASE_URL || "http://localhost:8080/api";
 
 function crearAdminAutomatico() {
     let usuarios = JSON.parse(localStorage.getItem('usuarios') || '[]');
     
-    // busco si ya existe el admin
     let existe = false;
     for (let i = 0; i < usuarios.length; i++) {
         if (usuarios[i].email === CORREO_ADMIN) {
@@ -19,18 +19,14 @@ function crearAdminAutomatico() {
             nombre: "Administrador Tienda 3V",
             email: CORREO_ADMIN,
             telefono: "5500000000",
-            contrasena: btoa(CONTRASENA_ADMIN),  //
+            contrasena: btoa(CONTRASENA_ADMIN),
             rol: "admin"
         };
         usuarios.push(admin);
         localStorage.setItem('usuarios', JSON.stringify(usuarios));
-        console.log("✅ Admin creado automaticamente");
-        console.log("Correo: " + CORREO_ADMIN);
-        console.log("Contraseña: " + CONTRASENA_ADMIN);
     }
 }
 
-// ejecuto la funcion al cargar la pagina
 crearAdminAutomatico();
 
 // valido formato de correo
@@ -40,29 +36,82 @@ function validarCorreo(correo) {
 }
 
 // funcion principal
-function iniciarSesion() {
-    // limpio mensajes
+async function iniciarSesion() {
     document.getElementById('mensaje').innerHTML = "";
     
-    // tomo los valores
-    let correo = document.getElementById('correo').value.trim();
+    let correo = document.getElementById('correo').value.trim().toLowerCase();
     let contrasena = document.getElementById('contrasena').value;
     
-    // valido campos vacios
     if (correo == "" || contrasena == "") {
         document.getElementById('mensaje').innerHTML = 
             '<div class="alert alert-danger">Llena todos los campos.</div>';
         return;
     }
     
-    // valido formato de correo
     if (!validarCorreo(correo)) {
         document.getElementById('mensaje').innerHTML = 
             '<div class="alert alert-danger">Escribe un correo válido.</div>';
         return;
     }
+
+    // 1. Intentar autenticar contra el Backend API (Spring Boot + MySQL)
+    try {
+        const resp = await fetch(`${URL_API_LOGIN}/usuarios/login`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                correo: correo,
+                passwordHash: contrasena
+            })
+        });
+
+        if (resp.status === 404) {
+            document.getElementById('mensaje').innerHTML = 
+                '<div class="alert alert-warning">Este correo no está registrado. <a href="registro.html" class="alert-link">Regístrate aquí</a>.</div>';
+            return;
+        }
+
+        if (resp.status === 401) {
+            document.getElementById('mensaje').innerHTML = 
+                '<div class="alert alert-danger">Contraseña incorrecta.</div>';
+            document.getElementById('contrasena').value = "";
+            return;
+        }
+
+        if (resp.ok) {
+            const usuarioApi = await resp.json();
+            const esAdmin = (usuarioApi.rol && usuarioApi.rol.nombre === "administrador") || usuarioApi.correo === CORREO_ADMIN;
+            const nombreCompleto = `${usuarioApi.nombre || ""} ${usuarioApi.apellido || ""}`.trim();
+
+            let sesion = {
+                id: usuarioApi.id,
+                email: usuarioApi.correo,
+                nombre: nombreCompleto,
+                telefono: usuarioApi.telefono,
+                rol: esAdmin ? "admin" : "usuario"
+            };
+            localStorage.setItem('sesionActiva', JSON.stringify(sesion));
+
+            document.getElementById('mensaje').innerHTML = 
+                '<div class="alert alert-success">' +
+                '<strong>¡Bienvenido, ' + nombreCompleto + '!</strong><br>' +
+                'Redirigiendo...' +
+                '</div>';
+
+            setTimeout(function() {
+                if (esAdmin) {
+                    window.location.href = "admin-productos.html";
+                } else {
+                    window.location.href = "../index.html";
+                }
+            }, 1500);
+            return;
+        }
+    } catch (err) {
+        console.warn("Autenticando con localStorage (API no disponible):", err.message);
+    }
     
-    // busco en usuarios guardados
+    // 2. Respaldo en localStorage si la API está apagada
     let usuarios = JSON.parse(localStorage.getItem('usuarios') || '[]');
     let contrasenaCodificada = btoa(contrasena);
     
@@ -70,7 +119,7 @@ function iniciarSesion() {
     let contrasenaCorrecta = false;
     
     for (let i = 0; i < usuarios.length; i++) {
-        if (usuarios[i].email == correo) {
+        if (usuarios[i].email.toLowerCase() == correo) {
             correoEncontrado = usuarios[i];
             if (usuarios[i].contrasena == contrasenaCodificada) {
                 contrasenaCorrecta = true;
@@ -78,14 +127,12 @@ function iniciarSesion() {
         }
     }
     
-    // no existe el correo
     if (correoEncontrado == null) {
         document.getElementById('mensaje').innerHTML = 
             '<div class="alert alert-warning">Este correo no está registrado. <a href="registro.html" class="alert-link">Regístrate aquí</a>.</div>';
         return;
     }
     
-    // contraseña incorrecta
     if (!contrasenaCorrecta) {
         document.getElementById('mensaje').innerHTML = 
             '<div class="alert alert-danger">Contraseña incorrecta.</div>';
@@ -93,31 +140,25 @@ function iniciarSesion() {
         return;
     }
     
-    // ===== TODO BIEN - reviso si es admin =====
-    let esAdmin = false;
-    if (correoEncontrado.email === CORREO_ADMIN) {
-        esAdmin = true;
-    }
+    let esAdmin = correoEncontrado.email === CORREO_ADMIN;
     
-    // guardo la sesion
     let sesion = {
         email: correoEncontrado.email,
         nombre: correoEncontrado.nombre,
+        telefono: correoEncontrado.telefono || "5500000000",
         rol: esAdmin ? "admin" : "usuario"
     };
     localStorage.setItem('sesionActiva', JSON.stringify(sesion));
     
-    // mensaje de bienvenida
     document.getElementById('mensaje').innerHTML = 
         '<div class="alert alert-success">' +
         '<strong>¡Bienvenido, ' + correoEncontrado.nombre + '!</strong><br>' +
         'Redirigiendo...' +
         '</div>';
     
-    // redirijo segun el rol
     setTimeout(function() {
         if (esAdmin) {
-            window.location.href = "admin-productos.html";  // tu pagina de admin
+            window.location.href = "admin-productos.html";
         } else {
             window.location.href = "../index.html";
         }

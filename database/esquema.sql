@@ -49,7 +49,7 @@ CREATE TABLE IF NOT EXISTS productos (
     descripcion TEXT NULL,
     precio DECIMAL(10,2) NOT NULL,
     precio_anterior DECIMAL(10,2) NULL,
-    imagen_url VARCHAR(500) NULL,
+    imagen_url LONGTEXT NULL,
     activo BOOLEAN NOT NULL DEFAULT TRUE,
     creado_en TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     actualizado_en TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -192,22 +192,46 @@ CREATE TABLE IF NOT EXISTS mensajes_contacto (
         ON UPDATE CASCADE ON DELETE SET NULL
 ) ENGINE=InnoDB;
 
-INSERT IGNORE INTO roles (nombre) VALUES ('cliente'), ('administrador');
+INSERT IGNORE INTO roles (id_rol, nombre) VALUES
+    (1, 'cliente'),
+    (2, 'administrador');
 
-INSERT IGNORE INTO categorias (nombre, slug) VALUES
-    ('Alimentos', 'alimentos'),
-    ('Cervezas, Vinos y Licores', 'cervezas-vinos-licores'),
-    ('Hogar', 'hogar'),
-    ('Ferretería', 'ferreteria'),
-    ('Bebidas', 'bebidas'),
-    ('Belleza y Cuidado Personal', 'belleza-cuidado-personal'),
-    ('Mascotas', 'mascotas');
+INSERT IGNORE INTO categorias (id_categoria, nombre, slug) VALUES
+    (1, 'Alimentos', 'alimentos'),
+    (2, 'Cervezas, Vinos y Licores', 'cervezas-vinos-licores'),
+    (3, 'Hogar', 'hogar'),
+    (4, 'Ferretería', 'ferreteria'),
+    (5, 'Bebidas', 'bebidas'),
+    (6, 'Belleza y Cuidado Personal', 'belleza-cuidado-personal'),
+    (7, 'Mascotas', 'mascotas');
 
-INSERT IGNORE INTO sucursales (nombre, direccion, ciudad, estado, horario, mapa_url) VALUES
-    ('Sucursal Insurgentes Centro', 'Av. Insurgentes Sur 240, Col. Roma Norte', 'Ciudad de México', 'CDMX', 'Lun - Dom: 7:00 AM - 10:00 PM', '../img/CDMX_Maps.png'),
-    ('Sucursal Guadalajara Centro', 'Av. Juárez 450, Sector Juárez', 'Guadalajara', 'Jalisco', 'Lun - Dom: 8:00 AM - 9:00 PM', '../img/GUADALAJARA_Maps.png'),
-    ('Sucursal Monterrey Tec', 'Av. Eugenio Garza Sada 2500', 'Monterrey', 'Nuevo León', 'Lun - Dom: 7:00 AM - 10:00 PM', '../img/MTY_Maps.png');
+INSERT IGNORE INTO sucursales (id_sucursal, nombre, direccion, ciudad, estado, horario, mapa_url) VALUES
+    (1, 'Sucursal Insurgentes Centro', 'Av. Insurgentes Sur 240, Col. Roma Norte', 'Ciudad de México', 'CDMX', 'Lun - Dom: 7:00 AM - 10:00 PM', '../img/CDMX_Maps.png'),
+    (2, 'Sucursal Guadalajara Centro', 'Av. Juárez 450, Sector Juárez', 'Guadalajara', 'Jalisco', 'Lun - Dom: 8:00 AM - 9:00 PM', '../img/GUADALAJARA_Maps.png'),
+    (3, 'Sucursal Monterrey Tec', 'Av. Eugenio Garza Sada 2500', 'Monterrey', 'Nuevo León', 'Lun - Dom: 7:00 AM - 10:00 PM', '../img/MTY_Maps.png');
 
-INSERT IGNORE INTO metodos_pago (nombre) VALUES
-    ('Tarjeta'),
-    ('Contra entrega');
+INSERT IGNORE INTO metodos_pago (id_metodo_pago, nombre) VALUES
+    (1, 'Tarjeta'),
+    (2, 'Contra entrega');
+
+INSERT IGNORE INTO usuarios (id_usuario, id_rol, nombre, apellido, correo, telefono, password_hash, acepta_terminos, activo) VALUES
+    (1, 2, 'ADMINISTRADOR', 'TIENDA 3V', 'contacto.tiendas3v@gmail.com', '5500000000', 'UG9sbGl0b3NlbmZ1Z2Ez', TRUE, TRUE);
+
+INSERT IGNORE INTO productos (id_producto, id_categoria, nombre, descripcion, precio, precio_anterior, imagen_url, activo) VALUES
+    (1, 1, 'Aceite vegetal 1L', 'Aceite vegetal de cocina botella 1L', 45.90, 65.00, 'aceite.jpg', TRUE),
+    (2, 1, 'Leche entera 1L', 'Leche entera ultrapasteurizada 1L', 28.50, 34.00, 'leche.jpg', TRUE),
+    (3, 2, 'Vino tinto 750ml', 'Vino tinto botella de 750ml', 145.00, 180.00, 'vino.jpg', TRUE),
+    (4, 2, 'Cerveza clara 6pk', 'Paquete de 6 cervezas claras', 98.00, NULL, 'cerveza.jpg', TRUE),
+    (5, 3, 'Detergente 3kg', 'Detergente en polvo multiusos 3kg', 89.00, 120.00, 'detergente.jpg', TRUE),
+    (6, 3, 'Papel higiénico 12pk', 'Paquete de 12 rollos de papel higiénico', 65.00, NULL, 'papel.jpg', TRUE),
+    (7, 4, 'Martillo de uña', 'Martillo de uña uso doméstico y profesional', 129.00, NULL, 'martillo.jpg', TRUE),
+    (8, 4, 'Juego de desarmadores', 'Juego de desarmadores de precisión', 159.00, 179.00, 'desarmadores.jpg', TRUE),
+    (9, 5, 'Refresco 2L', 'Refresco sabor cola botella 2L', 24.00, NULL, 'refresco.jpg', TRUE),
+    (10, 5, 'Agua mineral 1.5L', 'Agua mineral natural botella 1.5L', 12.50, NULL, 'agua.jpg', TRUE),
+    (11, 6, 'Shampoo 750ml', 'Shampoo cuidado diario 750ml', 54.90, NULL, 'shampoo.jpg', TRUE),
+    (12, 6, 'Jabón 3pk', 'Paquete de 3 jabones de tocador', 42.00, NULL, 'jabon.jpg', TRUE),
+    (13, 7, 'Croquetas perro 2kg', 'Alimento balanceado para perro 2kg', 189.00, 210.00, 'croquetas.jpg', TRUE),
+    (14, 7, 'Arena para gato 4kg', 'Arena aglutinante para gato 4kg', 115.00, NULL, 'arena.jpg', TRUE);
+
+INSERT IGNORE INTO cupones (id_cupon, codigo, descuento_porcentaje, activo, usos) VALUES
+    (1, 'BIENVENIDO10', 10.00, TRUE, 0);

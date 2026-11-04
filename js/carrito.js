@@ -15,6 +15,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const checkoutMessageModal = document.getElementById("checkout-message-modal");
     const checkoutMessageTitle = document.getElementById("checkout-message-title");
     const checkoutMessageBody = document.getElementById("checkout-message-body");
+    const URL_API_CARRITO = window.API_BASE_URL || "http://localhost:8080/api";
     let appliedCoupon = null;
 
     function showCheckoutMessage(title, message) {
@@ -28,10 +29,47 @@ document.addEventListener("DOMContentLoaded", function () {
         couponMessage.className = `small mt-1 text-${type}`;
     }
 
+    async function sincronizarDatosCarritoDesdeApi() {
+        // Sincronizar cupones desde el Backend API
+        try {
+            const respCupones = await fetch(`${URL_API_CARRITO}/cupones`);
+            if (respCupones.ok) {
+                const datosCupones = await respCupones.json();
+                if (Array.isArray(datosCupones)) {
+                    const cuponesMapeados = datosCupones.map(c => ({
+                        id: Number(c.idCupon ?? c.id),
+                        codigo: String(c.codigo || "").toUpperCase(),
+                        descuento: Math.round(Number(c.porcentajeDescuento ?? c.descuento ?? 10)),
+                        activo: Boolean(c.activo ?? true)
+                    }));
+                    localStorage.setItem("tienda3v_cupones", JSON.stringify(cuponesMapeados));
+                }
+            }
+        } catch (err) {
+            console.warn("Usando cupones en localStorage:", err.message);
+        }
+
+        // Sincronizar sucursales desde el Backend API
+        try {
+            const respSuc = await fetch(`${URL_API_CARRITO}/sucursales`);
+            if (respSuc.ok && branchSelect) {
+                const sucursales = await respSuc.json();
+                if (Array.isArray(sucursales) && sucursales.length > 0) {
+                    branchSelect.innerHTML = sucursales
+                        .filter(s => s.activa !== false)
+                        .map((s, idx) => `<option value="${s.id}" ${idx === 0 ? "selected" : ""}>${s.nombre}, ${s.estado}</option>`)
+                        .join("");
+                }
+            }
+        } catch (err) {
+            console.warn("Usando sucursales por defecto:", err.message);
+        }
+    }
+
     function loadCoupons() {
         const savedCoupons = localStorage.getItem("tienda3v_cupones");
         if (savedCoupons === null) {
-            return [{ codigo: "BIENVENIDO10", descuento: 10, activo: true }];
+            return [{ id: 1, codigo: "BIENVENIDO10", descuento: 10, activo: true }];
         }
 
         const coupons = JSON.parse(savedCoupons);
@@ -109,7 +147,7 @@ document.addEventListener("DOMContentLoaded", function () {
         if (cartTitleCount) cartTitleCount.textContent = `(${totalProductsCount} ${totalProductsCount === 1 ? 'producto' : 'productos'})`;
     }
 
-    applyCouponButton.addEventListener("click", function () {
+    applyCouponButton.addEventListener("click", async function () {
         const code = couponCodeInput.value.trim().toUpperCase();
         appliedCoupon = null;
 
@@ -118,6 +156,8 @@ document.addEventListener("DOMContentLoaded", function () {
             renderCart();
             return;
         }
+
+        await sincronizarDatosCarritoDesdeApi();
 
         let coupons;
         try {
@@ -196,13 +236,16 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 
-    btnCheckout.addEventListener("click", function () {
-        if (obtenerCarrito().length === 0) {
+    btnCheckout.addEventListener("click", async function () {
+        const cart = obtenerCarrito();
+        if (cart.length === 0) {
             showCheckoutMessage("Carrito vacío", "Agrega al menos un producto antes de confirmar el pedido.");
             return;
         }
 
-        const branch = branchSelect.options[branchSelect.selectedIndex].textContent.trim();
+        const branchOption = branchSelect.options[branchSelect.selectedIndex];
+        const branch = branchOption.textContent.trim();
+        const sucursalId = Number(branchOption.value) || 1;
         const pickupDate = pickupDateInput.value.trim();
         const selectedTimeSlot = document.querySelector(".time-slot.active-slot");
 
@@ -211,9 +254,81 @@ document.addEventListener("DOMContentLoaded", function () {
             return;
         }
 
+        // Calcular importes del pedido
+        const subtotal = Number(cart.reduce((acc, item) => acc + (item.precio * item.cantidad), 0).toFixed(2));
+        const descuento = appliedCoupon && subtotal > 0
+            ? Number((subtotal * appliedCoupon.descuento / 100).toFixed(2))
+            : 0;
+        const total = Number(Math.max(0, subtotal - descuento).toFixed(2));
+
+        // Datos del cliente (de sesión activa o invitado)
+        let sesion = null;
+        try {
+            sesion = JSON.parse(localStorage.getItem("sesionActiva") || "null");
+        } catch (err) {
+            sesion = null;
+        }
+
+        let folioPedido = "";
+        try {
+            const respPedido = await fetch(`${URL_API_CARRITO}/pedidos`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    usuarioId: sesion && sesion.id ? Number(sesion.id) : null,
+                    sucursalId: sucursalId,
+                    metodoPagoId: 2, // Contra entrega en sucursal
+                    cuponId: appliedCoupon && appliedCoupon.id ? Number(appliedCoupon.id) : null,
+                    estado: "pendiente",
+                    estadoPago: "pendiente",
+                    nombreCliente: (sesion && sesion.nombre) ? sesion.nombre : "Cliente Invitado",
+                    correoCliente: (sesion && sesion.email) ? sesion.email : "invitado@tienda3v.com",
+                    telefonoCliente: (sesion && sesion.telefono) ? sesion.telefono : "5500000000",
+                    codigoCupon: appliedCoupon ? appliedCoupon.codigo : null,
+                    subtotal: subtotal,
+                    descuento: descuento,
+                    total: total
+                })
+            });
+
+            if (respPedido.ok) {
+                const pedidoCreado = await respPedido.json();
+                folioPedido = `\nFolio de pedido: #${pedidoCreado.id}`;
+
+                // Registrar el detalle de cada producto del carrito
+                for (const item of cart) {
+                    const subItem = Number((item.precio * item.cantidad).toFixed(2));
+                    await fetch(`${URL_API_CARRITO}/detalles-pedido`, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                            pedidoId: pedidoCreado.id,
+                            productoId: Number(item.id) || null,
+                            nombreProducto: item.nombre,
+                            cantidad: Number(item.cantidad),
+                            precioUnitario: Number(Number(item.precio).toFixed(2)),
+                            subtotal: subItem
+                        })
+                    });
+                }
+            }
+        } catch (err) {
+            console.warn("Pedido procesado localmente (API no disponible):", err.message);
+        }
+
+        // Vaciar carrito tras confirmar pedido
+        localStorage.setItem("carrito", JSON.stringify([]));
+        if (typeof notificarCambioCarrito === "function") {
+            notificarCambioCarrito();
+        }
+        appliedCoupon = null;
+        couponCodeInput.value = "";
+        couponMessage.textContent = "";
+        renderCart();
+
         showCheckoutMessage(
             "Pedido confirmado",
-            `Sucursal: ${branch}\nFecha de recolección: ${pickupDate}\nHorario: ${selectedTimeSlot.textContent.trim()}`
+            `Sucursal: ${branch}\nFecha de recolección: ${pickupDate}\nHorario: ${selectedTimeSlot.textContent.trim()}${folioPedido}`
         );
     });
 
@@ -226,4 +341,5 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Llamada inicial
     renderCart();
+    sincronizarDatosCarritoDesdeApi();
 });

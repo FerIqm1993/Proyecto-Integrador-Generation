@@ -1,9 +1,8 @@
 // =====================================
-// PRODUCTO SERVICE
-// Fuente de datos temporal: LocalStorage
+// PRODUCTO SERVICE (Integrado con Backend API + LocalStorage)
 // =====================================
 
-const STORAGE_KEY = "productos_tienda3v";
+const STORAGE_KEY = "tienda3v_productos";
 
 // Productos iniciales del catálogo
 const PRODUCTOS_INICIALES = [
