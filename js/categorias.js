@@ -116,13 +116,13 @@
           <div class="product-img-wrap">
             ${p.anterior ? '<span class="oferta-tag">OFERTA</span>' : ''}
             ${p.disp ? `<button class="add-btn" data-id="${p.id}" aria-label="Añadir ${p.nombre}"><i class="bi bi-plus-lg"></i></button>` : ''}
-            <a href="producto.html"><img src="${obtenerRutaImagen(p.img)}" alt="${p.nombre}" loading="lazy"></a>
+            <img src="${obtenerRutaImagen(p.img)}" alt="${p.nombre}" loading="lazy">
           </div>
           <div class="product-body">
             <span class="stock-badge ${p.disp ? 'in' : 'out'}">
               <i class="bi ${p.disp ? 'bi-check-circle-fill' : 'bi-x-circle-fill'}"></i>${p.disp ? 'Disponible' : 'Agotado'}
             </span>
-            <a href="producto.html" class="product-link"><div class="product-name">${p.nombre}</div></a>
+            <div class="product-link"><div class="product-name">${p.nombre}</div></div>
             <div class="price-row">
               <span class="price-now">${dinero(p.precio)}</span>
               ${p.anterior ? `<span class="price-old">${dinero(p.anterior)}</span>` : ''}

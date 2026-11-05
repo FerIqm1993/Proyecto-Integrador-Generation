@@ -215,7 +215,7 @@ INSERT IGNORE INTO metodos_pago (id_metodo_pago, nombre) VALUES
     (2, 'Contra entrega');
 
 INSERT IGNORE INTO usuarios (id_usuario, id_rol, nombre, apellido, correo, telefono, password_hash, acepta_terminos, activo) VALUES
-    (1, 2, 'ADMINISTRADOR', 'TIENDA 3V', 'contacto.tiendas3v@gmail.com', '5500000000', 'UG9sbGl0b3NlbmZ1Z2Ez', TRUE, TRUE);
+    (1, 2, 'ADMINISTRADOR', 'TIENDA 3V', 'contacto.tiendas3v@gmail.com', '5500000000', 'sha256$b4d556b8d3ba89654bb91a2b977060e394eaa529dfb5e5cc8f5796e4417908bf', TRUE, TRUE);
 
 INSERT IGNORE INTO productos (id_producto, id_categoria, nombre, descripcion, precio, precio_anterior, imagen_url, activo) VALUES
     (1, 1, 'Aceite vegetal 1L', 'Aceite vegetal de cocina botella 1L', 45.90, 65.00, 'aceite.jpg', TRUE),

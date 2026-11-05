@@ -1,10 +1,56 @@
 // ==========================================
-// CONFIGURACIÓN Y UTILIDADES GLOBALES (API + CARRITO)
+// CONFIGURACIÓN Y UTILIDADES GLOBALES (API + CARRITO + SESIÓN)
 // ==========================================
 
 window.API_BASE_URL = (typeof CONFIG !== "undefined" && CONFIG.API_BASE_URL)
   ? CONFIG.API_BASE_URL
   : "http://localhost:8080/api";
+
+// ==========================================
+// GESTIÓN DE SESIÓN Y ROLES
+// ==========================================
+
+function obtenerSesionActiva() {
+  try {
+    const raw = localStorage.getItem("sesionActiva");
+    if (!raw) return null;
+    const sesion = JSON.parse(raw);
+    return sesion && typeof sesion === "object" && sesion.email ? sesion : null;
+  } catch (e) {
+    return null;
+  }
+}
+
+function esAdminSesion() {
+  const sesion = obtenerSesionActiva();
+  return Boolean(sesion && sesion.rol === "admin");
+}
+
+function obtenerHeadersAdmin() {
+  const sesion = obtenerSesionActiva();
+  const headers = { "Content-Type": "application/json" };
+  if (sesion) {
+    if (sesion.id != null) {
+      headers["X-Usuario-Id"] = String(sesion.id);
+    }
+    if (sesion.rol) {
+      headers["X-Usuario-Rol"] = String(sesion.rol);
+    }
+  }
+  return headers;
+}
+
+function cerrarSesionUsuario() {
+  localStorage.removeItem("sesionActiva");
+  const isRoot = window.location.pathname.endsWith("index.html")
+    || window.location.pathname.endsWith("/")
+    || !window.location.pathname.includes("/pages/");
+  window.location.href = isRoot ? "index.html" : "../index.html";
+}
+
+// ==========================================
+// MAPEO DE CATEGORÍAS Y PRODUCTOS
+// ==========================================
 
 const MAPA_ID_A_CAT = {
   1: "alimentos",
@@ -101,6 +147,10 @@ async function sincronizarProductosDesdeApi() {
   }
   return null;
 }
+
+// ==========================================
+// CARRITO DE COMPRAS
+// ==========================================
 
 function actualizarContadorCarrito() {
   const contador = document.querySelector(".contador-carrito");

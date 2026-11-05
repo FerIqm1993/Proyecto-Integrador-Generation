@@ -11,43 +11,49 @@ function validarCorreo(correo) {
 
 // muestro mensajes en pantalla
 function mostrarMensaje(texto, tipo = "danger") {
-    document.getElementById('mensaje').innerHTML = 
+    document.getElementById('mensaje').innerHTML =
         `<div class="alert alert-${tipo}">${texto}</div>`;
 }
 
 // cuando le dan click a verificar correo
 document.getElementById('btnVerificar').addEventListener('click', async function () {
     document.getElementById('mensaje').innerHTML = "";
-    
+
     const correo = document.getElementById('correoRecuperar').value.trim().toLowerCase();
-    
+
     if (correo === "") {
         mostrarMensaje("Escribe tu correo por favor.");
         return;
     }
-    
+
     if (!validarCorreo(correo)) {
-        mostrarMensaje("Escribe un correo valido. ejemplo@dominio.com");
+        mostrarMensaje("Escribe un correo válido. ejemplo@dominio.com");
         return;
     }
-    
-    let usuarioEncontrado = null;
 
-    // 1. Buscar en el Backend API (Spring Boot + MySQL)
+    let usuarioEncontrado = null;
+    let tokenRecuperacion = "";
+
+    // 1. Solicitar token de recuperación firmado en el Backend API (Spring Boot + MySQL)
     try {
-        const resp = await fetch(`${URL_API_RECUPERAR}/usuarios/correo/${encodeURIComponent(correo)}`);
+        const resp = await fetch(`${URL_API_RECUPERAR}/usuarios/solicitar-recuperacion`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ correo })
+        });
         if (resp.ok) {
-            const usuarioApi = await resp.json();
+            const datosToken = await resp.json();
             usuarioEncontrado = {
-                email: usuarioApi.correo,
-                nombre: `${usuarioApi.nombre || ""} ${usuarioApi.apellido || ""}`.trim()
+                email: datosToken.correo,
+                nombre: datosToken.nombre || "Usuario"
             };
+            tokenRecuperacion = datosToken.token || "";
         }
     } catch (err) {
         console.warn("Buscando usuario en localStorage:", err.message);
     }
 
-    // 2. Respaldo en localStorage
+    // 2. Respaldo en localStorage si la API está apagada
     if (!usuarioEncontrado) {
         const usuarios = JSON.parse(localStorage.getItem('usuarios') || '[]');
         for (let i = 0; i < usuarios.length; i++) {
@@ -57,44 +63,45 @@ document.getElementById('btnVerificar').addEventListener('click', async function
             }
         }
     }
-    
+
     if (!usuarioEncontrado) {
         mostrarMensaje(
-            "Este correo no esta registrado. " +
-            "<a href='registro.html' class='alert-link'>Crea una cuenta aqui</a>."
+            "Este correo no está registrado. " +
+            "<a href='registro.html' class='alert-link'>Crea una cuenta aquí</a>."
         );
         return;
     }
-    
-    const enlace = window.location.origin + window.location.pathname.replace('recuperar.html', 'restablecer.html') 
-                   + '?correo=' + encodeURIComponent(correo);
-    
-    console.log("enlace de recuperacion:", enlace);
-    
+
+    const sufijoToken = tokenRecuperacion ? `&token=${encodeURIComponent(tokenRecuperacion)}` : "";
+    const enlace = window.location.origin
+        + window.location.pathname.replace('recuperar.html', 'restablecer.html')
+        + '?correo=' + encodeURIComponent(correo)
+        + sufijoToken;
+
     const datosCorreo = {
         to_email: correo,
         nombre: usuarioEncontrado.nombre,
         enlace_restablecer: enlace
     };
-    
+
     const boton = document.getElementById('btnVerificar');
     boton.disabled = true;
     boton.textContent = "Enviando...";
-    
+
     emailjs.send(SERVICE_ID, TEMPLATE_ID, datosCorreo)
-        .then(function() {
+        .then(function () {
             mostrarMensaje(
                 "✅ ¡Correo enviado! Revisa tu bandeja de entrada " +
-                "(tambien revisa la carpeta de spam).", 
+                "(también revisa la carpeta de spam).",
                 "success"
             );
             boton.textContent = "Enviar de nuevo";
             boton.disabled = false;
         })
-        .catch(function(error) {
+        .catch(function (error) {
             console.log("error al enviar:", error);
             mostrarMensaje(
-                "Hubo un problema al enviar el correo. Intenta mas tarde."
+                "Hubo un problema al enviar el correo. Intenta más tarde."
             );
             boton.textContent = "Verificar correo";
             boton.disabled = false;

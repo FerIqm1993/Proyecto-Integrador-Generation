@@ -1,9 +1,73 @@
-// TIENDA 3V - ADMINISTRACIÓN DE PRODUCTOS Y CUPONES (Integrado con Backend API + LocalStorage)
+// TIENDA 3V - ADMINISTRACIÓN DE PRODUCTOS Y CUPONES (Protegido por Rol Admin + Backend API + LocalStorage)
 
 // Claves para guardar los datos en el navegador.
 const CLAVE_PRODUCTOS = "tienda3v_productos";
 const CLAVE_CUPONES = "tienda3v_cupones";
 const URL_API = window.API_BASE_URL || "http://localhost:8080/api";
+
+// ==========================================
+// GUARDIA DE SEGURIDAD (SOLO ADMINISTRADOR)
+// ==========================================
+(function verificarAccesoAdministrador() {
+    let sesion = null;
+    try {
+        sesion = JSON.parse(localStorage.getItem("sesionActiva") || "null");
+    } catch (e) {
+        sesion = null;
+    }
+
+    if (!sesion || !sesion.email) {
+        window.location.replace("login.html");
+        return;
+    }
+
+    if (sesion.rol !== "admin") {
+        alert("Acceso restringido: Esta sección es exclusiva para administradores de Tienda 3V.");
+        window.location.replace("../index.html");
+        return;
+    }
+
+    // Verificación adicional contra MySQL si el servidor está activo
+    if (sesion.id != null) {
+        fetch(`${URL_API}/usuarios/${sesion.id}`)
+            .then(resp => {
+                if (resp.status === 404) {
+                    localStorage.removeItem("sesionActiva");
+                    window.location.replace("login.html");
+                    return null;
+                }
+                return resp.ok ? resp.json() : null;
+            })
+            .then(usuarioDb => {
+                if (usuarioDb && (!usuarioDb.rol || usuarioDb.rol.nombre !== "administrador" || usuarioDb.activo === false)) {
+                    alert("Tu cuenta no cuenta con privilegios de administrador en el servidor.");
+                    localStorage.removeItem("sesionActiva");
+                    window.location.replace("../index.html");
+                }
+            })
+            .catch(() => {
+                // Si la API está apagada, se mantiene la validación de sesión local
+            });
+    }
+})();
+
+function construirHeadersAdmin() {
+    if (typeof obtenerHeadersAdmin === "function") {
+        return obtenerHeadersAdmin();
+    }
+    let sesion = null;
+    try {
+        sesion = JSON.parse(localStorage.getItem("sesionActiva") || "null");
+    } catch (e) {
+        sesion = null;
+    }
+    const headers = { "Content-Type": "application/json" };
+    if (sesion) {
+        if (sesion.id != null) headers["X-Usuario-Id"] = String(sesion.id);
+        if (sesion.rol) headers["X-Usuario-Rol"] = String(sesion.rol);
+    }
+    return headers;
+}
 
 const productosIniciales = [
     { id: 1, nombre: 'Aceite vegetal 1L', precio: 45.90, anterior: 65, cat: 'alimentos', disp: true, img: 'aceite.jpg' },
@@ -23,7 +87,7 @@ const productosIniciales = [
 ];
 
 const cuponesIniciales = [
-    { id: 1, codigo: "BIENVENIDO10", descuento: 10, activo: true }
+    { id: 1, codigo: "BIENVENIDO10", descuento: 10, activo: true, usos: 0 }
 ];
 
 function obtenerElemento(idElemento) {
@@ -58,7 +122,8 @@ function mapearCuponApiAFrontend(c) {
         id: Number(c.idCupon ?? c.id),
         codigo: String(c.codigo || "").toUpperCase(),
         descuento: Math.round(Number(c.porcentajeDescuento ?? c.descuento ?? 10)),
-        activo: Boolean(c.activo ?? true)
+        activo: Boolean(c.activo ?? true),
+        usos: Number(c.usos ?? 0)
     };
 }
 
@@ -202,7 +267,14 @@ async function eliminarProducto(idProducto) {
     if (!confirm('¿Eliminar el producto "' + producto.nombre + '"?')) return;
 
     try {
-        await fetch(`${URL_API}/productos/${idProducto}`, { method: "DELETE" });
+        const resp = await fetch(`${URL_API}/productos/${idProducto}`, {
+            method: "DELETE",
+            headers: construirHeadersAdmin()
+        });
+        if (resp.status === 403) {
+            mostrarAlerta("alertas", "Acceso denegado: Se requieren permisos de administrador.", "danger");
+            return;
+        }
     } catch (err) {
         console.warn("Eliminado solo en localStorage (API no disponible):", err.message);
     }
@@ -287,9 +359,13 @@ async function guardarFormularioProducto(evento) {
         const metodo = existente ? "PUT" : "POST";
         const resp = await fetch(url, {
             method: metodo,
-            headers: { "Content-Type": "application/json" },
+            headers: construirHeadersAdmin(),
             body: JSON.stringify(payloadApi)
         });
+        if (resp.status === 403) {
+            mostrarAlerta("alertas", "Acceso denegado: Se requieren permisos de administrador.", "danger");
+            return;
+        }
         if (resp.ok) {
             const guardadoEnApi = await resp.json();
             producto = mapearProductoApiAFrontend(guardadoEnApi);
@@ -388,16 +464,21 @@ async function cambiarEstadoCupon(idCupon) {
     cupon.activo = !cupon.activo;
 
     try {
-        await fetch(`${URL_API}/cupones/${idCupon}`, {
+        const resp = await fetch(`${URL_API}/cupones/${idCupon}`, {
             method: "PUT",
-            headers: { "Content-Type": "application/json" },
+            headers: construirHeadersAdmin(),
             body: JSON.stringify({
                 codigo: cupon.codigo,
                 porcentajeDescuento: cupon.descuento,
                 activo: cupon.activo,
-                usos: 0
+                usos: cupon.usos ?? 0
             })
         });
+        if (resp.status === 403) {
+            cupon.activo = !cupon.activo;
+            mostrarAlerta("alertasCupones", "Acceso denegado: Se requieren permisos de administrador.", "danger");
+            return;
+        }
     } catch (err) {
         console.warn("Estado de cupón actualizado en localStorage:", err.message);
     }
@@ -413,7 +494,14 @@ async function eliminarCupon(idCupon) {
     if (!confirm("¿Eliminar el cupón " + cupon.codigo + "?")) return;
 
     try {
-        await fetch(`${URL_API}/cupones/${idCupon}`, { method: "DELETE" });
+        const resp = await fetch(`${URL_API}/cupones/${idCupon}`, {
+            method: "DELETE",
+            headers: construirHeadersAdmin()
+        });
+        if (resp.status === 403) {
+            mostrarAlerta("alertasCupones", "Acceso denegado: Se requieren permisos de administrador.", "danger");
+            return;
+        }
     } catch (err) {
         console.warn("Cupón eliminado en localStorage:", err.message);
     }
@@ -454,7 +542,8 @@ async function guardarFormularioCupon(evento) {
         id: idCupon ?? (Math.max(0, ...listaCupones.map(c => c.id)) + 1),
         codigo: codigoCupon,
         descuento: porcentajeDescuento,
-        activo: activoChecked
+        activo: activoChecked,
+        usos: cuponExistente ? (cuponExistente.usos ?? 0) : 0
     };
 
     try {
@@ -462,14 +551,18 @@ async function guardarFormularioCupon(evento) {
         const metodo = cuponExistente ? "PUT" : "POST";
         const resp = await fetch(url, {
             method: metodo,
-            headers: { "Content-Type": "application/json" },
+            headers: construirHeadersAdmin(),
             body: JSON.stringify({
                 codigo: codigoCupon,
                 porcentajeDescuento: porcentajeDescuento,
                 activo: activoChecked,
-                usos: 0
+                usos: nuevoCupon.usos
             })
         });
+        if (resp.status === 403) {
+            mostrarAlerta("alertasCupones", "Acceso denegado: Se requieren permisos de administrador.", "danger");
+            return;
+        }
         if (resp.ok) {
             const guardadoApi = await resp.json();
             nuevoCupon = mapearCuponApiAFrontend(guardadoApi);
@@ -489,7 +582,6 @@ async function guardarFormularioCupon(evento) {
     limpiarFormularioCupon();
     mostrarAlerta("alertasCupones", cuponExistente
         ? "Cupón actualizado correctamente." : "Cupón creado correctamente.", "success");
-    console.log("Cupón en JSON:", JSON.stringify(nuevoCupon, null, 2));
 }
 
 // Mostramos los productos y cupones guardados y sincronizamos con el Backend API.

@@ -108,7 +108,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     const desdeApi = await sincronizarProductosDesdeApi();
     if (Array.isArray(desdeApi) && desdeApi.length > 0) {
       productos = desdeApi;
-      if (categoriaActual === "Todos") {
+      const queryInicial = new URLSearchParams(window.location.search).get("q");
+      if (queryInicial && queryInicial.trim() !== "") {
+        filtrarPorTerminoBusqueda(queryInicial.trim());
+      } else if (categoriaActual === "Todos") {
         renderizarProductos(productos);
       } else {
         filtrarPorCategoria(categoriaActual);
@@ -314,26 +317,37 @@ function actualizarUICarrito() {
   `).join('');
 }
 
+function filtrarPorTerminoBusqueda(consultaRaw) {
+  const consulta = String(consultaRaw || "").toLowerCase().trim();
+  if (!consulta) {
+    filtrarPorCategoria(categoriaActual);
+    return;
+  }
+  const filtrados = productos.filter(p => {
+    const nombre = (p.nombre || "").toLowerCase();
+    const cat = (CATEGORIAS[p.cat] || p.categoria || p.cat || "").toLowerCase();
+    return nombre.includes(consulta) || cat.includes(consulta);
+  });
+  renderizarProductos(filtrados);
+}
+
 // Escuchar búsquedas y botones
 function configurarEventos() {
-  const inputBusqueda = document.querySelector('input[type="search"]');
-  const inputBusquedaMovil = document.getElementById("searchInputMobile");
   const botonBusquedaMovil = document.getElementById("mobileSearchBtn");
   const contenedorBusquedaMovil = document.getElementById("mobileSearchContainer");
   const botonRestablecerFiltro = document.getElementById("btnRestablecerFiltro");
 
-  const manejarBusqueda = (e) => {
-    const consulta = e.target.value.toLowerCase().trim();
-    const filtrados = productos.filter(p => {
-      const nombre = (p.nombre || "").toLowerCase();
-      const cat = (CATEGORIAS[p.cat] || p.categoria || p.cat || "").toLowerCase();
-      return nombre.includes(consulta) || cat.includes(consulta);
-    });
-    renderizarProductos(filtrados);
-  };
+  // Delegación de eventos para soportar el navbar cargado asíncronamente
+  document.addEventListener("input", (e) => {
+    if (e.target && e.target.matches('input[type="search"], #searchInputMobile')) {
+      filtrarPorTerminoBusqueda(e.target.value);
+    }
+  });
 
-  if (inputBusqueda) inputBusqueda.addEventListener("input", manejarBusqueda);
-  if (inputBusquedaMovil) inputBusquedaMovil.addEventListener("input", manejarBusqueda);
+  const queryInicial = new URLSearchParams(window.location.search).get("q");
+  if (queryInicial && queryInicial.trim() !== "") {
+    filtrarPorTerminoBusqueda(queryInicial.trim());
+  }
 
   if (botonBusquedaMovil && contenedorBusquedaMovil) {
     botonBusquedaMovil.addEventListener("click", () => {
@@ -342,7 +356,11 @@ function configurarEventos() {
   }
 
   if (botonRestablecerFiltro) {
-    botonRestablecerFiltro.addEventListener("click", () => filtrarPorCategoria("Todos"));
+    botonRestablecerFiltro.addEventListener("click", () => {
+      const inputNav = document.querySelector('#form-buscador input[type="search"]');
+      if (inputNav) inputNav.value = "";
+      filtrarPorCategoria("Todos");
+    });
   }
 }
 

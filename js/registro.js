@@ -12,7 +12,7 @@ formulario.addEventListener("submit", async function (evento) {
     // Limpiar los mensajes de intentos anteriores 
     alertas.innerHTML = "";
 
-    //Obtener los valores escritos en los campos
+    // Obtener los valores escritos en los campos
     const nombre = document.getElementById("nombre").value.trim();
     const apellido = document.getElementById("apellido").value.trim();
     const email = document.getElementById("email").value.trim();
@@ -26,7 +26,7 @@ formulario.addEventListener("submit", async function (evento) {
     // Crear un arreglo para almacenar los errores
     const errores = [];
 
-    //Validar que ningún campo obligatorio esté vacío
+    // Validar que ningún campo obligatorio esté vacío
     if (
         nombre === "" ||
         apellido === "" ||
@@ -83,7 +83,7 @@ formulario.addEventListener("submit", async function (evento) {
         errores.push("Las contraseñas no coinciden.");
     }
 
-    //-----TERMINOS Y CONDICIONES-----
+    //-----TÉRMINOS Y CONDICIONES-----
     if (!terminos.checked) {
         errores.push("Debes aceptar los términos y condiciones.");
     }
@@ -101,8 +101,8 @@ formulario.addEventListener("submit", async function (evento) {
         return;
     }
 
-    // ===== REGISTRAR EN EL BACKEND API (Spring Boot + MySQL) =====
-    const passwordCodificado = btoa(password);
+    // ===== REGISTRAR EN EL BACKEND API (Spring Boot + MySQL con hash SHA-256) =====
+    let guardadoEnServidor = false;
     try {
         const resp = await fetch(`${URL_API_REGISTRO}/usuarios`, {
             method: "POST",
@@ -113,7 +113,7 @@ formulario.addEventListener("submit", async function (evento) {
                 apellido: apellido,
                 correo: email.toLowerCase(),
                 telefono: telefonoLimpio,
-                passwordHash: passwordCodificado,
+                passwordHash: password,
                 aceptaTerminos: true,
                 activo: true
             })
@@ -132,20 +132,31 @@ formulario.addEventListener("submit", async function (evento) {
         if (!resp.ok) {
             throw new Error(`Error HTTP ${resp.status}`);
         }
+        guardadoEnServidor = true;
     } catch (err) {
         console.warn("Guardando usuario en localStorage (API no disponible):", err.message);
     }
 
-    // ===== GUARDAR EL USUARIO EN LOCALSTORAGE (Respaldo / Sincronización) =====
-    let usuariosGuardados = JSON.parse(localStorage.getItem('usuarios') || '[]');
-    let correoYaExiste = usuariosGuardados.some(u => u.email.toLowerCase() === email.toLowerCase());
+    // ===== GUARDAR EL USUARIO EN LOCALSTORAGE SOLO SI LA API NO ESTÁ DISPONIBLE =====
+    if (!guardadoEnServidor) {
+        let usuariosGuardados = JSON.parse(localStorage.getItem('usuarios') || '[]');
+        let correoYaExiste = usuariosGuardados.some(u => u.email.toLowerCase() === email.toLowerCase());
 
-    if (!correoYaExiste) {
+        if (correoYaExiste) {
+            alertas.innerHTML = `
+                <div class="alert alert-warning" role="alert">
+                    <strong>Este correo ya está registrado.</strong>
+                    <a href="login.html" class="alert-link">Inicia sesión aquí</a>.
+                </div>
+            `;
+            return;
+        }
+
         let nuevoUsuario = {
             nombre: nombre + " " + apellido,
             email: email.toLowerCase(),
             telefono: telefonoLimpio,
-            contrasena: passwordCodificado
+            contrasena: btoa(password)
         };
         usuariosGuardados.push(nuevoUsuario);
         localStorage.setItem('usuarios', JSON.stringify(usuariosGuardados));
