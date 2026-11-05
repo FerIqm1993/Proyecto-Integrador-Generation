@@ -1,5 +1,5 @@
 // ==========================================
-// CONFIGURACIÓN Y UTILIDADES GLOBALES (API + CARRITO + SESIÓN)
+// CONFIGURACIÓN Y UTILIDADES GLOBALES (API + CARRITO + SESIÓN JWT)
 // ==========================================
 
 window.API_BASE_URL = (typeof CONFIG !== "undefined" && CONFIG.API_BASE_URL)
@@ -7,7 +7,7 @@ window.API_BASE_URL = (typeof CONFIG !== "undefined" && CONFIG.API_BASE_URL)
   : "http://localhost:8080/api";
 
 // ==========================================
-// GESTIÓN DE SESIÓN Y ROLES
+// GESTIÓN DE SESIÓN, JWT Y ROLES
 // ==========================================
 
 function obtenerSesionActiva() {
@@ -30,6 +30,9 @@ function obtenerHeadersAdmin() {
   const sesion = obtenerSesionActiva();
   const headers = { "Content-Type": "application/json" };
   if (sesion) {
+    if (sesion.token) {
+      headers["Authorization"] = `Bearer ${sesion.token}`;
+    }
     if (sesion.id != null) {
       headers["X-Usuario-Id"] = String(sesion.id);
     }

@@ -1,4 +1,4 @@
-// login.js - Autenticación segura contra Spring Boot API + MySQL (sin contraseñas expuestas en cliente)
+// login.js - Autenticación con JWT + BCrypt contra Spring Boot API + MySQL
 const CORREO_ADMIN_SISTEMA = "contacto.tiendas3v@gmail.com";
 const URL_API_LOGIN = window.API_BASE_URL || "http://localhost:8080/api";
 
@@ -40,43 +40,53 @@ async function iniciarSesion() {
         return;
     }
 
-    // 1. Autenticar contra el Backend API (Spring Boot + MySQL con SHA-256)
+    // 1. Autenticar con JWT + BCrypt contra el Backend API (/api/auth/login)
     try {
-        const resp = await fetch(`${URL_API_LOGIN}/usuarios/login`, {
+        const resp = await fetch(`${URL_API_LOGIN}/auth/login`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
                 correo: correo,
-                passwordHash: contrasena
+                password: contrasena
             })
         });
 
-        if (resp.status === 404) {
+        if (resp.status === 401 || resp.status === 404) {
             document.getElementById('mensaje').innerHTML =
-                '<div class="alert alert-warning">Este correo no está registrado. <a href="registro.html" class="alert-link">Regístrate aquí</a>.</div>';
-            return;
-        }
-
-        if (resp.status === 401) {
-            document.getElementById('mensaje').innerHTML =
-                '<div class="alert alert-danger">Contraseña incorrecta.</div>';
+                '<div class="alert alert-danger">Correo o contraseña incorrectos. Si aún no tienes cuenta, <a href="registro.html" class="alert-link">regístrate aquí</a>.</div>';
             document.getElementById('contrasena').value = "";
             return;
         }
 
         if (resp.ok) {
-            const usuarioApi = await resp.json();
-            const esAdmin = Boolean(usuarioApi.rol && usuarioApi.rol.nombre === "administrador");
-            const nombreCompleto = `${usuarioApi.nombre || ""} ${usuarioApi.apellido || ""}`.trim();
+            const datosAuth = await resp.json();
+            const tokenJwt = datosAuth.token || "";
+            let usuarioApi = datosAuth.usuario || null;
+
+            // Si el endpoint devolvió solo el token, consultamos los datos del usuario con el token JWT
+            if (!usuarioApi && tokenJwt) {
+                const respUsr = await fetch(`${URL_API_LOGIN}/usuarios/correo/${encodeURIComponent(correo)}`, {
+                    headers: { "Authorization": `Bearer ${tokenJwt}` }
+                });
+                if (respUsr.ok) {
+                    usuarioApi = await respUsr.json();
+                }
+            }
+
+            const esAdmin = Boolean(usuarioApi && usuarioApi.rol && usuarioApi.rol.nombre === "administrador");
+            const nombreCompleto = usuarioApi
+                ? `${usuarioApi.nombre || ""} ${usuarioApi.apellido || ""}`.trim()
+                : correo;
 
             let sesion = {
-                id: usuarioApi.id,
-                email: usuarioApi.correo,
+                id: usuarioApi ? usuarioApi.id : null,
+                email: usuarioApi ? usuarioApi.correo : correo,
                 nombre: nombreCompleto,
-                nombreSolo: usuarioApi.nombre || "",
-                apellidoSolo: usuarioApi.apellido || "",
-                telefono: usuarioApi.telefono || "",
-                rol: esAdmin ? "admin" : "usuario"
+                nombreSolo: usuarioApi ? (usuarioApi.nombre || "") : "",
+                apellidoSolo: usuarioApi ? (usuarioApi.apellido || "") : "",
+                telefono: usuarioApi ? (usuarioApi.telefono || "") : "",
+                rol: esAdmin ? "admin" : "usuario",
+                token: tokenJwt
             };
             localStorage.setItem('sesionActiva', JSON.stringify(sesion));
 

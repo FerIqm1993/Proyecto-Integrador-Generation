@@ -101,7 +101,7 @@ formulario.addEventListener("submit", async function (evento) {
         return;
     }
 
-    // ===== REGISTRAR EN EL BACKEND API (Spring Boot + MySQL con hash SHA-256) =====
+    // ===== REGISTRAR EN EL BACKEND API (Spring Boot + MySQL con encriptación BCrypt) =====
     let guardadoEnServidor = false;
     try {
         const resp = await fetch(`${URL_API_REGISTRO}/usuarios`, {

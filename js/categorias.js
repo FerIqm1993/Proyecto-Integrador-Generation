@@ -8,16 +8,34 @@
 
   // Catálogo: cada objeto contiene los datos de un producto.
   const CLAVE_PRODUCTOS = "tienda3v_productos";
+  const PRODUCTOS_RESPALDO = [
+    { id: 1, nombre: "Aceite vegetal 1L", descripcion: "Aceite vegetal de cocina botella 1L abarrotes", precio: 45.90, anterior: 65, cat: "alimentos", disp: true, img: "aceite.jpg" },
+    { id: 2, nombre: "Leche entera 1L", descripcion: "Leche entera ultrapasteurizada 1L lacteos abarrotes", precio: 28.50, anterior: 34, cat: "alimentos", disp: true, img: "leche.jpg" },
+    { id: 3, nombre: "Vino tinto 750ml", descripcion: "Vino tinto botella de 750ml licores", precio: 145, anterior: 180, cat: "cervezas", disp: true, img: "vino.jpg" },
+    { id: 4, nombre: "Cerveza clara 6pk", descripcion: "Paquete de 6 cervezas claras", precio: 98, anterior: null, cat: "cervezas", disp: true, img: "cerveza.jpg" },
+    { id: 5, nombre: "Detergente 3kg", descripcion: "Detergente en polvo multiusos 3kg limpieza", precio: 89, anterior: 120, cat: "hogar", disp: true, img: "detergente.jpg" },
+    { id: 6, nombre: "Papel higiénico 12pk", descripcion: "Paquete de 12 rollos de papel higienico limpieza hogar", precio: 65, anterior: null, cat: "hogar", disp: true, img: "papel.jpg" },
+    { id: 7, nombre: "Martillo de uña", descripcion: "Martillo de una uso domestico y profesional herramienta", precio: 129, anterior: null, cat: "ferreteria", disp: true, img: "martillo.jpg" },
+    { id: 8, nombre: "Juego de desarmadores", descripcion: "Juego de desarmadores de precision herramienta", precio: 159, anterior: 179, cat: "ferreteria", disp: true, img: "desarmadores.jpg" },
+    { id: 9, nombre: "Refresco 2L", descripcion: "Refresco sabor cola botella 2L bebidas", precio: 24, anterior: null, cat: "bebidas", disp: true, img: "refresco.jpg" },
+    { id: 10, nombre: "Agua mineral 1.5L", descripcion: "Agua mineral natural botella 1.5L bebidas", precio: 12.50, anterior: null, cat: "bebidas", disp: true, img: "agua.jpg" },
+    { id: 11, nombre: "Shampoo 750ml", descripcion: "Shampoo cuidado diario 750ml higiene personal", precio: 54.90, anterior: null, cat: "belleza", disp: true, img: "shampoo.jpg" },
+    { id: 12, nombre: "Jabón 3pk", descripcion: "Paquete de 3 jabones de tocador limpieza higiene", precio: 42, anterior: null, cat: "belleza", disp: true, img: "jabon.jpg" },
+    { id: 13, nombre: "Croquetas perro 2kg", descripcion: "Alimento balanceado para perro 2kg mascotas", precio: 189, anterior: 210, cat: "mascotas", disp: true, img: "croquetas.jpg" },
+    { id: 14, nombre: "Arena para gato 4kg", descripcion: "Arena aglutinante para gato 4kg mascotas", precio: 115, anterior: null, cat: "mascotas", disp: true, img: "arena.jpg" }
+  ];
 
   function obtenerProductos() {
     try {
-      return JSON.parse(
-        localStorage.getItem(CLAVE_PRODUCTOS)
-      ) || [];
+      const guardados = JSON.parse(localStorage.getItem(CLAVE_PRODUCTOS));
+      if (Array.isArray(guardados) && guardados.length > 0) {
+        return guardados;
+      }
     } catch (error) {
       console.error(error);
-      return [];
     }
+    localStorage.setItem(CLAVE_PRODUCTOS, JSON.stringify(PRODUCTOS_RESPALDO));
+    return [...PRODUCTOS_RESPALDO];
   }
 
   let PRODUCTOS = obtenerProductos();
@@ -33,15 +51,52 @@
     mascotas: "Mascotas"
   };
 
+  const SINONIMOS_CATEGORIA = {
+    alimentos: "abarrotes despensa comida cocina lacteos leche aceite",
+    cervezas: "vinos licores alcohol botella",
+    hogar: "limpieza detergente papel bano casa",
+    ferreteria: "herramientas martillo desarmadores reparacion",
+    bebidas: "refresco agua jugos",
+    belleza: "cuidado personal higiene shampoo jabon",
+    mascotas: "perro gato croquetas arena alimento"
+  };
+
+  function normalizarTexto(texto) {
+    return String(texto || "")
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toLowerCase()
+      .trim();
+  }
+
+  function coincideConBusqueda(producto, terminoRaw) {
+    const termino = normalizarTexto(terminoRaw);
+    if (!termino) return true;
+
+    const textoProducto = normalizarTexto([
+      producto.nombre,
+      producto.descripcion,
+      producto.cat,
+      CATEGORIAS[producto.cat] || "",
+      SINONIMOS_CATEGORIA[producto.cat] || ""
+    ].join(" "));
+
+    const palabras = termino.split(/\s+/).filter(Boolean);
+    return palabras.every(palabra => textoProducto.includes(palabra));
+  }
+
   // Guarda los filtros y el estado actual de la página.
+  const paramsUrl = new URLSearchParams(window.location.search);
   const state = {
     categoria: "alimentos",
     minPrecio: 0,
     maxPrecio: 300,
     soloDisponibles: true,
     orden: "relevancia",
+    busqueda: (paramsUrl.get("q") || "").trim()
   };
-  const categoriaSolicitada = new URLSearchParams(window.location.search).get("categoria");
+
+  const categoriaSolicitada = paramsUrl.get("categoria");
   if (Object.prototype.hasOwnProperty.call(CATEGORIAS, categoriaSolicitada)) {
     state.categoria = categoriaSolicitada;
   }
@@ -70,27 +125,39 @@
     return `../img/productos/${img}`;
   }
 
+  function filtrarPorCategoriaYPrecio(categoria) {
+    return PRODUCTOS
+      .filter(p => p.cat === categoria && p.precio >= state.minPrecio && p.precio <= state.maxPrecio)
+      .filter(p => !state.soloDisponibles || p.disp)
+      .filter(p => coincideConBusqueda(p, state.busqueda));
+  }
+
   function actualizarConteosCategorias() {
     catList.querySelectorAll("li[data-cat]").forEach(item => {
       const contador = item.querySelector(".count");
       if (!contador) return;
-      const cantidad = filtrar(item.dataset.cat).length;
+      const cantidad = filtrarPorCategoriaYPrecio(item.dataset.cat).length;
       contador.textContent = `(${cantidad})`;
     });
   }
 
-  document.querySelectorAll("#catList li").forEach(item => {
-    item.classList.toggle("active", item.dataset.cat === state.categoria);
-  });
+  function sincronizarSeleccionCategoriaUI() {
+    document.querySelectorAll("#catList li").forEach(item => {
+      item.classList.toggle("active", !state.busqueda && item.dataset.cat === state.categoria);
+    });
+  }
+  sincronizarSeleccionCategoriaUI();
 
   // Convierte un número a formato de precio.
   const dinero = n => `$${Number(n).toFixed(2).replace(".", ",")}`;
 
-  // Devuelve productos de la categoría, rango de precio y disponibilidad elegidos.
-  function filtrar(categoria = state.categoria) {
+  // Devuelve productos de la categoría (o de todo el catálogo si hay búsqueda activa), rango de precio y disponibilidad elegidos.
+  function filtrar() {
     return PRODUCTOS
-      .filter(p => p.cat === categoria && p.precio >= state.minPrecio && p.precio <= state.maxPrecio)
-      .filter(p => !state.soloDisponibles || p.disp);
+      .filter(p => (state.busqueda ? true : p.cat === state.categoria))
+      .filter(p => p.precio >= state.minPrecio && p.precio <= state.maxPrecio)
+      .filter(p => !state.soloDisponibles || p.disp)
+      .filter(p => coincideConBusqueda(p, state.busqueda));
   }
 
   // Ordena una copia de la lista para no modificar el catálogo original.
@@ -105,9 +172,14 @@
   // Dibuja o actualiza las tarjetas de productos y los textos de la página.
   function render() {
     actualizarConteosCategorias();
+    sincronizarSeleccionCategoriaUI();
     const lista = ordenar(filtrar());
-    catTitle.textContent = CATEGORIAS[state.categoria] || "Productos";
-    foundCount.textContent = `(${lista.length} productos encontrados)`;
+    if (state.busqueda) {
+      catTitle.textContent = `Resultados para "${state.busqueda}"`;
+    } else {
+      catTitle.textContent = CATEGORIAS[state.categoria] || "Productos";
+    }
+    foundCount.textContent = `(${lista.length} ${lista.length === 1 ? "producto encontrado" : "productos encontrados"})`;
     emptyState.classList.toggle("d-none", lista.length > 0);
     // map() crea el HTML de cada producto; join("") une las tarjetas en un solo texto.
     grid.innerHTML = lista.map(p => `
@@ -134,8 +206,9 @@
 
   // Sincroniza los controles del precio y la barra visual con state.
   function actualizarRangoUI() {
-    rangeFill.style.left = `${state.minPrecio / MAX * 100}%`;
-    rangeFill.style.right = `${100 - state.maxPrecio / MAX * 100}%`;
+    const topeMax = Number(maxRange.max) || MAX;
+    rangeFill.style.left = `${state.minPrecio / topeMax * 100}%`;
+    rangeFill.style.right = `${100 - state.maxPrecio / topeMax * 100}%`;
     minInput.value = state.minPrecio;
     maxInput.value = state.maxPrecio;
     minRange.value = state.minPrecio;
@@ -159,17 +232,19 @@
 
   // Cuando se mueve el precio máximo, conserva la separación mínima.
   maxRange.addEventListener("input", function () {
+    const topeMax = Number(maxRange.max) || MAX;
     const min = Number(minRange.value);
     let max = Number(maxRange.value);
     if (max < min + GAP) max = min + GAP;
-    state.maxPrecio = Math.min(MAX, max);
+    state.maxPrecio = Math.min(topeMax, max);
     refrescarRango();
   });
 
   // Lee los precios escritos, limita sus valores y actualiza los filtros.
   function cambiarInputPrecio() {
-    let min = Math.max(0, Math.min(MAX, Number(minInput.value) || 0));
-    let max = Math.max(0, Math.min(MAX, Number(maxInput.value) || MAX));
+    const topeMax = Number(maxRange.max) || MAX;
+    let min = Math.max(0, Math.min(topeMax, Number(minInput.value) || 0));
+    let max = Math.max(0, Math.min(topeMax, Number(maxInput.value) || topeMax));
     if (min > max) [min, max] = [max, min];
     state.minPrecio = min;
     state.maxPrecio = max;
@@ -183,14 +258,28 @@
   catList.addEventListener("click", e => {
     const li = e.target.closest("li[data-cat]");
     if (!li) return;
-    document.querySelectorAll("#catList li").forEach(item => item.classList.remove("active"));
-    li.classList.add("active");
     state.categoria = li.dataset.cat;
+    state.busqueda = "";
+    const inputNav = document.querySelector('#form-buscador input[type="search"]');
+    if (inputNav) inputNav.value = "";
     render();
     if (window.innerWidth < 992) {
       const panel = bootstrap.Collapse.getInstance(document.getElementById("filterCollapse"));
       if (panel) panel.hide();
     }
+  });
+
+  // Escuchar escritura y envío en la barra de búsqueda del navbar dentro de Categorías
+  document.addEventListener("input", e => {
+    if (e.target && e.target.matches('#form-buscador input[type="search"]')) {
+      state.busqueda = e.target.value.trim();
+      render();
+    }
+  });
+
+  window.addEventListener("busquedaCatalogo", e => {
+    state.busqueda = (e.detail && e.detail.termino ? e.detail.termino : "").trim();
+    render();
   });
 
   // Activa o desactiva el filtro de productos disponibles.

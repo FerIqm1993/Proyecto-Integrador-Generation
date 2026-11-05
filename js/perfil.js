@@ -31,6 +31,7 @@
             return obtenerHeadersAdmin();
         }
         const h = { "Content-Type": "application/json" };
+        if (sesion.token) h["Authorization"] = `Bearer ${sesion.token}`;
         if (sesion.id != null) h["X-Usuario-Id"] = String(sesion.id);
         if (sesion.rol) h["X-Usuario-Rol"] = String(sesion.rol);
         return h;
@@ -132,10 +133,10 @@
         try {
             let resp = null;
             if (sesion.id != null) {
-                resp = await fetch(`${URL_API}/usuarios/${sesion.id}`);
+                resp = await fetch(`${URL_API}/usuarios/${sesion.id}`, { headers: headersAdmin() });
             }
             if (!resp || !resp.ok) {
-                resp = await fetch(`${URL_API}/usuarios/correo/${encodeURIComponent(sesion.email)}`);
+                resp = await fetch(`${URL_API}/usuarios/correo/${encodeURIComponent(sesion.email)}`, { headers: headersAdmin() });
             }
             if (resp && resp.ok) {
                 usuarioActualDb = await resp.json();
@@ -206,7 +207,7 @@
                 };
                 const resp = await fetch(`${URL_API}/usuarios/${sesion.id}`, {
                     method: "PUT",
-                    headers: { "Content-Type": "application/json" },
+                    headers: headersAdmin(),
                     body: JSON.stringify(payload)
                 });
                 if (!resp.ok) {
@@ -237,14 +238,14 @@
 
         try {
             if (sesion.id != null) {
-                const resp = await fetch(`${URL_API}/pedidos/usuario/${sesion.id}`);
+                const resp = await fetch(`${URL_API}/pedidos/usuario/${sesion.id}`, { headers: headersAdmin() });
                 if (resp.ok) {
                     pedidos = await resp.json();
                 }
             }
             // También incluir pedidos que coincidan por correo o teléfono
             if (!Array.isArray(pedidos) || pedidos.length === 0) {
-                const respTodos = await fetch(`${URL_API}/pedidos`);
+                const respTodos = await fetch(`${URL_API}/pedidos`, { headers: headersAdmin() });
                 if (respTodos.ok) {
                     const todos = await respTodos.json();
                     pedidos = todos.filter(p =>
@@ -325,7 +326,7 @@
         modal.show();
 
         try {
-            const resp = await fetch(`${URL_API}/detalles-pedido/pedido/${pedidoId}`);
+            const resp = await fetch(`${URL_API}/detalles-pedido/pedido/${pedidoId}`, { headers: headersAdmin() });
             if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
             const detalles = await resp.json();
 
@@ -384,7 +385,7 @@
         const tbody = document.getElementById("tablaAdminPedidos");
         const contador = document.getElementById("contadorAdminPedidos");
         try {
-            const resp = await fetch(`${URL_API}/pedidos`);
+            const resp = await fetch(`${URL_API}/pedidos`, { headers: headersAdmin() });
             if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
             const pedidos = await resp.json();
             contador.textContent = pedidos.length;
@@ -458,7 +459,7 @@
         const tbody = document.getElementById("tablaAdminUsuarios");
         const contador = document.getElementById("contadorAdminUsuarios");
         try {
-            const resp = await fetch(`${URL_API}/usuarios`);
+            const resp = await fetch(`${URL_API}/usuarios`, { headers: headersAdmin() });
             if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
             const usuarios = await resp.json();
             contador.textContent = usuarios.length;
@@ -533,7 +534,7 @@
         const tbody = document.getElementById("tablaAdminMensajes");
         const contador = document.getElementById("contadorAdminMensajes");
         try {
-            const resp = await fetch(`${URL_API}/mensajes-contacto`);
+            const resp = await fetch(`${URL_API}/mensajes-contacto`, { headers: headersAdmin() });
             if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
             const mensajes = await resp.json();
             contador.textContent = mensajes.length;

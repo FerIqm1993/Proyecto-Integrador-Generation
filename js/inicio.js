@@ -70,7 +70,26 @@ function obtenerProductos() {
 }
 
 let categoriaActual = "Todos";
+let terminoBusquedaActual = (new URLSearchParams(window.location.search).get("q") || "").trim();
 let productos = obtenerProductos();
+
+const SINONIMOS_BUSQUEDA = {
+  alimentos: "abarrotes despensa comida cocina lacteos leche aceite",
+  cervezas: "vinos licores alcohol botella",
+  hogar: "limpieza detergente papel bano casa",
+  ferreteria: "herramientas martillo desarmadores reparacion",
+  bebidas: "refresco agua jugos",
+  belleza: "cuidado personal higiene shampoo jabon",
+  mascotas: "perro gato croquetas arena alimento"
+};
+
+function normalizarTextoBusqueda(texto) {
+  return String(texto || "")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .trim();
+}
 
 //recarga Productos
 function recargarProductos() {
@@ -108,9 +127,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     const desdeApi = await sincronizarProductosDesdeApi();
     if (Array.isArray(desdeApi) && desdeApi.length > 0) {
       productos = desdeApi;
-      const queryInicial = new URLSearchParams(window.location.search).get("q");
-      if (queryInicial && queryInicial.trim() !== "") {
-        filtrarPorTerminoBusqueda(queryInicial.trim());
+      const inputNav = document.querySelector('#form-buscador input[type="search"]');
+      const terminoActivo = (inputNav && inputNav.value.trim()) ? inputNav.value.trim() : terminoBusquedaActual;
+      if (terminoActivo) {
+        filtrarPorTerminoBusqueda(terminoActivo);
       } else if (categoriaActual === "Todos") {
         renderizarProductos(productos);
       } else {
@@ -207,18 +227,32 @@ function renderizarProductos(articulos) {
   }).join('');
 }
 
+function actualizarTituloSeccionOfertas(textoBusqueda, cantidad) {
+  const tituloEl = document.querySelector("#ofertas h3");
+  if (!tituloEl) return;
+  if (textoBusqueda) {
+    tituloEl.innerHTML = `<i class="bi bi-search text-primary me-2"></i>Resultados para "${textoBusqueda}" <span class="fs-6 text-muted fw-normal">(${cantidad})</span>`;
+  } else {
+    tituloEl.innerHTML = `<i class="fa-solid fa-fire text-danger me-2"></i>Las Ofertas de la Semana`;
+  }
+}
+
 // Filtrar Productos por categoría (soporta tanto nombre completo como clave interna)
 function filtrarPorCategoria(categoria) {
   categoriaActual = categoria;
+  terminoBusquedaActual = "";
+  const inputNav = document.querySelector('#form-buscador input[type="search"]');
+  if (inputNav) inputNav.value = "";
   renderizarCategoriasPildora();
+  actualizarTituloSeccionOfertas("", productos.length);
 
   if (categoria === "Todos") {
     renderizarProductos(productos);
   } else {
-    const catBuscada = categoria.toLowerCase();
+    const catBuscada = normalizarTextoBusqueda(categoria);
     const filtrados = productos.filter(p => {
-      const catNombre = (CATEGORIAS[p.cat] || p.categoria || p.cat || "").toLowerCase();
-      const catClave = (p.cat || "").toLowerCase();
+      const catNombre = normalizarTextoBusqueda(CATEGORIAS[p.cat] || p.categoria || p.cat || "");
+      const catClave = normalizarTextoBusqueda(p.cat || "");
       return catNombre === catBuscada || catClave === catBuscada;
     });
     renderizarProductos(filtrados);
@@ -318,16 +352,25 @@ function actualizarUICarrito() {
 }
 
 function filtrarPorTerminoBusqueda(consultaRaw) {
-  const consulta = String(consultaRaw || "").toLowerCase().trim();
+  const textoOriginal = String(consultaRaw || "").trim();
+  terminoBusquedaActual = textoOriginal;
+  const consulta = normalizarTextoBusqueda(textoOriginal);
   if (!consulta) {
     filtrarPorCategoria(categoriaActual);
     return;
   }
+  const palabras = consulta.split(/\s+/).filter(Boolean);
   const filtrados = productos.filter(p => {
-    const nombre = (p.nombre || "").toLowerCase();
-    const cat = (CATEGORIAS[p.cat] || p.categoria || p.cat || "").toLowerCase();
-    return nombre.includes(consulta) || cat.includes(consulta);
+    const textoProducto = normalizarTextoBusqueda([
+      p.nombre || "",
+      p.descripcion || "",
+      p.cat || "",
+      CATEGORIAS[p.cat] || p.categoria || "",
+      SINONIMOS_BUSQUEDA[p.cat] || ""
+    ].join(" "));
+    return palabras.every(palabra => textoProducto.includes(palabra));
   });
+  actualizarTituloSeccionOfertas(textoOriginal, filtrados.length);
   renderizarProductos(filtrados);
 }
 
@@ -339,9 +382,14 @@ function configurarEventos() {
 
   // Delegación de eventos para soportar el navbar cargado asíncronamente
   document.addEventListener("input", (e) => {
-    if (e.target && e.target.matches('input[type="search"], #searchInputMobile')) {
+    if (e.target && e.target.matches('#form-buscador input[type="search"], #searchInputMobile')) {
       filtrarPorTerminoBusqueda(e.target.value);
     }
+  });
+
+  window.addEventListener("busquedaCatalogo", (e) => {
+    const termino = e.detail && e.detail.termino ? e.detail.termino : "";
+    filtrarPorTerminoBusqueda(termino);
   });
 
   const queryInicial = new URLSearchParams(window.location.search).get("q");
