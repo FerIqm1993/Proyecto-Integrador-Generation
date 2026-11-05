@@ -252,16 +252,50 @@
         </div>
     </div>
 
+    <div class="modal fade" id="modalModificarPedido" tabindex="-1" aria-labelledby="modalModificarPedidoLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow">
+                <form id="formModificarPedido">
+                    <div class="modal-header bg-primary text-white">
+                        <h5 class="modal-title fw-bold" id="modalModificarPedidoLabel">Modificar pedido</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" id="modificarPedidoId">
+                        <p class="text-muted small">Solo puedes cambiar la fecha y el horario de recolección.</p>
+                        <div id="alertaModificarPedido" aria-live="polite"></div>
+                        <div class="mb-3">
+                            <label for="fechaRecoleccionPedido" class="form-label">Fecha de recolección</label>
+                            <input type="date" class="form-control" id="fechaRecoleccionPedido" required>
+                        </div>
+                        <div>
+                            <label for="horarioRecoleccionPedido" class="form-label">Horario</label>
+                            <select class="form-select" id="horarioRecoleccionPedido" required>
+                                <option value="">Selecciona un horario</option>
+                                <option value="14:00 - 16:00">14:00 - 16:00</option>
+                                <option value="16:00 - 18:00">16:00 - 18:00</option>
+                                <option value="18:00 - 20:00">18:00 - 20:00</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-primary" id="btnGuardarCambiosRecoleccion">Guardar cambios</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <!-- Footer dinámico -->
     <div id="footer-container"></div>
 
     <!-- Bootstrap Bundle -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="../js/global.js?v=20261104-3"></script>
-    <script src="../js/perfil.js?v=20261104-3"></script>
+    <script src="../js/perfil.js?v=20261105-2"></script>
     <script src="../js/navbar.js?v=20261104-3"></script>
     <script src="../js/footer.js"></script>
 </body>
 
 </html>
-

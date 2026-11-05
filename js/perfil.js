@@ -25,6 +25,47 @@
     }
 
     let usuarioActualDb = null;
+    let pedidosUsuario = [];
+
+    function fechaLocalISO(fecha = new Date()) {
+        const año = fecha.getFullYear();
+        const mes = String(fecha.getMonth() + 1).padStart(2, "0");
+        const dia = String(fecha.getDate()).padStart(2, "0");
+        return `${año}-${mes}-${dia}`;
+    }
+
+    function formatearFechaRecoleccion(fecha) {
+        if (!fecha) return "Sin seleccionar";
+        const [año, mes, dia] = String(fecha).slice(0, 10).split("-").map(Number);
+        if (!año || !mes || !dia) return "Sin seleccionar";
+        return new Date(año, mes - 1, dia).toLocaleDateString("es-MX", {
+            year: "numeric",
+            month: "long",
+            day: "numeric"
+        });
+    }
+
+    function obtenerRecoleccionesGuardadas() {
+        try {
+            const recolecciones = JSON.parse(localStorage.getItem("tienda3v_recolecciones_pedidos") || "{}");
+            return recolecciones && typeof recolecciones === "object" ? recolecciones : {};
+        } catch (error) {
+            console.warn("No se pudieron leer las fechas de recolección guardadas:", error.message);
+            return {};
+        }
+    }
+
+    function guardarFechaHoraPedido(pedidoId, fecha, horario) {
+        const recolecciones = obtenerRecoleccionesGuardadas();
+        recolecciones[String(pedidoId)] = { fecha, horario };
+        try {
+            localStorage.setItem("tienda3v_recolecciones_pedidos", JSON.stringify(recolecciones));
+            return true;
+        } catch (error) {
+            console.warn("No se pudo guardar la fecha de recolección del pedido:", error.message);
+            return false;
+        }
+    }
 
     function headersAdmin() {
         if (typeof obtenerHeadersAdmin === "function") {
@@ -259,6 +300,15 @@
             console.warn("No se pudieron cargar pedidos desde la API:", err.message);
         }
 
+        const recoleccionesGuardadas = obtenerRecoleccionesGuardadas();
+        pedidosUsuario = Array.isArray(pedidos) ? pedidos.map(p => {
+            const guardada = recoleccionesGuardadas[String(p.id)];
+            return guardada ? {
+                ...p,
+                fechaRecoleccion: guardada.fecha || p.fechaRecoleccion || p.fechaEntrega,
+                horarioRecoleccion: guardada.horario || p.horarioRecoleccion || p.horarioEntrega
+            } : p;
+        }) : [];
         if (!Array.isArray(pedidos) || pedidos.length === 0) {
             contenedor.innerHTML = `
                 <div class="text-center py-5 border rounded-4 bg-light">
@@ -273,12 +323,16 @@
 
         contenedor.innerHTML = `
             <div class="d-flex flex-column gap-3">
-                ${pedidos.map(p => {
+                ${pedidosUsuario.map(p => {
                     const sucursalNombre = obtenerNombreSucursal(p);
                     const metodoNombre = obtenerNombreMetodoPago(p);
                     const codigoCupon = p.codigoCupon || (p.cupon && p.cupon.codigo);
                     const cuponTexto = codigoCupon ? `<span class="badge bg-light text-primary border ms-2">Cupón: ${codigoCupon}</span>` : "";
                     const fechaPedido = p.creadoEn || p.fechaCreacion;
+                    const fechaRecoleccion = p.fechaRecoleccion || p.fechaEntrega;
+                    const horarioRecoleccion = p.horarioRecoleccion || p.horarioEntrega;
+                    const estado = String(p.estado || "pendiente").toLowerCase();
+                    const permiteModificar = !["entregado", "completado", "cancelado"].includes(estado);
                     return `
                         <div class="border rounded-4 p-3 bg-white shadow-sm">
                             <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 border-bottom pb-2 mb-2">
@@ -295,6 +349,8 @@
                                 <div class="col-12 col-md-5">
                                     <div class="text-muted"><i class="bi bi-shop me-1 text-primary"></i><strong>Sucursal:</strong> ${sucursalNombre}</div>
                                     <div class="text-muted"><i class="bi bi-credit-card me-1 text-primary"></i><strong>Pago:</strong> ${metodoNombre}</div>
+                                    <div class="text-muted"><i class="bi bi-calendar-event me-1 text-primary"></i><strong>Recolección:</strong> ${formatearFechaRecoleccion(fechaRecoleccion)}</div>
+                                    <div class="text-muted"><i class="bi bi-clock me-1 text-primary"></i><strong>Horario:</strong> ${horarioRecoleccion || "Sin seleccionar"}</div>
                                 </div>
                                 <div class="col-6 col-md-4">
                                     <div class="text-muted">Subtotal: ${formatearMoneda(p.subtotal)}</div>
@@ -305,6 +361,11 @@
                                     <button type="button" class="btn btn-sm btn-outline-primary btn-ver-detalle" data-pedido-id="${p.id}">
                                         <i class="bi bi-eye me-1"></i>Ver productos
                                     </button>
+                                    ${permiteModificar ? `
+                                        <button type="button" class="btn btn-sm btn-outline-secondary btn-modificar-pedido mt-1" data-pedido-id="${p.id}">
+                                            <i class="bi bi-calendar2-check me-1"></i>Modificar pedido
+                                        </button>
+                                    ` : ""}
                                 </div>
                             </div>
                         </div>
@@ -312,6 +373,84 @@
                 }).join("")}
             </div>
         `;
+    }
+
+    function abrirModalModificarPedido(pedidoId) {
+        const pedido = pedidosUsuario.find(p => String(p.id) === String(pedidoId));
+        if (!pedido) return;
+
+        const fechaInput = document.getElementById("fechaRecoleccionPedido");
+        const horarioInput = document.getElementById("horarioRecoleccionPedido");
+        const alerta = document.getElementById("alertaModificarPedido");
+        const hoy = fechaLocalISO();
+        const fechaActual = pedido.fechaRecoleccion || pedido.fechaEntrega || "";
+        const horarioActual = pedido.horarioRecoleccion || pedido.horarioEntrega || "";
+
+        fechaInput.min = hoy;
+        fechaInput.value = String(fechaActual).slice(0, 10);
+        horarioInput.value = horarioActual;
+        document.getElementById("modificarPedidoId").value = String(pedido.id);
+        alerta.innerHTML = "";
+        bootstrap.Modal.getOrCreateInstance(document.getElementById("modalModificarPedido")).show();
+    }
+
+    async function guardarCambiosRecoleccion(e) {
+        e.preventDefault();
+        const form = e.currentTarget;
+        const pedidoId = document.getElementById("modificarPedidoId").value;
+        const fecha = document.getElementById("fechaRecoleccionPedido").value;
+        const horario = document.getElementById("horarioRecoleccionPedido").value;
+        const alerta = document.getElementById("alertaModificarPedido");
+        const boton = document.getElementById("btnGuardarCambiosRecoleccion");
+
+        alerta.innerHTML = "";
+        if (!fecha || fecha < fechaLocalISO() || !horario) {
+            alerta.innerHTML = `<div class="alert alert-warning py-2 small">Selecciona una fecha a partir de hoy y un horario.</div>`;
+            return;
+        }
+
+        boton.disabled = true;
+        let errorApi = "";
+        try {
+            const resp = await fetch(`${URL_API}/pedidos/${encodeURIComponent(pedidoId)}/recoleccion`, {
+                method: "PATCH",
+                headers: headersAdmin(),
+                body: JSON.stringify({
+                    fechaRecoleccion: fecha,
+                    horarioRecoleccion: horario
+                })
+            });
+            if (!resp.ok) {
+                errorApi = `HTTP ${resp.status}`;
+            }
+        } catch (err) {
+            errorApi = err.message;
+        }
+
+        const guardadoLocal = guardarFechaHoraPedido(pedidoId, fecha, horario);
+        if (!guardadoLocal && errorApi) {
+            alerta.innerHTML = `<div class="alert alert-danger py-2 small">No se pudo guardar el cambio. El servidor respondió ${errorApi} y el navegador tampoco pudo guardarlo.</div>`;
+            boton.disabled = false;
+            return;
+        }
+
+        const pedido = pedidosUsuario.find(p => String(p.id) === String(pedidoId));
+        if (pedido) {
+            pedido.fechaRecoleccion = fecha;
+            pedido.horarioRecoleccion = horario;
+        }
+        await cargarMisPedidos();
+
+        if (errorApi) {
+            alerta.innerHTML = `<div class="alert alert-warning py-2 small">La fecha y el horario se guardaron en este navegador, pero el servidor rechazó el cambio (${errorApi}). No se sincronizarán con otros dispositivos.</div>`;
+        } else {
+            bootstrap.Modal.getOrCreateInstance(document.getElementById("modalModificarPedido")).hide();
+        }
+
+        if (!guardadoLocal && !errorApi) {
+            console.warn("El cambio se guardó en el servidor, pero no pudo almacenarse en este navegador.");
+        }
+        boton.disabled = false;
     }
 
     async function abrirModalDetallePedido(pedidoId) {
@@ -572,6 +711,7 @@
         await cargarDatosPanelAdmin();
 
         document.getElementById("formActualizarPerfil").addEventListener("submit", guardarCambiosPerfil);
+        document.getElementById("formModificarPedido").addEventListener("submit", guardarCambiosRecoleccion);
 
         document.getElementById("btnCerrarSesionPerfil").addEventListener("click", () => {
             if (typeof cerrarSesionUsuario === "function") {
@@ -591,6 +731,10 @@
             const btnDetalle = e.target.closest(".btn-ver-detalle");
             if (btnDetalle) {
                 abrirModalDetallePedido(btnDetalle.dataset.pedidoId);
+            }
+            const btnModificarPedido = e.target.closest(".btn-modificar-pedido");
+            if (btnModificarPedido) {
+                abrirModalModificarPedido(btnModificarPedido.dataset.pedidoId);
             }
             const btnToggleUser = e.target.closest(".btn-toggle-usuario");
             if (btnToggleUser) {

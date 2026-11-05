@@ -29,6 +29,39 @@ document.addEventListener("DOMContentLoaded", function () {
         couponMessage.className = `small mt-1 text-${type}`;
     }
 
+    function getLocalDateString(date = new Date()) {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, "0");
+        const day = String(date.getDate()).padStart(2, "0");
+        return `${year}-${month}-${day}`;
+    }
+
+    function formatPickupDate(dateString) {
+        const [year, month, day] = dateString.split("-").map(Number);
+        return new Date(year, month - 1, day).toLocaleDateString("es-MX", {
+            weekday: "long",
+            year: "numeric",
+            month: "long",
+            day: "numeric"
+        });
+    }
+
+    function guardarFechaHoraPedido(pedidoId, fecha, horario) {
+        const storageKey = "tienda3v_recolecciones_pedidos";
+        let recolecciones = {};
+        try {
+            recolecciones = JSON.parse(localStorage.getItem(storageKey) || "{}");
+        } catch (error) {
+            console.warn("No se pudieron leer las fechas de recolección guardadas:", error.message);
+        }
+        recolecciones[String(pedidoId)] = { fecha, horario };
+        try {
+            localStorage.setItem(storageKey, JSON.stringify(recolecciones));
+        } catch (error) {
+            console.warn("No se pudo guardar la fecha de recolección del pedido:", error.message);
+        }
+    }
+
     async function sincronizarDatosCarritoDesdeApi() {
         // Sincronizar cupones desde el Backend API
         try {
@@ -246,11 +279,17 @@ document.addEventListener("DOMContentLoaded", function () {
         const branchOption = branchSelect.options[branchSelect.selectedIndex];
         const branch = branchOption.textContent.trim();
         const sucursalId = Number(branchOption.value) || 1;
-        const pickupDate = pickupDateInput.value.trim();
+        const pickupDate = pickupDateInput.value;
         const selectedTimeSlot = document.querySelector(".time-slot.active-slot");
+        const today = getLocalDateString();
 
         if (!pickupDate || !selectedTimeSlot) {
-            showCheckoutMessage("Faltan datos", "Selecciona una fecha y un horario para recoger tu pedido.");
+            showCheckoutMessage("Faltan datos", "Selecciona una fecha y un horario para recoger tu pedido antes de confirmar.");
+            return;
+        }
+
+        if (pickupDate < today) {
+            showCheckoutMessage("Fecha no válida", "Selecciona una fecha de recolección a partir de hoy.");
             return;
         }
 
@@ -281,6 +320,8 @@ document.addEventListener("DOMContentLoaded", function () {
                     cuponId: appliedCoupon && appliedCoupon.id ? Number(appliedCoupon.id) : null,
                     estado: "pendiente",
                     estadoPago: "pendiente",
+                    fechaRecoleccion: pickupDate,
+                    horarioRecoleccion: selectedTimeSlot.textContent.trim(),
                     nombreCliente: (sesion && sesion.nombre) ? sesion.nombre : "Cliente Invitado",
                     correoCliente: (sesion && sesion.email) ? sesion.email : "invitado@tienda3v.com",
                     telefonoCliente: (sesion && sesion.telefono) ? sesion.telefono : "5500000000",
@@ -294,6 +335,7 @@ document.addEventListener("DOMContentLoaded", function () {
             if (respPedido.ok) {
                 const pedidoCreado = await respPedido.json();
                 folioPedido = `\nFolio de pedido: #${pedidoCreado.id}`;
+                guardarFechaHoraPedido(pedidoCreado.id, pickupDate, selectedTimeSlot.textContent.trim());
 
                 // Registrar el detalle de cada producto del carrito
                 for (const item of cart) {
@@ -328,15 +370,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
         showCheckoutMessage(
             "Pedido confirmado",
-            `Sucursal: ${branch}\nFecha de recolección: ${pickupDate}\nHorario: ${selectedTimeSlot.textContent.trim()}${folioPedido}`
+            `Sucursal: ${branch}\nFecha de recolección: ${formatPickupDate(pickupDate)}\nHorario: ${selectedTimeSlot.textContent.trim()}${folioPedido}`
         );
     });
 
     // Cargar la fecha actual en el selector de fecha
     if (pickupDateInput) {
-        let options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-        let today = new Date().toLocaleDateString('es-MX', options);
-        pickupDateInput.value = "Hoy, " + today;
+        const today = getLocalDateString();
+        pickupDateInput.min = today;
     }
 
     // Llamada inicial
