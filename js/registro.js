@@ -136,19 +136,6 @@ formulario.addEventListener("submit", function (evento) {
         return;
     }
 
-    // Crear el objeto del usuario con los datos validados
-    const usuario = {
-        nombreCompleto: `${nombre} ${apellido}`,
-        email: email,
-        telefono: telefonoLimpio,
-        password: password
-    };
-
-    //Convertir el objeto JavaScript a formato JSON
-    const usuarioJSON = JSON.stringify(usuario, null, 2);
-
-    // Mostrar el JSON en la consola para comprobar el resultado
-    console.log("Usuario registrado:", usuarioJSON);
 
     // Mostrar una alerta verde cuando todo sea válido
     alertas.innerHTML = `
@@ -160,37 +147,54 @@ formulario.addEventListener("submit", function (evento) {
         </div>
     `;
 
-    // ===== GUARDAR EL USUARIO EN LOCALSTORAGE =====
-// asi podra iniciar sesion despues
-let usuariosGuardados = JSON.parse(localStorage.getItem('usuarios') || '[]');
-
-// reviso si el correo ya esta registrado
-let correoYaExiste = false;
-for (let i = 0; i < usuariosGuardados.length; i++) {
-    if (usuariosGuardados[i].email == email) {
-        correoYaExiste = true;
-    }
-}
-
-if (correoYaExiste == false) {
-    // creo el objeto con los datos
-    let nuevoUsuario = {
-        nombre: nombre + " " + apellido,
-        email: email,
+// ===== GUARDAR EL USUARIO EN LA BD =====
+fetch("http://localhost:8080/api/usuarios", {
+    method: "POST",
+    headers: {
+        "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+        nombre: nombre,
+        apellido: apellido,
+        correo: email,
         telefono: telefonoLimpio,
-        contrasena: btoa(password)  // codifico la contraseña
-    };
-    // lo agrego a la lista y guardo
-    usuariosGuardados.push(nuevoUsuario);
-    localStorage.setItem('usuarios', JSON.stringify(usuariosGuardados));
-    console.log("Usuario guardado en localStorage: " + email);
-}
+        passwordHash: password,
+        aceptaTerminos: true
+    })
+})
+.then(async response => {
+
+    if (!response.ok) {
+        const error = await response.text();
+        throw new Error(error);
+    }
+
+    return response.json();
+})
+.then(data => {
+
+    console.log("Usuario registrado:", data);
+
+    alertas.innerHTML = `
+        <div class="alert alert-success" role="alert">
+            <strong>¡Registro exitoso!</strong>
+        </div>
+    `;
 
     formulario.reset();
 
-    // espero 1.5 segundos para que vea el mensaje y lo llevo al login
-    setTimeout(function () {
+    setTimeout(() => {
         window.location.href = "login.html";
     }, 1500);
 
+})
+.catch(error => {
+
+    console.error(error);
+
+    alertas.innerHTML = `
+        <div class="alert alert-danger" role="alert">
+            Error al registrar usuario.
+        </div>
+    `;
 });
