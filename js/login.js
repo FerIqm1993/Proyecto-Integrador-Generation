@@ -89,6 +89,8 @@ async function iniciarSesion() {
                 token: tokenJwt
             };
             localStorage.setItem('sesionActiva', JSON.stringify(sesion));
+            localStorage.setItem("token", tokenJwt);
+            localStorage.setItem("tipo", datosAuth.tipo || "Bearer");
 
             document.getElementById('mensaje').innerHTML =
                 '<div class="alert alert-success">' +

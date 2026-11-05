@@ -28,11 +28,12 @@ function esAdminSesion() {
 
 function obtenerHeadersAdmin() {
   const sesion = obtenerSesionActiva();
+  const tokenGuardado = (sesion && sesion.token) || localStorage.getItem("token") || "";
   const headers = { "Content-Type": "application/json" };
+  if (tokenGuardado) {
+    headers["Authorization"] = `Bearer ${tokenGuardado}`;
+  }
   if (sesion) {
-    if (sesion.token) {
-      headers["Authorization"] = `Bearer ${sesion.token}`;
-    }
     if (sesion.id != null) {
       headers["X-Usuario-Id"] = String(sesion.id);
     }
@@ -45,6 +46,8 @@ function obtenerHeadersAdmin() {
 
 function cerrarSesionUsuario() {
   localStorage.removeItem("sesionActiva");
+  localStorage.removeItem("token");
+  localStorage.removeItem("tipo");
   const isRoot = window.location.pathname.endsWith("index.html")
     || window.location.pathname.endsWith("/")
     || !window.location.pathname.includes("/pages/");
