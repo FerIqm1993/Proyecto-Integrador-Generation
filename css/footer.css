@@ -1,0 +1,94 @@
+/* ===================================================
+   ESTILOS FOOTER
+   =================================================== */
+
+/* Contenedor principal del pie de página */
+footer.footer-contacto,
+.footer-contacto {
+  margin-top: auto;
+  background-color: var(--azul, #4A90E2) !important;
+  color: #ffffff !important;
+  padding: 18px 0;
+  width: 100%;
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+}
+
+/* Contenedor de contenido flexible */
+.contenido-footer {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  gap: 45px;
+  flex-wrap: wrap;
+}
+
+/* Elemento individual de contacto */
+.item-footer {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 10px;
+  font-size: 0.95rem;
+  color: #ffffff;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.item-footer:hover {
+  transform: translateY(-1px);
+}
+
+/* Iconos de contacto */
+.item-footer i {
+  color: #ffffff !important;
+  font-size: 1.15rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s ease;
+}
+
+.item-footer:hover i {
+  transform: scale(1.12);
+}
+
+/* Texto y enlaces del footer */
+.item-footer span,
+.item-footer a,
+.footer-link {
+  color: #ffffff !important;
+  text-decoration: none !important;
+  font-weight: 500;
+  transition: opacity 0.2s ease;
+}
+
+.item-footer a:hover,
+.footer-link:hover {
+  opacity: 0.9;
+  text-decoration: underline !important;
+}
+
+/* ===================================================
+   RESPONSIVE FOOTER (Dispositivos móviles y tablets)
+   =================================================== */
+@media (max-width: 768px) {
+  .contenido-footer {
+    gap: 25px !important;
+  }
+}
+
+@media (max-width: 575.98px) {
+  footer.footer-contacto,
+  .footer-contacto {
+    padding: 16px 0;
+  }
+
+  .contenido-footer {
+    flex-direction: column !important;
+    gap: 12px !important;
+  }
+
+  .item-footer {
+    font-size: 0.88rem;
+    text-align: center;
+    justify-content: center;
+  }
+}

@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Perfil y Pedidos | Tienda 3V</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="../css/global.css" rel="stylesheet">
+    <link rel="stylesheet" href="../css/navbar.css?v=20261104-3">
+    <link rel="stylesheet" href="../css/footer.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        .avatar-circulo {
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #1d4ed8, #4361ee);
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.6rem;
+            font-weight: 700;
+            box-shadow: 0 6px 16px rgba(67, 97, 238, 0.25);
+        }
+        .card-perfil {
+            border: none;
+            border-radius: 16px;
+        }
+        .estado-badge {
+            font-size: 0.78rem;
+            padding: 0.35em 0.75em;
+            border-radius: 50px;
+            text-transform: capitalize;
+        }
+    </style>
+</head>
+
+<body class="bg-light d-flex flex-column min-vh-100">
+    <!-- Navbar dinámico -->
+    <div id="navbar-container"></div>
+
+    <main class="container py-4 flex-grow-1">
+        <!-- Encabezado de bienvenida -->
+        <div class="card card-perfil shadow-sm mb-4">
+            <div class="card-body p-4 d-flex flex-wrap align-items-center justify-content-between gap-3">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="avatar-circulo" id="avatarIniciales">U</div>
+                    <div>
+                        <div class="d-flex align-items-center gap-2 flex-wrap">
+                            <h1 class="h4 fw-bold mb-0" id="perfilNombreTitulo">Cargando perfil...</h1>
+                            <span id="perfilRolBadge" class="badge bg-primary">Cliente</span>
+                        </div>
+                        <p class="text-muted mb-0" id="perfilCorreoSubtitulo"></p>
+                    </div>
+                </div>
+                <div class="d-flex flex-wrap gap-2">
+                    <a href="admin-productos.html" id="btnIrAdminProductos" class="btn btn-primary d-none">
+                        <i class="bi bi-box-seam me-1"></i>Administrar Productos y Cupones
+                    </a>
+                    <button type="button" id="btnCerrarSesionPerfil" class="btn btn-outline-danger">
+                        <i class="bi bi-box-arrow-right me-1"></i>Cerrar sesión
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            <!-- Columna Izquierda: Datos Personales -->
+            <div class="col-12 col-lg-4">
+                <div class="card card-perfil shadow-sm h-100">
+                    <div class="card-body p-4">
+                        <h2 class="h5 fw-bold mb-3">
+                            <i class="bi bi-person-lines-fill text-primary me-2"></i>Mis Datos Personales
+                        </h2>
+                        <div id="alertaPerfil"></div>
+                        <form id="formActualizarPerfil" novalidate>
+                            <div class="mb-3">
+                                <label for="inputNombre" class="form-label fw-semibold small">Nombre(s)</label>
+                                <input type="text" id="inputNombre" class="form-control" required maxlength="90">
+                            </div>
+                            <div class="mb-3">
+                                <label for="inputApellido" class="form-label fw-semibold small">Apellidos</label>
+                                <input type="text" id="inputApellido" class="form-control" required maxlength="90">
+                            </div>
+                            <div class="mb-3">
+                                <label for="inputCorreo" class="form-label fw-semibold small">Correo electrónico</label>
+                                <input type="email" id="inputCorreo" class="form-control bg-light" readonly disabled>
+                                <div class="form-text">El correo es tu identificador único de cuenta.</div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="inputTelefono" class="form-label fw-semibold small">Teléfono (10 dígitos)</label>
+                                <input type="tel" id="inputTelefono" class="form-control" required maxlength="10" placeholder="5512345678">
+                            </div>
+                            <button type="submit" class="btn btn-primary w-100 fw-semibold" id="btnGuardarPerfil">
+                                <i class="bi bi-check2-circle me-1"></i>Guardar cambios
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Columna Derecha: Historial de Mis Pedidos -->
+            <div class="col-12 col-lg-8">
+                <div class="card card-perfil shadow-sm h-100">
+                    <div class="card-body p-4">
+                        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+                            <h2 class="h5 fw-bold mb-0">
+                                <i class="bi bi-bag-check-fill text-primary me-2"></i>Mis Pedidos Recientes
+                            </h2>
+                            <a href="../index.html#ofertas" class="btn btn-sm btn-outline-primary">
+                                <i class="bi bi-cart-plus me-1"></i>Seguir comprando
+                            </a>
+                        </div>
+                        <div id="contenedorMisPedidos">
+                            <div class="text-center text-muted py-4">Cargando historial de pedidos...</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECCIÓN EXCLUSIVA PARA ADMINISTRADORES -->
+        <section id="seccion-admin" class="mt-5 d-none">
+            <div class="card card-perfil shadow-sm border-top border-4 border-primary">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+                        <div>
+                            <span class="badge bg-warning text-dark fw-semibold mb-1">
+                                <i class="bi bi-shield-lock-fill me-1"></i>Panel de Control Administrativo
+                            </span>
+                            <h2 class="h4 fw-bold mb-0">Gestión de Pedidos, Usuarios y Contacto</h2>
+                        </div>
+                        <button type="button" class="btn btn-sm btn-outline-secondary" id="btnRecargarAdmin">
+                            <i class="bi bi-arrow-clockwise me-1"></i>Actualizar datos
+                        </button>
+                    </div>
+
+                    <div id="alertaAdminGeneral"></div>
+
+                    <!-- Pestañas Admin -->
+                    <ul class="nav nav-tabs mb-3" id="adminTabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active fw-semibold" id="tab-pedidos-btn" data-bs-toggle="tab" data-bs-target="#tab-pedidos" type="button" role="tab">
+                                <i class="bi bi-receipt me-1"></i>Todos los Pedidos <span class="badge bg-secondary ms-1" id="contadorAdminPedidos">0</span>
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link fw-semibold" id="tab-usuarios-btn" data-bs-toggle="tab" data-bs-target="#tab-usuarios" type="button" role="tab">
+                                <i class="bi bi-people me-1"></i>Usuarios Registrados <span class="badge bg-secondary ms-1" id="contadorAdminUsuarios">0</span>
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link fw-semibold" id="tab-mensajes-btn" data-bs-toggle="tab" data-bs-target="#tab-mensajes" type="button" role="tab">
+                                <i class="bi bi-envelope-paper me-1"></i>Mensajes de Contacto <span class="badge bg-secondary ms-1" id="contadorAdminMensajes">0</span>
+                            </button>
+                        </li>
+                    </ul>
+
+                    <div class="tab-content" id="adminTabsContent">
+                        <!-- Tab 1: Todos los pedidos -->
+                        <div class="tab-pane fade show active" id="tab-pedidos" role="tabpanel">
+                            <div class="table-responsive">
+                                <table class="table table-hover align-middle">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Folio</th>
+                                            <th>Cliente / Teléfono</th>
+                                            <th>Sucursal</th>
+                                            <th>Pago</th>
+                                            <th>Total</th>
+                                            <th>Estado</th>
+                                            <th>Detalle</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tablaAdminPedidos">
+                                        <tr><td colspan="7" class="text-center text-muted py-3">Cargando pedidos...</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Tab 2: Usuarios registrados -->
+                        <div class="tab-pane fade" id="tab-usuarios" role="tabpanel">
+                            <div class="table-responsive">
+                                <table class="table table-hover align-middle">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Nombre</th>
+                                            <th>Correo</th>
+                                            <th>Teléfono</th>
+                                            <th>Rol</th>
+                                            <th>Estado</th>
+                                            <th>Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tablaAdminUsuarios">
+                                        <tr><td colspan="7" class="text-center text-muted py-3">Cargando usuarios...</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Tab 3: Mensajes de contacto -->
+                        <div class="tab-pane fade" id="tab-mensajes" role="tabpanel">
+                            <div class="table-responsive">
+                                <table class="table table-hover align-middle">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Remitente</th>
+                                            <th>Correo / Teléfono</th>
+                                            <th>Motivo</th>
+                                            <th>Mensaje</th>
+                                            <th>Fecha</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tablaAdminMensajes">
+                                        <tr><td colspan="6" class="text-center text-muted py-3">Cargando mensajes...</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Modal para ver los productos de un pedido -->
+    <div class="modal fade" id="modalDetallePedido" tabindex="-1" aria-labelledby="modalDetallePedidoLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content border-0 shadow">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title fw-bold" id="modalDetallePedidoLabel">Detalle del Pedido</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body" id="modalDetallePedidoBody">
+                    <div class="text-center py-4 text-muted">Cargando productos del pedido...</div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modalModificarPedido" tabindex="-1" aria-labelledby="modalModificarPedidoLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow">
+                <form id="formModificarPedido">
+                    <div class="modal-header bg-primary text-white">
+                        <h5 class="modal-title fw-bold" id="modalModificarPedidoLabel">Modificar pedido</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" id="modificarPedidoId">
+                        <p class="text-muted small">Solo puedes cambiar la fecha y el horario de recolección.</p>
+                        <div id="alertaModificarPedido" aria-live="polite"></div>
+                        <div class="mb-3">
+                            <label for="fechaRecoleccionPedido" class="form-label">Fecha de recolección</label>
+                            <input type="date" class="form-control" id="fechaRecoleccionPedido" required>
+                        </div>
+                        <div>
+                            <label for="horarioRecoleccionPedido" class="form-label">Horario</label>
+                            <select class="form-select" id="horarioRecoleccionPedido" required>
+                                <option value="">Selecciona un horario</option>
+                                <option value="14:00 - 16:00">14:00 - 16:00</option>
+                                <option value="16:00 - 18:00">16:00 - 18:00</option>
+                                <option value="18:00 - 20:00">18:00 - 20:00</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-primary" id="btnGuardarCambiosRecoleccion">Guardar cambios</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer dinámico -->
+    <div id="footer-container"></div>
+
+    <!-- Bootstrap Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../js/global.js?v=20261104-3"></script>
+    <script src="../js/perfil.js?v=20261105-2"></script>
+    <script src="../js/navbar.js?v=20261104-3"></script>
+    <script src="../js/footer.js"></script>
+</body>
+
+</html>

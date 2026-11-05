@@ -10,7 +10,8 @@
     <!-- Custom CSS -->
     <link href="css/inicio.css" rel="stylesheet">
     <link href="css/global.css" rel="stylesheet">
-    <link rel="stylesheet" href="../css/navbar.css">
+    <link rel="stylesheet" href="css/navbar.css">
+    <link rel="stylesheet" href="css/footer.css">
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <!-- Bootstrap Icons -->
@@ -23,7 +24,7 @@
     <div id="navbar-container"></div>
 
     <!-- Contenido Principal -->
-    <!-- BANNER PRINCIPAL - RESTAURADO A COLOR OSCURO -->
+    <!-- BANNER PRINCIPAL -->
 <section class="seccion-principal py-4 py-lg-5 text-white">
   <div class="container-fluid container-xl">
     <div class="row align-items-center gy-4">
@@ -45,16 +46,6 @@
     </div>
   </div>
 </section>
-
-
-  <!-- BARRA DE CATEGORIAS (PILDORAS / BOTONES) -->
-  <section class="py-3 bg-white border-bottom shadow-sm overflow-hidden">
-    <div class="container-fluid container-xl">
-      <div class="d-flex gap-2 overflow-auto py-1 scrollbar-hidden" id="contenedorPildoras">
-        <!-- Renderizado dinamico via JS -->
-      </div>
-    </div>
-  </section>
 
   <!-- SECCION DE BENEFICIOS / VENTAJAS -->
   <section class="py-4 bg-light-blue" id="ventajas">
@@ -100,10 +91,19 @@
           <p class="mb-0 text-light-gray">Ordena en línea y recoge tu despensa en minutos. Contamos con estacionamiento exclusivo y rápida entrega en tu cajuela. ¡Gratis!</p>
         </div>
         <div class="col-md-4 text-md-end">
-          <button type="button" class="btn btn-light btn-lg fw-bold px-4 text-dark">
-  Recoge en sucursal <i class="bi bi-shop ms-2"></i>
-</button>
+          <a href="pages/acerca.html#sucursales" class="btn btn-light btn-lg fw-bold px-4 text-dark text-decoration-none">
+            Recoge en sucursal <i class="bi bi-shop ms-2"></i>
+          </a>
         </div>
+      </div>
+    </div>
+  </section>
+
+   <!-- BARRA DE CATEGORIAS (PILDORAS / BOTONES) -->
+  <section class="py-3 bg-white border-bottom shadow-sm overflow-hidden">
+    <div class="container-fluid container-xl">
+      <div class="d-flex gap-2 overflow-auto py-1 scrollbar-hidden" id="contenedorPildoras">
+        <!-- Renderizado dinamico via JS -->
       </div>
     </div>
   </section>
@@ -123,25 +123,8 @@
     </div>
   </section>
 
-    <footer class="footer-contacto" id="contacto">
-    <div class="container">
-        <div class="contenido-footer">
-
-            <!-- Teléfono -->
-            <div class="item-footer">
-                <i class="bi bi-telephone-fill"></i>
-                <span>Llámanos: 800-3V-AYUDA (800-382-9832)</span>
-            </div>
-
-            <!-- Correo -->
-            <div class="item-footer">
-                <i class="bi bi-envelope-fill"></i>
-                <span>contacto@tienda3v.mx</span>
-            </div>
-
-        </div>
-    </div>
-    </footer>
+    <!-- Sección Footer -->
+    <div id="footer-container"></div>
 
     <!-- CANVAS LATERAL DEL CARRITO -->
   <div class="offcanvas offcanvas-end" tabindex="-1" id="canvasCarrito" aria-labelledby="etiquetaCanvasCarrito">
@@ -165,11 +148,11 @@
     <!-- Bootstrap Bundle con Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <!-- JS Personalizado -->
-    <script src="js/inicio.js"></script>
-    <script src="js/global.js"></script>
-    <script src="js/navbar.js"></script>
-    <script src="../js/footer.js"></script>
-  <script src="js/bootstrap.bundle.min.js"></script>
+    <script src="js/global.js?v=20261104-3"></script>
+    <script src="js/inicio.js?v=20261104-3"></script>
+    
+    <script src="js/navbar.js?v=20261104-3"></script>
+    <script src="js/footer.js"></script>
   
 
 </body>

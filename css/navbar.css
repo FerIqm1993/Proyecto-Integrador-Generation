@@ -103,8 +103,39 @@ form.search-box input[type="search"]::-webkit-search-cancel-button {
   color: #212529;
 }
 
-/* Botón Carrito (Azul, ovalado y sin badge de número) */
+/* Botón de usuario con sesión iniciada */
+.btn-usuario-logueado {
+  height: 44px;
+  padding: 0 16px;
+  border-radius: 50px;
+  border: 1px solid #cfe2ff;
+  background-color: #eef4ff;
+  color: #1e3a8a;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-usuario-logueado:hover {
+  background-color: #dbeafe;
+  border-color: #93c5fd;
+  color: #172554;
+}
+
+.nombre-corto-nav {
+  max-width: 110px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Botón Carrito */
 .btn-carrito {
+  position: relative;
   height: 44px;
   padding: 0 22px;
   border-radius: 50px;
@@ -129,3 +160,117 @@ form.search-box input[type="search"]::-webkit-search-cancel-button {
 .btn-carrito i {
   font-size: 1.1rem;
 }
+
+.contador-carrito {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 5px;
+  border: 2px solid #ffffff;
+  border-radius: 999px;
+  background: #dc3545;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.contador-carrito[hidden] {
+  display: none;
+}
+
+/* ===================================================
+   DESPLEGABLE DE RESULTADOS DEL BUSCADOR GLOBAL
+   =================================================== */
+.sugerencias-buscador {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  right: 0;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.14);
+  z-index: 1080;
+  overflow: hidden;
+}
+
+.sugerencias-lista {
+  max-height: 310px;
+  overflow-y: auto;
+}
+
+.sugerencia-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  text-decoration: none;
+  color: #1e293b;
+  border-bottom: 1px solid #f1f5f9;
+  transition: background-color 0.15s ease;
+}
+
+.sugerencia-item:hover {
+  background-color: #f8fafc;
+  color: #1d4ed8;
+}
+
+.sugerencia-img {
+  width: 42px;
+  height: 42px;
+  object-fit: contain;
+  border-radius: 8px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  padding: 2px;
+  flex-shrink: 0;
+}
+
+.sugerencia-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.sugerencia-nombre {
+  font-size: 0.88rem;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sugerencia-cat {
+  font-size: 0.75rem;
+  color: #64748b;
+}
+
+.sugerencia-precio {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #4361ee;
+  flex-shrink: 0;
+}
+
+.sugerencia-ver-todos {
+  width: 100%;
+  border: none;
+  background: #eff6ff;
+  color: #1d4ed8;
+  font-size: 0.82rem;
+  font-weight: 600;
+  padding: 9px 14px;
+  text-align: center;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.sugerencia-ver-todos:hover {
+  background: #dbeafe;
+}
+

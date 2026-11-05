@@ -1,0 +1,386 @@
+document.addEventListener("DOMContentLoaded", function () {
+    const cartItemsContainer = document.getElementById("cart-items");
+    const cartBadgeCount = document.getElementById("cart-badge-count");
+    const cartTitleCount = document.getElementById("cart-title-count");
+    const summarySubtotal = document.getElementById("summary-subtotal");
+    const summaryDiscount = document.getElementById("summary-discount");
+    const summaryTotal = document.getElementById("summary-total");
+    const btnCheckout = document.getElementById("btn-checkout");
+    const couponCodeInput = document.getElementById("coupon-code");
+    const applyCouponButton = document.getElementById("apply-coupon");
+    const couponMessage = document.getElementById("coupon-message");
+    const branchSelect = document.getElementById("branch-select");
+    const timeSlots = document.querySelectorAll(".time-slot");
+    const pickupDateInput = document.getElementById("pickup-date");
+    const checkoutMessageModal = document.getElementById("checkout-message-modal");
+    const checkoutMessageTitle = document.getElementById("checkout-message-title");
+    const checkoutMessageBody = document.getElementById("checkout-message-body");
+    const URL_API_CARRITO = window.API_BASE_URL || "http://localhost:8080/api";
+    let appliedCoupon = null;
+
+    function showCheckoutMessage(title, message) {
+        checkoutMessageTitle.textContent = title;
+        checkoutMessageBody.textContent = message;
+        bootstrap.Modal.getOrCreateInstance(checkoutMessageModal).show();
+    }
+
+    function showCouponMessage(message, type) {
+        couponMessage.textContent = message;
+        couponMessage.className = `small mt-1 text-${type}`;
+    }
+
+    function getLocalDateString(date = new Date()) {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, "0");
+        const day = String(date.getDate()).padStart(2, "0");
+        return `${year}-${month}-${day}`;
+    }
+
+    function formatPickupDate(dateString) {
+        const [year, month, day] = dateString.split("-").map(Number);
+        return new Date(year, month - 1, day).toLocaleDateString("es-MX", {
+            weekday: "long",
+            year: "numeric",
+            month: "long",
+            day: "numeric"
+        });
+    }
+
+    function guardarFechaHoraPedido(pedidoId, fecha, horario) {
+        const storageKey = "tienda3v_recolecciones_pedidos";
+        let recolecciones = {};
+        try {
+            recolecciones = JSON.parse(localStorage.getItem(storageKey) || "{}");
+        } catch (error) {
+            console.warn("No se pudieron leer las fechas de recolección guardadas:", error.message);
+        }
+        recolecciones[String(pedidoId)] = { fecha, horario };
+        try {
+            localStorage.setItem(storageKey, JSON.stringify(recolecciones));
+        } catch (error) {
+            console.warn("No se pudo guardar la fecha de recolección del pedido:", error.message);
+        }
+    }
+
+    async function sincronizarDatosCarritoDesdeApi() {
+        // Sincronizar cupones desde el Backend API
+        try {
+            const respCupones = await fetch(`${URL_API_CARRITO}/cupones`);
+            if (respCupones.ok) {
+                const datosCupones = await respCupones.json();
+                if (Array.isArray(datosCupones)) {
+                    const cuponesMapeados = datosCupones.map(c => ({
+                        id: Number(c.idCupon ?? c.id),
+                        codigo: String(c.codigo || "").toUpperCase(),
+                        descuento: Math.round(Number(c.porcentajeDescuento ?? c.descuento ?? 10)),
+                        activo: Boolean(c.activo ?? true)
+                    }));
+                    localStorage.setItem("tienda3v_cupones", JSON.stringify(cuponesMapeados));
+                }
+            }
+        } catch (err) {
+            console.warn("Usando cupones en localStorage:", err.message);
+        }
+
+        // Sincronizar sucursales desde el Backend API
+        try {
+            const respSuc = await fetch(`${URL_API_CARRITO}/sucursales`);
+            if (respSuc.ok && branchSelect) {
+                const sucursales = await respSuc.json();
+                if (Array.isArray(sucursales) && sucursales.length > 0) {
+                    branchSelect.innerHTML = sucursales
+                        .filter(s => s.activa !== false)
+                        .map((s, idx) => `<option value="${s.id}" ${idx === 0 ? "selected" : ""}>${s.nombre}, ${s.estado}</option>`)
+                        .join("");
+                }
+            }
+        } catch (err) {
+            console.warn("Usando sucursales por defecto:", err.message);
+        }
+    }
+
+    function loadCoupons() {
+        const savedCoupons = localStorage.getItem("tienda3v_cupones");
+        if (savedCoupons === null) {
+            return [{ id: 1, codigo: "BIENVENIDO10", descuento: 10, activo: true }];
+        }
+
+        const coupons = JSON.parse(savedCoupons);
+        if (!Array.isArray(coupons)) {
+            throw new Error("La lista de cupones guardada no es válida.");
+        }
+        return coupons;
+    }
+
+    // Renderizar carrito
+    function renderCart() {
+        let cart = obtenerCarrito(); // Desde global.js
+        cartItemsContainer.innerHTML = '';
+        let totalSubtotal = 0;
+        let totalProductsCount = 0;
+
+        if (cart.length === 0) {
+            cartItemsContainer.innerHTML = `
+                <tr>
+                    <td colspan="5" class="text-center py-5 text-muted">
+                        <i class="bi bi-cart-x fs-1 d-block mb-2"></i>
+                        Tu carrito está vacío
+                    </td>
+                </tr>
+            `;
+        } else {
+            cart.forEach(item => {
+                let subtotal = item.precio * item.cantidad;
+                totalSubtotal += subtotal;
+                totalProductsCount += item.cantidad;
+                const imagePath = item.img && item.img.startsWith("img/")
+                    ? `../${item.img}`
+                    : item.img;
+
+                cartItemsContainer.innerHTML += `
+                    <tr data-id="${item.id}">
+                        <td class="ps-4 py-3">
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="bg-light p-2 rounded-3 border" style="width: 50px; height: 50px; display: flex; align-items: center; justify-content: center;">
+                                    <img src="${imagePath}" alt="${item.nombre}" style="max-height: 100%; object-fit: contain;">
+                                </div>
+                                <span class="fw-semibold text-dark" style="font-size: 14px;">${item.nombre}</span>
+                            </div>
+                        </td>
+                        <td class="text-secondary" style="font-size: 14px;">$${item.precio.toFixed(2)}</td>
+                        <td>
+                            <div class="input-group input-group-sm quantity-control border rounded bg-light" style="width: 100px;">
+                                <button class="btn btn-light border-0 text-dark px-2 btn-minus" type="button">-</button>
+                                <input type="text" class="form-control text-center border-0 bg-light px-0 quantity-input" value="${item.cantidad}" readonly style="font-size: 14px;">
+                                <button class="btn btn-light border-0 text-dark px-2 btn-plus" type="button">+</button>
+                            </div>
+                        </td>
+                        <td class="fw-bold text-primary subtotal-text" style="font-size: 14px;">$${subtotal.toFixed(2)}</td>
+                        <td>
+                            <button class="btn btn-link text-danger p-0 btn-delete" type="button"><i class="bi bi-trash"></i></button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        let discount = appliedCoupon && totalSubtotal > 0
+            ? Number((totalSubtotal * appliedCoupon.descuento / 100).toFixed(2))
+            : 0;
+        let finalTotal = Math.max(0, totalSubtotal - discount);
+
+        // Actualizar textos en el resumen del pedido
+        summarySubtotal.textContent = "$" + totalSubtotal.toFixed(2);
+        summaryDiscount.textContent = "-$" + discount.toFixed(2);
+        summaryTotal.textContent = "$" + finalTotal.toFixed(2);
+        btnCheckout.textContent = "Confirmar pedido $" + finalTotal.toFixed(2);
+
+        // Actualizar contadores superiores del carrito si existen
+        if (cartBadgeCount) cartBadgeCount.textContent = totalProductsCount;
+        if (cartTitleCount) cartTitleCount.textContent = `(${totalProductsCount} ${totalProductsCount === 1 ? 'producto' : 'productos'})`;
+    }
+
+    applyCouponButton.addEventListener("click", async function () {
+        const code = couponCodeInput.value.trim().toUpperCase();
+        appliedCoupon = null;
+
+        if (!code) {
+            showCouponMessage("Ingresa un código de cupón.", "danger");
+            renderCart();
+            return;
+        }
+
+        await sincronizarDatosCarritoDesdeApi();
+
+        let coupons;
+        try {
+            coupons = loadCoupons();
+        } catch (error) {
+            console.error("No se pudieron cargar los cupones:", error);
+            showCouponMessage("No se pudieron cargar los cupones. Intenta de nuevo.", "danger");
+            renderCart();
+            return;
+        }
+
+        const coupon = coupons.find(item =>
+            item && typeof item.codigo === "string" &&
+            item.codigo.toUpperCase() === code
+        );
+
+        if (!coupon) {
+            showCouponMessage("El cupón no existe.", "danger");
+        } else if (coupon.activo !== true) {
+            showCouponMessage("Este cupón no está activo.", "danger");
+        } else if (!Number.isInteger(coupon.descuento) || coupon.descuento < 1 || coupon.descuento > 100) {
+            showCouponMessage("El descuento de este cupón no es válido.", "danger");
+        } else {
+            appliedCoupon = coupon;
+            couponCodeInput.value = code;
+            showCouponMessage(`Cupón aplicado: ${coupon.descuento}% de descuento.`, "success");
+        }
+
+        renderCart();
+    });
+
+    // Eventos para botones de cantidad (+) y (-) y eliminar (bote de basura)
+    cartItemsContainer.addEventListener("click", function (e) {
+        let targetButton = e.target.closest("button");
+        if (!targetButton) return;
+
+        let row = targetButton.closest("tr");
+        if (!row) return;
+
+        let productId = row.getAttribute("data-id");
+
+        // Botón Incrementar (+)
+        if (targetButton.classList.contains("btn-plus")) {
+            let input = row.querySelector(".quantity-input");
+            let qty = parseInt(input.value) + 1;
+            actualizarCantidad(productId, qty);
+            renderCart();
+        }
+
+        // Botón Decrementar (-)
+        if (targetButton.classList.contains("btn-minus")) {
+            let input = row.querySelector(".quantity-input");
+            let qty = parseInt(input.value);
+            if (qty > 1) {
+                actualizarCantidad(productId, qty - 1);
+                renderCart();
+            }
+        }
+
+        // Botón Eliminar (Bote de basura)
+        if (targetButton.classList.contains("btn-delete")) {
+            eliminarDelCarritoLocal(productId);
+            renderCart();
+        }
+    });
+
+    // Interactividad para los botones de horarios
+    timeSlots.forEach(slot => {
+        slot.addEventListener("click", function () {
+            timeSlots.forEach(s => {
+                s.classList.remove("active-slot", "btn-outline-primary", "fw-medium");
+                s.classList.add("btn-outline-secondary", "text-muted", "bg-light", "border-0");
+            });
+            this.classList.remove("btn-outline-secondary", "text-muted", "bg-light", "border-0");
+            this.classList.add("active-slot", "btn-outline-primary", "fw-medium");
+        });
+    });
+
+    btnCheckout.addEventListener("click", async function () {
+        const cart = obtenerCarrito();
+        if (cart.length === 0) {
+            showCheckoutMessage("Carrito vacío", "Agrega al menos un producto antes de confirmar el pedido.");
+            return;
+        }
+
+        const branchOption = branchSelect.options[branchSelect.selectedIndex];
+        const branch = branchOption.textContent.trim();
+        const sucursalId = Number(branchOption.value) || 1;
+        const pickupDate = pickupDateInput.value;
+        const selectedTimeSlot = document.querySelector(".time-slot.active-slot");
+        const today = getLocalDateString();
+
+        if (!pickupDate || !selectedTimeSlot) {
+            showCheckoutMessage("Faltan datos", "Selecciona una fecha y un horario para recoger tu pedido antes de confirmar.");
+            return;
+        }
+
+        if (pickupDate < today) {
+            showCheckoutMessage("Fecha no válida", "Selecciona una fecha de recolección a partir de hoy.");
+            return;
+        }
+
+        // Calcular importes del pedido
+        const subtotal = Number(cart.reduce((acc, item) => acc + (item.precio * item.cantidad), 0).toFixed(2));
+        const descuento = appliedCoupon && subtotal > 0
+            ? Number((subtotal * appliedCoupon.descuento / 100).toFixed(2))
+            : 0;
+        const total = Number(Math.max(0, subtotal - descuento).toFixed(2));
+
+        // Datos del cliente (de sesión activa o invitado)
+        let sesion = null;
+        try {
+            sesion = JSON.parse(localStorage.getItem("sesionActiva") || "null");
+        } catch (err) {
+            sesion = null;
+        }
+
+        let folioPedido = "";
+        try {
+            const respPedido = await fetch(`${URL_API_CARRITO}/pedidos`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    usuarioId: sesion && sesion.id ? Number(sesion.id) : null,
+                    sucursalId: sucursalId,
+                    metodoPagoId: 2, // Contra entrega en sucursal
+                    cuponId: appliedCoupon && appliedCoupon.id ? Number(appliedCoupon.id) : null,
+                    estado: "pendiente",
+                    estadoPago: "pendiente",
+                    fechaRecoleccion: pickupDate,
+                    horarioRecoleccion: selectedTimeSlot.textContent.trim(),
+                    nombreCliente: (sesion && sesion.nombre) ? sesion.nombre : "Cliente Invitado",
+                    correoCliente: (sesion && sesion.email) ? sesion.email : "invitado@tienda3v.com",
+                    telefonoCliente: (sesion && sesion.telefono) ? sesion.telefono : "5500000000",
+                    codigoCupon: appliedCoupon ? appliedCoupon.codigo : null,
+                    subtotal: subtotal,
+                    descuento: descuento,
+                    total: total
+                })
+            });
+
+            if (respPedido.ok) {
+                const pedidoCreado = await respPedido.json();
+                folioPedido = `\nFolio de pedido: #${pedidoCreado.id}`;
+                guardarFechaHoraPedido(pedidoCreado.id, pickupDate, selectedTimeSlot.textContent.trim());
+
+                // Registrar el detalle de cada producto del carrito
+                for (const item of cart) {
+                    const subItem = Number((item.precio * item.cantidad).toFixed(2));
+                    await fetch(`${URL_API_CARRITO}/detalles-pedido`, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                            pedidoId: pedidoCreado.id,
+                            productoId: Number(item.id) || null,
+                            nombreProducto: item.nombre,
+                            cantidad: Number(item.cantidad),
+                            precioUnitario: Number(Number(item.precio).toFixed(2)),
+                            subtotal: subItem
+                        })
+                    });
+                }
+            }
+        } catch (err) {
+            console.warn("Pedido procesado localmente (API no disponible):", err.message);
+        }
+
+        // Vaciar carrito tras confirmar pedido
+        localStorage.setItem("carrito", JSON.stringify([]));
+        if (typeof notificarCambioCarrito === "function") {
+            notificarCambioCarrito();
+        }
+        appliedCoupon = null;
+        couponCodeInput.value = "";
+        couponMessage.textContent = "";
+        renderCart();
+
+        showCheckoutMessage(
+            "Pedido confirmado",
+            `Sucursal: ${branch}\nFecha de recolección: ${formatPickupDate(pickupDate)}\nHorario: ${selectedTimeSlot.textContent.trim()}${folioPedido}`
+        );
+    });
+
+    // Cargar la fecha actual en el selector de fecha
+    if (pickupDateInput) {
+        const today = getLocalDateString();
+        pickupDateInput.min = today;
+    }
+
+    // Llamada inicial
+    renderCart();
+    sincronizarDatosCarritoDesdeApi();
+});
