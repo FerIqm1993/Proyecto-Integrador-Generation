@@ -309,10 +309,13 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         let folioPedido = "";
+        const headersPeticion = typeof obtenerHeadersAdmin === "function"
+            ? obtenerHeadersAdmin()
+            : { "Content-Type": "application/json" };
         try {
             const respPedido = await fetch(`${URL_API_CARRITO}/pedidos`, {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
+                headers: headersPeticion,
                 body: JSON.stringify({
                     usuarioId: sesion && sesion.id ? Number(sesion.id) : null,
                     sucursalId: sucursalId,
@@ -342,7 +345,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     const subItem = Number((item.precio * item.cantidad).toFixed(2));
                     await fetch(`${URL_API_CARRITO}/detalles-pedido`, {
                         method: "POST",
-                        headers: { "Content-Type": "application/json" },
+                        headers: headersPeticion,
                         body: JSON.stringify({
                             pedidoId: pedidoCreado.id,
                             productoId: Number(item.id) || null,

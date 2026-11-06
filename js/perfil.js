@@ -72,7 +72,8 @@
             return obtenerHeadersAdmin();
         }
         const h = { "Content-Type": "application/json" };
-        if (sesion.token) h["Authorization"] = `Bearer ${sesion.token}`;
+        const tokenGuardado = sesion.token || localStorage.getItem("token") || "";
+        if (tokenGuardado) h["Authorization"] = `Bearer ${tokenGuardado}`;
         if (sesion.id != null) h["X-Usuario-Id"] = String(sesion.id);
         if (sesion.rol) h["X-Usuario-Rol"] = String(sesion.rol);
         return h;
@@ -192,7 +193,8 @@
                     nombreSolo: usuarioActualDb.nombre || "",
                     apellidoSolo: usuarioActualDb.apellido || "",
                     telefono: usuarioActualDb.telefono || "",
-                    rol: esAdmin ? "admin" : "usuario"
+                    rol: esAdmin ? "admin" : "usuario",
+                    token: sesion.token || localStorage.getItem("token") || ""
                 };
                 localStorage.setItem("sesionActiva", JSON.stringify(sesion));
 
