@@ -1,4 +1,4 @@
-﻿/*  HERO EQUIPO */
+/*  HERO EQUIPO */
 
 .hero-equipo {
     padding: 55px 0;
@@ -138,6 +138,7 @@
 }
 
 .enlace-social[title="Curriculum Vitae"] {
+    display: none !important;
     width: auto;
     padding: 0 15px;
     border-radius: 20px;
