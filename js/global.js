@@ -2,9 +2,13 @@
 // CONFIGURACIÓN Y UTILIDADES GLOBALES (API + CARRITO + SESIÓN JWT)
 // ==========================================
 
+const _esHostLocal = !window.location.hostname
+  || window.location.hostname === "localhost"
+  || window.location.hostname === "127.0.0.1";
+
 window.API_BASE_URL = (typeof CONFIG !== "undefined" && CONFIG.API_BASE_URL)
   ? CONFIG.API_BASE_URL
-  : "http://localhost:8080/api";
+  : (_esHostLocal ? "http://localhost:8080/api" : `${window.location.origin}/api`);
 
 // ==========================================
 // GESTIÓN DE SESIÓN, JWT Y ROLES
