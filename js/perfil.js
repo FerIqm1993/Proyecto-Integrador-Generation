@@ -334,7 +334,7 @@
                     const fechaRecoleccion = p.fechaRecoleccion || p.fechaEntrega;
                     const horarioRecoleccion = p.horarioRecoleccion || p.horarioEntrega;
                     const estado = String(p.estado || "pendiente").toLowerCase();
-                    const permiteModificar = !["entregado", "completado", "cancelado"].includes(estado);
+                    const permiteModificar = sesion.rol === "admin" && !["entregado", "completado", "cancelado"].includes(estado);
                     return `
                         <div class="border rounded-4 p-3 bg-white shadow-sm">
                             <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 border-bottom pb-2 mb-2">
@@ -378,7 +378,10 @@
     }
 
     function abrirModalModificarPedido(pedidoId) {
-        const pedido = pedidosUsuario.find(p => String(p.id) === String(pedidoId));
+        if (sesion.rol !== "admin") return;
+        const listaAdmin = window._pedidosAdminCache || [];
+        const pedido = listaAdmin.find(p => String(p.id) === String(pedidoId))
+            || pedidosUsuario.find(p => String(p.id) === String(pedidoId));
         if (!pedido) return;
 
         const fechaInput = document.getElementById("fechaRecoleccionPedido");
@@ -398,7 +401,13 @@
 
     async function guardarCambiosRecoleccion(e) {
         e.preventDefault();
-        const form = e.currentTarget;
+        if (sesion.rol !== "admin") {
+            const alerta = document.getElementById("alertaModificarPedido");
+            if (alerta) {
+                alerta.innerHTML = `<div class="alert alert-danger py-2 small">Solo el administrador puede modificar el horario de recolección.</div>`;
+            }
+            return;
+        }
         const pedidoId = document.getElementById("modificarPedidoId").value;
         const fecha = document.getElementById("fechaRecoleccionPedido").value;
         const horario = document.getElementById("horarioRecoleccionPedido").value;
@@ -442,6 +451,9 @@
             pedido.horarioRecoleccion = horario;
         }
         await cargarMisPedidos();
+        if (sesion.rol === "admin") {
+            await cargarAdminPedidos();
+        }
 
         if (errorApi) {
             alerta.innerHTML = `<div class="alert alert-warning py-2 small">La fecha y el horario se guardaron en este navegador, pero el servidor rechazó el cambio (${errorApi}). No se sincronizarán con otros dispositivos.</div>`;
@@ -528,7 +540,17 @@
         try {
             const resp = await fetch(`${URL_API}/pedidos`, { headers: headersAdmin() });
             if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
-            const pedidos = await resp.json();
+            const pedidosRaw = await resp.json();
+            const recoleccionesGuardadas = obtenerRecoleccionesGuardadas();
+            const pedidos = Array.isArray(pedidosRaw) ? pedidosRaw.map(p => {
+                const guardada = recoleccionesGuardadas[String(p.id)];
+                return guardada ? {
+                    ...p,
+                    fechaRecoleccion: guardada.fecha || p.fechaRecoleccion || p.fechaEntrega,
+                    horarioRecoleccion: guardada.horario || p.horarioRecoleccion || p.horarioEntrega
+                } : p;
+            }) : [];
+            window._pedidosAdminCache = pedidos;
             contador.textContent = pedidos.length;
 
             if (pedidos.length === 0) {
@@ -548,6 +570,9 @@
                 const sucursal = obtenerNombreSucursal(p);
                 const metodo = obtenerNombreMetodoPago(p);
                 const estadoActual = String(p.estado || "pendiente").toLowerCase();
+                const permiteModificar = !["entregado", "completado", "cancelado"].includes(estadoActual);
+                const fechaRec = p.fechaRecoleccion || p.fechaEntrega;
+                const horarioRec = p.horarioRecoleccion || p.horarioEntrega;
                 const opciones = estadosDisponibles.map(op =>
                     `<option value="${op.valor}" ${op.valor === estadoActual ? "selected" : ""}>${op.texto}</option>`
                 ).join("");
@@ -559,7 +584,10 @@
                             <div class="fw-semibold">${p.nombreCliente || "Cliente"}</div>
                             <div class="small text-muted">${p.correoCliente || ""} ${p.telefonoCliente ? "· " + p.telefonoCliente : ""}</div>
                         </td>
-                        <td class="small">${sucursal}</td>
+                        <td class="small">
+                            <div>${sucursal}</div>
+                            <div class="text-muted"><i class="bi bi-calendar-event me-1"></i>${formatearFechaRecoleccion(fechaRec)} · ${horarioRec || "Sin horario"}</div>
+                        </td>
                         <td class="small">${metodo}</td>
                         <td class="fw-bold text-primary">${formatearMoneda(p.total)}</td>
                         <td>
@@ -568,9 +596,16 @@
                             </select>
                         </td>
                         <td>
-                            <button type="button" class="btn btn-sm btn-outline-primary btn-ver-detalle" data-pedido-id="${p.id}">
-                                <i class="bi bi-list-ul"></i> Productos
-                            </button>
+                            <div class="d-flex flex-column gap-1">
+                                <button type="button" class="btn btn-sm btn-outline-primary btn-ver-detalle" data-pedido-id="${p.id}">
+                                    <i class="bi bi-list-ul"></i> Productos
+                                </button>
+                                ${permiteModificar ? `
+                                    <button type="button" class="btn btn-sm btn-outline-secondary btn-modificar-pedido" data-pedido-id="${p.id}">
+                                        <i class="bi bi-calendar2-check"></i> Horario
+                                    </button>
+                                ` : ""}
+                            </div>
                         </td>
                     </tr>
                 `;
