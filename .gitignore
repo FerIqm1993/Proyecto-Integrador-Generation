@@ -7,7 +7,8 @@ database/conexion.env
 .env.local
 .env.*.local
 
-# IDEs y editores
+# IDEs, editores y archivos temporales de Office
 .vscode/
 .idea/
 *.swp
+~$*
